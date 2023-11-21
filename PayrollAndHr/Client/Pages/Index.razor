@@ -1,0 +1,51 @@
+﻿@using PayrollAndHr.Client.Shared.Components
+@using PayrollAndHr.Shared.Dtos
+@page "/"
+
+@inject NavigationManager NavigationManager;
+
+<PageTitle>Login</PageTitle>
+
+<section class=" gradient-custom">
+    <div class="container py-5">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
+
+                        <EditForm Model="@loginDto" OnSubmit="@Login" class="mb-md-5 mt-4 md-2 pb-2">
+
+                            <h2 class="fw-bold mb-2 text-uppercase">Payroll and Hr</h2>
+                            <p class="text-white-50 mb-5">Please enter your login and password!</p>
+
+                            <div class="form-outline form-white mb-4">
+                                <InputText @bind-Value="@loginDto.Email" type="email" id="typeEmailX" class="form-control form-control-lg" placeholder="Email" />
+                                <ValidationMessage For="@(()=> loginDto.Email)"/>
+                            </div>
+
+                            <div class="form-outline form-white mb-4">
+                                <InputText @bind-Value="@loginDto.Password" type="password" id="typePasswordX" class="form-control form-control-lg" placeholder="Password" />
+                                <ValidationMessage For="@(()=> loginDto.Password)" />
+                            </div>
+
+                            <p class="small mb-2 pb-2"><a class="text-white-50" href="#!">Forgot password?</a></p>
+
+                            <button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
+                        </EditForm>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code{
+    LoginDto loginDto = new LoginDto();
+
+    private void Login()
+    {
+        NavigationManager.NavigateTo("dashboard");
+
+    }
+}
