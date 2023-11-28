@@ -2,15 +2,130 @@
 @page "/dashboard/"
 @layout PayrollAndHr.Client.Shared.Layouts.MainLayout
 
+
 <PageTitle>Dashboard Overview</PageTitle>
 
-<h3>Dashboard Overview</h3>
-<div>
-    <div>
-        <h4>Application Module</h4>
+<style>
+    .blue {
+        color: cornflowerblue !important;
+        font-size: 22px !important;
+        font-weight: bold !important;
+    }
+</style>
+ <!-- Counts Section -->
+<section class="dashboard-counts section-padding mb-4">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-2 col-md-4 col-6">
+                <div class="wrapper count-title d-flex">
+                    <div class="icon"><i class="icon-check"></i></div>
+                    <div class="name">
+                        <strong class="text-uppercase">Employees</strong><span></span>
+                        <span class="blue bold" id="EmployeeCount">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-md-4 col-6">
+                <div class="wrapper count-title d-flex">
+                    <div class="icon"><i class="icon-user"></i></div>
+                    <div class="name">
+                        <strong class="text-uppercase">Users</strong><span></span>
+                        <span class="UserCount blue bold">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-4 col-6">
+                <div class="wrapper count-title d-flex">
+                    <div class="icon"><i class="icon-bill"></i></div>
+                    <div class="name">
+                        <strong class="text-uppercase">Staff on Leave</strong><span></span>
+                        <span class="LeaveCount blue bold">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-md-4 col-6">
+                <div class="wrapper count-title d-flex">
+                    <div class="icon"><i class="icon-list"></i></div>
+                    <div class="name">
+                        <strong class="text-uppercase">Unapproved Reqs</strong><span></span>
+                        <span class="UnapproveCount blue bold">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-4 col-6">
+                <div class="wrapper count-title d-flex">
+                    <div class="icon"><i class="icon-list-1"></i></div>
+                    <div class="name">
+                        <strong class="text-uppercase">Suspended Staff</strong><span></span>
+                        <span class="SuspendedCount blue bold">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="col-md-12 mt-4">
+    <div class="card">
+        <div class="card-header"><strong>APPLICATION MODULE</strong> </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="well applink">
+                        <a href="#" title="User Setup and Management" >
+                            <div style="color:#160202;"> <span class="fa fa-user fa-4x"></span><br />  <span class="text-center;">User Management</span></div>
+                        
+                        </a>
+                    </div>
+                  
+                </div>
+                <div class="col-md-2">
+                    <div class="well applink">
+                        <a href="/Setup/Index" title="Company Info and other Setup" >
+                            <div style="color:#160202;"> <span class="fa fa-cog fa-4x"></span><br />  <span class="text-center;">Company Settings</span></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="well applink">
+                        <a href="/Employee/Index" title="Employee Information Management" >
+                            <div style="color:#160202;"> <span class="fa fa-user-circle fa-4x"></span><br />  <span class="text-center;">Employee</span></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="well applink">
+                        <a href="/Payroll/Index" title="Payroll System Module" >
+                            <div style="color:#160202;"> <span class="fa fa-bank fa-4x"></span><br />  <span class="text-center;">Payroll</span></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="well applink">
+                        <a href="/HumanResource/Index" title="Human Resource Module" >
+                            <div style="color:#160202;"> <span class="fa fa-user-o fa-4x"></span><br />  <span class="text-center;">Human Resource</span></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="well applink">
+                        <a href="#" title="Various Report" >
+                            <div style="color:#160202;"> <span class="fa fa-bar-chart fa-4x"></span><br />  <span class="text-center;">Reports</span></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+ 
+
+
+
 
 @code {
+    //LoadEmpCount();
+    //LoadUserCount();
+    //LoadLeaveCount();
+    //LoadUnapproveCount();
 
 }

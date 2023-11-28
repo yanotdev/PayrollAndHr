@@ -13,9 +13,9 @@ namespace PayrollAndHr.Server.Repo
         }
 
         //saving branch Information
-        public static void SaveBranchInfo(BranchEntity bra)
+        public void SaveBranchInfo(BranchEntity bra)
         {
-            var oldBra = _context.Branches.Where(d => d.BranchCode == bra.BranchCode).FirstOrDefault();
+            var oldBra= _context.Branches.Where(d => d.BranchCode == bra.BranchCode).FirstOrDefault();
             if (oldBra != null)
             {
                 oldBra.Address = bra.Address;
@@ -39,7 +39,7 @@ namespace PayrollAndHr.Server.Repo
 
         }
         //delete branch Info
-        public static void deleteBranch(int BranchCode)
+        public void deleteBranch(int BranchCode)
         {
             bool check = false;
             var emp = _context.EmployeeInfo.Where(d => d.BranchCode == BranchCode).FirstOrDefault();
@@ -64,7 +64,7 @@ namespace PayrollAndHr.Server.Repo
         }
 
         //saving titles
-        public static void SaveTitles(TitleEntity title)
+        public void SaveTitles(TitleEntity title)
         {
             var oldTitle = _context.Titles.Where(d => d.Code == title.Code).FirstOrDefault();
             if (oldTitle == null)
@@ -85,7 +85,7 @@ namespace PayrollAndHr.Server.Repo
         }
 
         //Save Levels
-        public static void SaveLevels(LevelEntity level)
+        public void SaveLevels(LevelEntity level)
         {
             var oldLevel = _context.Levels.Where(d => d.Code == level.Code).FirstOrDefault();
             if (oldLevel == null)
@@ -101,7 +101,7 @@ namespace PayrollAndHr.Server.Repo
             _context.SaveChanges();
         }
         //Save Employee Type
-        public static void SaveEmpType(EmploymentTypeEntity emp)
+        public void SaveEmpType(EmploymentTypeEntity emp)
         {
             var empType = _context.EmployementType.Where(d => d.Code == emp.Code).FirstOrDefault();
             if (empType == null)
@@ -116,7 +116,7 @@ namespace PayrollAndHr.Server.Repo
             _context.SaveChanges();
         }
         //Save Staff Dept
-        public static void SaveDept(DepartmentEntity dept)
+        public void SaveDept(DepartmentEntity dept)
         {
             var oldDept = _context.Depts.Where(d => d.DeptCode == dept.DeptCode).FirstOrDefault();
             if (oldDept == null)
@@ -131,7 +131,7 @@ namespace PayrollAndHr.Server.Repo
         }
 
         //Save Designation
-        public static void SaveDesignation(DesignationEntity Desg)
+        public void SaveDesignation(DesignationEntity Desg)
         {
             var oldDes = _context.Designations.Where(d => d.Code == Desg.Code).FirstOrDefault();
             if (oldDes != null)
@@ -145,7 +145,7 @@ namespace PayrollAndHr.Server.Repo
             _context.SaveChanges();
         }
         //Save Academic Degree
-        public static void SaveDegrees(DegreeEntity Degree)
+        public void SaveDegrees(DegreeEntity Degree)
         {
             var OldDeg = _context.Degrees.Where(d => d.Code == Degree.Code).FirstOrDefault();
             if (OldDeg != null)

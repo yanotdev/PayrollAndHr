@@ -5,6 +5,12 @@ namespace PayrollAndHr.Server.Data
 {
     public class AppDbContext:DbContext
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+
+        }
+
+     
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<CompanyInfoEntity> CompanyInfo { get; set; }
         public DbSet<BranchEntity> Branches { get; set; }

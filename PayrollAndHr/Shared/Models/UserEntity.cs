@@ -20,5 +20,7 @@ namespace PayrollAndHr.Shared.Models
         public string OtherID { get; set; }
         public string ImageUrl { get; set; }
         public long ID { get; set; }
+
+        public bool IsLogin { get; set; } = false;
     }
 }

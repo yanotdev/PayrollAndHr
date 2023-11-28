@@ -1,7 +1,11 @@
-﻿@using PayrollAndHr.Client.Shared.Components
+﻿@using Microsoft.AspNetCore.Http;
+@using PayrollAndHr.Client.Services;
+@using PayrollAndHr.Client.Shared.Components
 @using PayrollAndHr.Shared.Dtos
 @page "/"
 
+@inject ISessionStorageService _sessionStorageService;
+@inject IAuthService _authservice
 @inject NavigationManager NavigationManager;
 
 <PageTitle>Login</PageTitle>
@@ -14,7 +18,7 @@
                     <div class="card-body p-5 text-center">
 
                         <EditForm Model="@loginDto" OnSubmit="@Login" class="mb-md-5 mt-4 md-2 pb-2">
-
+                            @*<DataAnnotationsValidator />*@
                             <h2 class="fw-bold mb-2 text-uppercase">Payroll and Hr</h2>
                             <p class="text-white-50 mb-5">Please enter your login and password!</p>
 
@@ -41,11 +45,27 @@
 </section>
 
 @code{
+
     LoginDto loginDto = new LoginDto();
 
-    private void Login()
+    private async Task Login()
     {
-        NavigationManager.NavigateTo("dashboard");
+        var result =  await _authservice.Login(loginDto);
+
+        if (result.Success)
+        {
+            NavigationManager.NavigateTo("dashboard");
+            //var userrole =  await _sessionStorageService.GetItemAsStringAsync("UserRole");
+            //var department = await _sessionStorageService.GetItemAsync<string>("Department");
+
+            //if(userrole.ToString() == "Admin" || department.ToString() == "HR")
+            //{
+            //    NavigationManager.NavigateTo("dashboard");
+            //}
+            //NavigationManager.NavigateTo("staffportal");
+        }
+        
 
     }
+    
 }

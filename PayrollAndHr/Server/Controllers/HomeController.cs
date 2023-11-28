@@ -1,76 +1,65 @@
-﻿using Payroll_Application.BusinessLayers;
-using Payroll_Application.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using PayrollAndHr.Server.Services;
+using PayrollAndHr.Server.Data;
+using PayrollAndHr.Shared.Dtos;
+using PayrollAndHr.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+
 
 namespace Payroll_Application.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class HomeController : Controller
     {
-        string staffId = "", staffName = "";
-        MyDbContext db = new MyDbContext();
-        public ActionResult Index()
+        private readonly IAuthService _authService;
+       
+        public HomeController(IAuthService authService)
         {
-            ViewBag.appName = "Payroll Application";
-            return View();
-        }
-        [HttpPost]
-        public ActionResult Index(string username,string password)
-        {
-            try
-            {
-                string encryptpass = SecurityClass.Encrypt(password);
-                var olduser = db.Users.Where(d => (d.Username == username || d.Email==username) && d.Password == encryptpass).FirstOrDefault();
-                if (olduser != null)
-                {
-                    Session["UserID"] = olduser.UserID;
-                    if (olduser.OtherID != string.Empty)
-                    {
-                        Session["OtherID"] = olduser.OtherID;
-                    }
-                    Session["FullName"] = olduser.FullName;
-                    Session["Username"] = olduser.Username;
-                    Session["UserRole"] = olduser.UserRole;
-                    Session["UserImg"] = olduser.ImageUrl;
-                    if (olduser.UserRole == "Admin" || olduser.Department == "HR")
-                    {
-                        staffId = Session["OtherID"].ToString();
-                        staffName = Session["FullName"].ToString();
-                        return RedirectToAction("Index", "AdminPortal");
-                    }
-                    else
-                    {
-                        staffId = Session["OtherID"].ToString();
-                        staffName = Session["FullName"].ToString();
-                        return RedirectToAction("Index", "StaffPortal");
-                    }
-                }
-                else
-                {
-                    ViewBag.errorLogin = "Invalid Username or Password";
-                }
-            }
-            catch(Exception ex)
-            {
-                ViewBag.errorLogin = ex.Message;
-            }
-            return View();
+            _authService = authService;
         }
 
-       
-       
-        public ActionResult LogOut()
+        [HttpPost("login")]
+        public async Task<ActionResult<ServiceResponse<string>>> Login([FromBody]LoginDto loginDto)
         {
-            Session.Clear();
-            Session.Abandon();
-            Response.ClearHeaders();
-            Response.AddHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
-            Response.AddHeader("Pragma", "no-cache");
-            return View("Index");
-        }
+            var response = await _authService.Login(loginDto);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
 
+            return Ok(response);
+            
+        }
+        [HttpPost("register")]
+        public async Task<ActionResult<ServiceResponse<long>>> Register(UserRegister request)
+        {
+            var response = await _authService.Register(
+                new UserEntity
+                {
+                    Email = request.Email,
+                    Password = request.Password,
+                    Username = request.Username,
+                    UserID = request.UserID,
+                    UserRole = request.UserRole,
+                    Department = request.Department,
+                    PhoneNo = request.PhoneNo,
+                    OtherID = request.OtherID,
+                    ImageUrl = request.ImageUrl,
+                    FullName = request.FullName,
+                    
+                },
+                request.Password);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
     }
 }
