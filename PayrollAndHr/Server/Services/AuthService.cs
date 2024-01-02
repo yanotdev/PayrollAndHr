@@ -37,6 +37,7 @@ namespace PayrollAndHr.Server.Services
         public async Task<ServiceResponse<string>> Login(LoginDto loginDto)
         {
             var response = new ServiceResponse<string>();
+
             var user = await _context.Users
                 .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(loginDto.Email.ToLower()));
             if (user == null)
@@ -50,9 +51,10 @@ namespace PayrollAndHr.Server.Services
                 response.Message = "Wrong password.";
             }
             else
-            {
-                 _sessionStorageService.SetItemAsStringAsync("UserRole", user.UserRole);
-                 _sessionStorageService.SetItemAsStringAsync("Department", user.Department);
+        {
+                response.UserRole = user.UserRole;
+                response.UserName = user.Username;
+                response.Department = user.Department;
                 response.Data = CreateToken(user);
             }
 
@@ -91,7 +93,7 @@ namespace PayrollAndHr.Server.Services
 
         
             //========================Two way encryption=============================
-            public static string Encrypt(string datastring)
+            public string Encrypt(string datastring)
             {
                 string encryptData = string.Empty;
                 byte[] encode = new byte[datastring.Length];
@@ -100,7 +102,7 @@ namespace PayrollAndHr.Server.Services
                 return encryptData;
             }
 
-            public static string Dencrypt(string encryptDatastring)
+            public string Dencrypt(string encryptDatastring)
             {
                 string DataDencrypt = string.Empty;
                 UTF8Encoding encodepwd = new UTF8Encoding();

@@ -1,0 +1,1105 @@
+﻿@page "/registeremployee"
+@using PayrollAndHr.Client.Services;
+@using PayrollAndHr.Client.Shared.Components
+@using Microsoft.AspNetCore.Components.Web.Extensions
+@layout PayrollAndHr.Client.Shared.Layouts.EmployeeLayout
+@using Microsoft.AspNetCore.Components.Forms
+@using PayrollAndHr.Shared.Models;
+@using SixLabors.ImageSharp.Processing;
+@using SixLabors.ImageSharp;
+
+@inject IEmployeeService _employeeService;
+
+<style>
+    .ui-widget-header {
+        background: #33bb0b;
+        border: 1px solid rgba(51, 51, 51, 0.63);
+        color: #333333;
+        font-weight: bold;
+    }
+
+    .progress-label {
+        position: absolute;
+        left: 50%;
+        top: 40px;
+        font-weight: bold;
+        text-shadow: 1px 1px 0 #fff;
+    }
+
+    .control-space {
+        margin-top: 8px;
+    }
+
+    label {
+        font-weight: bold;
+        font-family: Arial,'Times New Roman', Times, serif;
+        font-size: 14px;
+    }
+
+    .tab-border {
+        border: 1px solid gray;
+        margin-right: 5px;
+        color: black;
+    }
+
+    .hide-txt {
+        display: none;
+    }
+
+    .actionbtn {
+        padding: 2px;
+        margin: 2px;
+    }
+</style>
+<div class="card">
+    <div class="card-header"><strong>Employee Information</strong></div>
+    <div class="card-body">
+        <button class="btn btn-primary" type="submit" id="NewRecord"><i class="fa fa-file-o"></i> New</button>
+
+        <button class="btn btn-primary" type="submit" id="searchRecord"><i class="fa fa-search"></i> Search</button>
+
+        <EditForm Model="@personalInformationEntity" OnSubmit="SaveEmployee" >
+        
+            <br />
+            @*<div class="alert alert-danger" id="lblErrorMsg">
+            </div>
+            <div class="alert alert-success" id="lblSuccessMsg">
+            </div>*@
+            <div class="row">
+
+                <div class="col-md-5">
+                    <fieldset class="form-group">
+                        <div class="row">
+
+                            <div class="col-md-3">
+                                <label class="label">Registration ID:</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" name="RegID" @bind="@personalInformationEntity.RegistrationID" class = "form-control control-input-border" disabled/>
+                                <input type="hidden" id="empImg" @bind="@personalInformationEntity.ID" />
+                            </div>
+
+                            <div class="col-md-3 control-space">
+                                <label class="label">Staff Number:</label>
+                            </div>
+                            <div class="col-md-9 control-space">
+                                <input type="text" name="staffNo" class="form-control control-input-border" @bind = "@personalInformationEntity.StaffNo"/>                                
+                            </div>
+                            <div class="col-md-3 control-space">
+                                <label class="label">Title:</label>
+                            </div>
+                            <div class="col-md-9 control-space">
+                                <select name="title" id="cboTitle" class="form-control control-input-border" @bind="@personalInformationEntity.TitleCode">
+                                    <option value="">----Select----</option>
+                                    <option value="Mr">Mr</option>
+                                    <option value="Mrs">Mrs</option>
+                                    <option value="Dr">Dr</option>
+                                    <option value="Prof">Prof</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3 control-space">
+                                <label class="label">Surname:</label>
+                            </div>
+                            <div class="col-md-9 control-space">
+                                <input name="surname" class="form-control control-input-border" id="txtsurname" @bind="@personalInformationEntity.Surname" />
+                            </div>
+                            <div class="col-md-3 control-space">
+                                <label class="label">Middle Name:</label>
+                            </div>
+                            <div class="col-md-9 control-space">
+                                <input name="middlename" @bind="@personalInformationEntity.MiddleName" class="form-control control-input-border" id="txtmiddlename" />
+                            </div>
+                            <div class="col-md-3 control-space">
+                                <label class="label">First Name:</label>
+                            </div>
+                            <div class="col-md-9 control-space">
+                                <input name="firstname" @bind="@personalInformationEntity.FirstName" class="form-control control-input-border" id="txtfirstname" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">Photograph</div>
+                        <div class="card-body">
+                            <div>
+                                <img src="@uploadedImagePath" alt="Uploaded Image" style="width: 300px; height: 250px;" class="img-thumbnail" id="empImage" />
+                                
+                            </div>
+
+                            <InputFile id="empfile" @bind-Value="@personalInformationEntity.ImageUrl" width="200" height="180" OnChange="HandleFileChange" />
+                                <div class="clearfix"></div>
+
+                                <br />
+                                <button class="btn btn-outline-info" @onclick="UploadImage" id="uploadPhoto"><i class="fa fa-upload"> Upload</i></button>
+                            
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12">   
+                    <div style="border:1px solid black; padding:10px;">
+                        <Tabs>
+                            <TabLinks>
+                                <Tab OnTabSelected="(() => SelectTab(0))">Personal Info</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(1))">Contact Info</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(2))">Next of Kin</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(3))">Guarantor and Reference</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(4))">Medical History</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(5))">Employment Info</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(6))">Experience</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(7))">Qualification</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(8))">Attachment</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(9))">Bank Info</Tab>
+                            </TabLinks>
+
+                            <TabContents>
+                                @if (selectedTabIndex == 0)
+                                {
+                                    <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-3 control-space">
+                                                <label class="label">Date of Birth:</label>
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                <input type="date" name="dob" @bind="@personalInformationEntity.DateofBirth" class="form-control control-input-border" id="txtdob" />
+                                            </div>
+
+                                            <div class="col-md-3 control-space">
+                                                <label class="label">Gender:</label>
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                <select id="cboGender" @bind="@personalInformationEntity.Gender" class="form-control control-input-border">
+                                                    <option value="">----Select----</option>
+                                                    <option value="Female">Female</option>
+                                                    <option value="Male">Male</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-3 control-space">
+                                                <label class="label">Marital Status:</label>
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                <select id="cboMarital" @bind="@personalInformationEntity.MaritalStatus" class="form-control control-input-border">
+                                                    <option value="">----Select----</option>
+                                                    <option value="Single">Single</option>
+                                                    <option value="Married">Married</option>
+                                                    <option value="Divorce">Divorce</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-3 control-space">
+                                                <label class="label">Country:</label>
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                    <select id="cboNation" @bind="@personalInformationEntity.Nationality" class="form-control control-input-border">
+                                                        <option value="">----Select----</option>
+                                                    </select>
+                                                
+                                            </div>
+
+                                            <div class="col-md-3 control-space">
+                                                <label class="label">State:</label>
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                    <select id="cboState" @bind="@personalInformationEntity.State" class="form-control control-input-border">
+                                                        <option value="">----Select----</option>
+                                                    </select>
+                                                    <input type="text" name="state" class="form-control control-input-border hide-txt" placeholder="Type the State" , id="txtstate" />
+                                                         
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-3 control-space">
+                                                <label class="label">Religion:</label>
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                    <select id="cboReligion" @bind="@personalInformationEntity.Religion" class="form-control control-input-border">
+                                                        <option value="">----Select----</option>
+                                                        <option value="Christianity">Christianity</option>
+                                                        <option value="Muslim">Muslim</option>
+                                                        <option value="Traditional">Traditional</option>
+                                                        <option value="Other">Other</option>
+                                                    </select>
+                                                
+                                            </div>
+
+                                            <div class="col-md-3 control-space">
+                                                <label class="label">Spouse Name:</label>
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                    <input type="text" name="spouseName" @bind="@personalInformationEntity.SpouseName"class="form-control control-input-border" id = "txtspouseName"/>
+                                               
+                                            </div>
+
+                                            <div class="col-md-3 control-space">
+                                                <label class="label">Disability:</label>
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                    <select id="cboDisability" @bind="@personalInformationEntity.Disability" class="form-control control-input-border">
+                                                        <option value="No">No</option>
+                                                        <option value="Yes">Yes</option>                                                        
+                                                    </select>
+                                               
+                                            </div>
+
+                                            <div class="col-md-3 control-space">
+                                                <label class="label">Disability Description:</label>
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                    <textarea name="disabilityDesc" @bind="@personalInformationEntity.DisabilityDescription" class="form-control control-input-border" id="txtdisabilityDesc"></textarea>
+                                               
+                                            </div>
+                                            <div class="col-md-3 control-space">
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                    <button class="btn btn-primary" type="submit" id="SavePersonal"><i class="fa fa-save"></i> Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                }
+                                else if (selectedTabIndex == 1)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Address:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <textarea name="address" class="form-control control-input-border" id="txtaddress" , rows=6></textarea>                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">City:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class="form-control control-input-border" , id="txtcity" />
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Country:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <select name="country" class="form-control control-input-border"  id="cbocountry">
+                                                        <option>----Select----</option>
+                                                    </select>                                                   
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">State:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <select name="state" class="form-control control-input-border" id="cboStateAdd">
+                                                        <option>----Select----</option>
+                                                    </select>
+                                                    <input type="text" class = "form-control control-input-border hide-txt" placeholder = "Type the State" id = "txtstateAdd" />
+                                                   </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">L.G.A:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class = "form-control control-input-border" id = "txtlga"/>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Landmark:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class = "form-control control-input-border"id = "txtlandmark" placeholder = "Enter Nearest Bus Stop"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Mobile No:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class = "form-control control-input-border" id = "txtMobileNo"/>
+                                                    
+                                                </div>
+
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Mobile No 2:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class = "form-control control-input-border" id = "txtMobileNo2"/>
+                                                    
+                                                </div>
+
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Work Phone:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text"class = "form-control control-input-border" id = "txtWorkPhone"/>
+                                                </div>
+
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">E-mail:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class = "form-control control-input-border" id = "txtemail"/>
+                                                    
+                                                </div>
+
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">E-mail (work):</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class = "form-control control-input-border" id = "txtemailwork"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <button class="btn btn-primary" type="submit" id="SaveCont"><i class="fa fa-save"></i> Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else if (selectedTabIndex == 2)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card">
+                                                <div class="card-header">Next of Kin</div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Full Name:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <input type="text" class = "form-control control-input-border" id = "txtnokName"/>                                                            
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Phone No:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <input type="text" class = "form-control control-input-border" id = "txtnokPhoneNo"/>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Relationship:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <input type="text" class = "form-control control-input-border" id = "txtnokRelationship" />
+                                                            
+                                                        </div>
+                                                        <div class="col-md-3"></div>
+                                                        <div class="col-md-9">
+                                                            <input type="checkbox" value="false" class = "checkbox" id = "chkNokAbove"/>
+                                                            Same as Contact Address
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Address:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <textarea name="nokaddress" class = "form-control control-input-border" id = "txtnokaddress" rows = 6></textarea>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Country:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <select class="form-control control-input-border"  id="cboNOKcountry">
+                                                                <option>----Select----</option>
+                                                            </select>                                                            
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">State:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <select class="form-control control-input-border" id="cboNOKState">
+                                                                <option>----Select----</option>
+                                                            </select>
+                                                            <input type="text" name="Nstate" class = "form-control control-input-border hide-txt" placeholder = "Type the State" id = "txtnokState"/>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="card">
+                                                    <div class="card-header"> In case of emergency, Please Specify...</div>
+                                                    <div class="card-body">
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">FullName:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <input type="text" name="sosName" class = "form-control control-input-border" id = "txtsosName"/>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Phone Number:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <input type="text" name="sosPhoneNo" class = "form-control control-input-border" id = "txtsosPhoneNo"/>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <button class="btn btn-primary" type="submit" id="SaveKin"><i class="fa fa-save"></i> Save </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else if (selectedTabIndex == 3)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Guarantor
+                                                    <div class="alert-danger">Should be minimum of two (2)</div>
+                                                </div>
+
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Full Name:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <input type="text" class = "form-control control-input-border clear" id = "txtGName"/>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Phone No:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <input type="text" class = "form-control control-input-border clear" id = "txtGPhoneNo"/>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Pay Level:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <input type="text" class = "form-control control-input-border clear" id = "txtGPayLevel" />
+                                                            
+                                                        </div>
+                                                        <div class="col-md-3"></div>
+                                                        <div class="col-md-9">
+                                                            <input type="checkbox" class = "checkbox clear" id = "chkGAbove"/>
+                                                            Same as Contact Address
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Address:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <textarea name="Gaddress" class = "form-control control-input-border clear" id = "txtGaddress" rows = 6></textarea>
+                                                           
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Country:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <select name="Gcountry" class="form-control control-input-border clear" id="cboGCountry">
+                                                                <option>----Select----</option>
+                                                            </select>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">State:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <select name="Gstate" class="form-control control-input-border clear" id="cboGState">
+                                                                <option>----Select----</option>
+                                                            </select>
+                                                            <input type="text" class = "form-control control-input-border hide-txt clear" placeholder = "Type the State" id = "txtGState"/>
+                                                            
+                                                        </div>
+
+                                                        <div class="col-md-3 control-space">
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <button class="btn btn-outline-primary" type="submit" id="AddGua"><i class="fa fa-save"></i> Add </button>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Reference
+                                                    <div class="alert-danger">Should be minimum of two (2)</div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Full Name:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <input type="text" class="form-control control-input-border clear"  id="txtRName"/>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Phone No:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <input type="text" class = "form-control control-input-border clear" id = "txtRPhoneNo"/>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Job Position:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <input type="text" class = "form-control control-input-border clear" id = "txtRJobPosition"/>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-3"></div>
+                                                        <div class="col-md-9">
+                                                            <input type="checkbox" class = "checkbox clear" id = "chkRAbove" />
+                                                            Same as Contact Address
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Address:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <textarea type="text" class = "form-control control-input-border clear" id = "txtRaddress" rows = 6 ></textarea>
+                                                          
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">Country:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <select name="Rcountry" class = "form-control control-input-border clear" id = "cboRCountry">
+                                                                <option>----Select----</option>
+                                                            </select>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-3 control-space">
+                                                            <label class="label">State:</label>
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <select name="Rstate" class="form-control control-input-border clear"  id="cboRState">
+                                                                <option>----Select----</option>
+                                                            </select>
+                                                            <input type="text" class = "form-control control-input-border hide-txt clear" placeholder = "Type the State" id = "txtRState"/>
+                                                            
+                                                        </div>
+
+                                                        <div class="col-md-3 control-space">
+                                                        </div>
+                                                        <div class="col-md-9 control-space">
+                                                            <button class="btn btn-outline-primary" type="submit" id="AddRef"><i class="fa fa-save"></i> Add </button>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                 else if (selectedTabIndex == 4)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Blood Group:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class = "form-control control-input-border" id = "txtbgroup"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Genotype:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class = "form-control control-input-border" id = "txtgenot"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Weight:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class = "form-control control-input-border" id = "txtweight" placeholder = "Specify in Kilogram (Kg)"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Height:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class = "form-control control-input-border" id = "txtheight" placeholder = "Specify in Inches (in)"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-4 control-space">
+                                                    <label class="label" id="smokeInd">Do you Smoke?:</label>
+                                                </div>
+                                                <div class="col-md-3 mt-3">
+                                                    <input type="checkbox" class = "checkbox" id = "chksmokeyes"/>
+                                                     Yes
+                                                </div>
+                                                <div class="col-md-3 mt-3">
+                                                    <input type="checkbox" class = "checkbox" id = "chksmokeno"/>
+                                                     No
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label" id="drinkInd">Do you Drink?:</label>
+                                                </div>
+                                                <div class="col-md-4 mt-2">
+                                                    <input type="checkbox" class = "checkbox" id = "chksocial"/>
+                                                    Social Drinker
+                                                </div>
+                                                <div class="col-md-3 mt-2">
+                                                    <input type="checkbox" class = "checkbox" id = "chkmoderate"/>
+                                                    Moderately
+                                                </div>
+                                                <div class="col-md-3"></div>
+                                                <div class="col-md-4">
+                                                    <input type="checkbox" class = "checkbox" id = "chkheavy"/>
+                                                    Heavy Drinker
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="checkbox" class = "checkbox" id = "chknodrink"/>
+                                                    No
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Allergies:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class = "form-control control-input-border" id = "txtallergies" placeholder = "Please indicate if any"/>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-10 control-space"><label class="label">Please Check according to previous/current medical history</label></div>
+                                                <div class="col-md-3"></div>
+                                                <div class="col-md-2">
+                                                    <input type="checkbox" class = "checkbox" id = "chkHBP"/>
+                                                     HBP
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="checkbox" class = "checkbox" id = "chkAsmathic"/>
+                                                     Asmathic
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="checkbox" class = "checkbox" id = "chkDiabetic" />
+                                                     Diabetic
+                                                </div>
+                                                <div class="col-md-3"></div>
+                                                <div class="col-md-2">
+                                                    <input type="checkbox" class = "checkbox" id = "chkCancer"/>
+                                                    Cancer
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="checkbox" class = "checkbox" id = "chkTerminal"/>
+                                                    Terminal Disease
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="checkbox" class = "checkbox" id = "chkOther" />
+                                                    Others
+                                               </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Comments:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <textarea name="medComm" class = "form-control control-input-border" id = "txtmedComm" rows = 6></textarea>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <button class="btn btn-primary" type="submit" id="SaveMed"><i class="fa fa-save"></i> Save </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else if (selectedTabIndex == 5)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Branch:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <select name="branch" class = "form-control control-input-border" id = "cboBranch">
+                                                        <option>----Select----</option>
+                                                    </select>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Date Joined:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class = "form-control control-input-border" id = "txtdateJoined" placeholder = "DD/MM/YYYY"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Grade/Level:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <select name="level" class = "form-control control-input-border" contextmenuid = "cboLevel">
+                                                        <option>----Select----</option>
+                                                    </select>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Date Started:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <input type="text" class = "form-control control-input-border" id = "txtdateStarted" placeholder = "DD/MM/YYYY"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space">
+                                                    <label class="label">Designation:</label>
+                                                </div>
+                                                <div class="col-md-9 control-space">
+                                                    <select class="form-control control-input-border"  id="cbodesignation">
+                                                        <option>----Select----</option>
+                                                    </select>>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-4 control-space">
+                                                    <label class="label">Employement Type:</label>
+                                                </div>
+                                                <div class="col-md-8 control-space">
+                                                    <select class = "form-control control-input-border" id = "cboempType">
+                                                        <option>----Select----</option>
+                                                    </select>
+                                                     
+                                                </div>
+                                                <div class="col-md-4 control-space">
+                                                    <label class="label">Department:</label>
+                                                </div>
+                                                <div class="col-md-8 control-space">
+                                                    <select name="dept" class = "form-control control-input-border" id = "cbodept">
+                                                        <option>----Select----</option>
+                                                    </select>
+                                                   
+                                                </div>
+                                                <div class="col-md-4 control-space">
+                                                    <label class="label">Job Description:</label>
+                                                </div>
+                                                <div class="col-md-8 control-space">
+                                                    <textarea name="jobDescription" class = "form-control control-input-border" id = "txtjobDescription" rows = 6></textarea>
+                                                    
+                                                </div>
+                                                <div class="col-md-4 control-space">
+                                                </div>
+                                                <div class="col-md-8 control-space">
+                                                    <button class="btn btn-primary" type="submit" id="SaveEmployment"><i class="fa fa-save"></i> Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else if (selectedTabIndex == 6)
+                                {
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header"><strong>Work Experience Information </strong></div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-5 control-space">
+                                                            <label class="label">Company Name:</label>
+                                                        </div>
+                                                        <div class="col-md-7 control-space">
+                                                            <input type="text" class="form-control clear control-input-border" id="txtcompName" placeholder="Type Company Name here" />
+
+                                                        </div>
+                                                        <div class="col-md-5 control-space">
+                                                            <label class="label">Job Position:</label>
+                                                        </div>
+                                                        <div class="col-md-7 control-space">
+                                                            <input type="text" class="form-control clear control-input-border" id="txtjobPosition" placeholder="Type Job Position Name here" />
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-4 control-space">
+                                                            <label class="label">Date Joined:</label>
+                                                        </div>
+                                                        <div class="col-md-8 control-space">
+                                                            <input type="text" class="form-control clear control-input-border" id="txtdJoined" placeholder="DD/MM/YYYY" />
+
+                                                        </div>
+                                                        <div class="col-md-4 control-space">
+                                                            <label class="label">Date Left:</label>
+                                                        </div>
+                                                        <div class="col-md-8 control-space">
+                                                            <input type="text" class="form-control clear control-input-border" id="txtdLeft" placeholder="DD/MM/YYYY" />
+
+                                                        </div>
+                                                        <div class="col-md-4 control-space">
+                                                        </div>
+                                                        <div class="col-md-8 control-space">
+                                                            <button class="btn btn-primary" style="margin-bottom:10px;" type="submit" id="addExp"><i class="fa fa-save"></i> Add </button>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="card">
+                                                        <div class="card-header"><strong>LIST OF EXPERIENCES</strong></div>
+                                                        <div class="card-body" id="experienceDataList">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+                                else if (selectedTabIndex == 7)
+                                {
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header"><strong>Educational and Other Qualifications Information </strong></div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-12 control-space">
+                                                            <label class="label">Institution Attended:</label>
+                                                        </div>
+                                                        <div class="col-md-12 control-space">
+                                                            <input type="text" class = "form-control clear control-input-border clear" id = "txtinstiAtt" placeholder = "Type Institution here..."/>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-12 control-space">
+                                                            <label class="label">Degree Obtained:</label>
+                                                        </div>
+                                                        <div class="col-md-12 control-space" style="margin-bottom:10px;">
+                                                            <div class="col-md-12 control-space" style="margin-bottom:10px;">
+                                                                <select name="edudegree" class = "form-control control-input-border clear" id = "txtedudegree">
+                                                                    <option value="Masters Degree">Masters Degree</option>
+                                                                    <option value="Bachelor Degreee">Bachelor Degreee</option>
+                                                                    <option value="SSCE">SSCE</option>
+                                                                    <option value="Others">Others</option>
+                                                                </select>
+                                                               
+                                                            </div>
+                                                            <div class="col-md-12 control-space">
+                                                                <input type="text class = "form-control clear control-input-border clear" id = "txtOthQuali" placeholder = "Please Specify---"/>
+                                                                
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-4 control-space">
+                                                            <label class="label">Year:</label>
+                                                        </div>
+                                                        <div class="col-md-8 control-space">
+                                                            <select name="year" class="form-control clear control-input-border"  id="txtyear">
+                                                                <option>--Year--</option>
+                                                            </select>
+                                                           
+                                                        </div>
+                                                        <div class="col-md-4 control-space">
+                                                        </div>
+                                                        <div class="col-md-8 control-space">
+                                                            <button class="btn btn-primary" type="submit" id="addQualifi"><i class="fa fa-save"></i> Add</button>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="card">
+                                                        <div class="card-header"><strong>LIST OF QUALIFICATIONS</strong></div>
+                                                        <div class="card-body" id="quaDataList">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else if (selectedTabIndex == 8)
+                                {
+                                    <div class="col-md-12">
+                                        <input type="hidden" @bind="empAtt" id = " empAtt" />
+                                        <div class="card">
+                                            <div class="card-header">Upload Documents, Qualifications and Other relevant files</div>
+                                            <div class="card-body">
+                                                <div class="col-sm-6" id="FileBrowse">
+                                                    <input type="file" id="empfileAtt" /><br />
+                                                    <div id="progressbar-5" class="mt-3">
+                                                        <div class="        ">
+                                                        </div>
+                                                    </div><br />
+                                                    <button class="btn btn-outline-info" id="uploadAttachment" type="submit"><i class="fa fa-upload"> Upload File</i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else if (selectedTabIndex == 9)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-3 control-space">
+                                                <label class="label">Bank:</label>
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                <select name="bank" class="form-control control-input-border"  id="cboBank">
+                                                    <option>----Select----</option>
+                                                </select>
+                                                
+                                            </div>
+                                            <div class="col-md-3 control-space">
+                                                <label class="label">Account No:</label>
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                <input type="text" class="form-control control-input-border"  id="txtaccountNumber"/>
+                                                
+                                            </div>
+                                            <div class="col-md-3 control-space">
+                                                <label class="label">Pension:</label>
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                <select name="Pension" class="form-control control-input-border" id="cboPension">
+                                                    <option>----Select----</option>
+                                                </select>
+                                                
+                                            </div>
+                                            <div class="col-md-3 control-space">
+                                                <label class="label">Pension Number:</label>
+                                            </div>
+                                            <div class="col-md-9 control-space">
+                                                <input type="text" class = "form-control control-input-border" id = "txtpensionNumber"/>
+                                                
+                                            </div>
+                                            <div class="col-md-9 control-space" style="margin-left: 0px;">
+                                                <button class="btn btn-primary" type="submit" id="SaveBankDetails"><i class="fa fa-save"></i> Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </TabContents>
+                        </Tabs>
+                 
+                
+                            @*<div class="alert alert-info" id="loading" style="padding:10px; position:absolute;border:2px solid #33bb0b;left:50%;top:50%;">
+                                Please wait.. <span>
+                                    <img src="~/Images/ajax-loader7.gif" />
+                                </span>
+                            </div>         *@              
+                    </div>
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+        </EditForm>
+        
+    </div>
+</div>
+<br />
+
+
+@code {
+    private int RegistrationId;
+    private int empImg;
+    private int empAtt;
+    private string? StaffNo;
+    private string? selectedGender;
+    private string? selectedMarital;
+    private string? selectedNation;
+    private string? selectedState;
+    private string? selectedReligion;
+
+    private int selectedTabIndex = 0;
+
+    private string uploadStatus = string.Empty;
+    private IBrowserFile selectedFile;
+    private string uploadedImagePath = string.Empty;
+
+    PersonalInformationEntity personalInformationEntity = new PersonalInformationEntity();
+    //private InputFile fileInput;
+
+    private async Task SaveEmployee()
+    {
+        await _employeeService.SaveEmployee(personalInformationEntity);
+       
+    }
+    private async Task HandleFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.GetMultipleFiles().FirstOrDefault();
+        if (selectedFile != null)
+        {
+            await ProcessAndSetImage();
+        }
+    }
+
+    private async Task ProcessAndSetImage()
+    {
+        // Resize the image using SixLabors.ImageSharp
+        //var memoryStream = new MemoryStream();
+        //var imageStream = selectedFile.OpenReadStream().CopyToAsync(memoryStream);
+        //var image = SixLabors.ImageSharp.Image.Load(imageStream);
+
+        //// Resize the image to a specified width (e.g., 300 pixels)
+        //var resizedImage = image.Clone(x => x.Resize(new ResizeOptions
+        //    {
+        //        Size = new Size(200, 180), // 0 maintains the aspect ratio
+        //        Mode = ResizeMode.Max
+        //    }));
+
+        //// Save the resized image to a memory stream
+        //var resizedImageStream = new MemoryStream();
+        //resizedImage.SaveAsJpeg(resizedImageStream);
+
+        // Save the resized image to the server
+        var folderPath = "wwwroot/images/"; // Adjust the folder path as needed
+        var filePath = Path.Combine(folderPath, selectedFile.Name);
+
+        await using (FileStream fileStream = new(filePath, FileMode.Create))
+        {
+            await selectedFile.OpenReadStream().CopyToAsync(fileStream);
+        }
+
+        uploadStatus = "Upload successful!";
+        uploadedImagePath = filePath.Substring(filePath.IndexOf("wwwroot", StringComparison.OrdinalIgnoreCase))
+            .Replace("\\", "/"); // Adjust the path separator for cross-platform compatibility
+    }
+
+    private async Task UploadImage()
+    {
+        if (selectedFile != null)
+        {
+            await ProcessAndSetImage();
+        }
+        else
+        {
+            uploadStatus = "No file selected.";
+        }
+    }
+
+    public void SelectTab(int index)
+    {
+        selectedTabIndex = index;
+    }
+    private async Task HandleSubmit()
+    {
+        
+    }
+
+
+}

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PayrollAndHr.Server.Data;
+using PayrollAndHr.Server.Services;
 using PayrollAndHr.Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -9,16 +10,19 @@ using System.Web;
 
 namespace Payroll_Application.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AdminPortalController : Controller
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly IAdminPortalService _adminPortalService;
 
-        public AdminPortalController(AppDbContext appDbContext)
+
+        public AdminPortalController(IAdminPortalService adminPortalService)
         {
-            _appDbContext = appDbContext;
+            _adminPortalService = adminPortalService;
         }
 
-       
+
 
         //        // GET: AdminPortal
         //        public ActionResult Index()
@@ -43,32 +47,31 @@ namespace Payroll_Application.Controllers
 
         //        }
 
-[HttpGet]
+[HttpGet("EmpCount")]
 public ActionResult GetEmpCount()
 {
-    var EmpCount = _appDbContext.PersonalInfo.AsEnumerable().Where(d => d.ID > 0).ToList().Count();
+    var EmpCount = _adminPortalService.GetEmpCount();
+
     return Ok(EmpCount);
 }
-[HttpGet]
+[HttpGet("UserCount")]
 public ActionResult GetUserCount()
 {
-    var EmpCount = _appDbContext.Users.AsEnumerable().Where(d => d.ID > 0).ToList().Count();
+    var EmpCount = _adminPortalService.GetUserCount();
     return Ok(EmpCount);
 }
 
-[HttpGet]
+[HttpGet("StaffLeaveCount")]
 public ActionResult GetStaffLeaveCount()
 {
-    var EmpCount = _appDbContext.Leaves.AsEnumerable().Where(d => d.Status == true).ToList().Count();
+    var EmpCount = _adminPortalService.GetStaffLeaveCount();
     return Ok(EmpCount);
 }
 
-[HttpGet]
+[HttpGet("UnapproveCount")]
 public ActionResult GetUnapproveCount()
 {
-    int unLeaves = _appDbContext.Leaves.AsEnumerable().Where(d => d.IsDeclined == true).ToList().Count();
-    int unLoan = _appDbContext.Messages.AsEnumerable().Where(d => d.IsLoan == true).ToList().Count();
-    int unapprove = unLeaves + unLoan;
+    int unapprove = _adminPortalService.GetUnapproveCount();
     return Ok(unapprove);
 }
     }

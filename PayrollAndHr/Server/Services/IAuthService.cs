@@ -15,5 +15,7 @@ namespace PayrollAndHr.Server.Services
 
         Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword);
         Task<UserEntity> GetUserByEmail(string email);
+        string Encrypt(string datastring);
+        string Dencrypt(string encryptDatastring);
     }
 }

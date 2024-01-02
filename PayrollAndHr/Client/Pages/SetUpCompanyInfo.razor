@@ -1,0 +1,73 @@
+﻿@page "/setupcompanyinfo/"
+@layout PayrollAndHr.Client.Shared.Layouts.SetUpLayout
+<div class="row">
+    <div class="col-md-6">
+
+        <div class="card">
+            <div class="card-header"><b>Setup Company Information</b></div>
+            <div class="card-body">
+                <div class="alert alert-success" id="sucMsg">
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">Company Logo</div>
+                            <div class="card-body">
+                                <div>
+                                    <img width="300" height="250" class="img-thumbnail" id="companyLogo" />
+                                </div>
+                                <form  method="post" enctype = "multipart/form-data">
+                                     <input type="file" id="logo" width="200" height="160" />
+                                    <div class="clearfix"></div>
+
+                                    <br />
+                                    <button class="btn btn-success" id="uploadImg">Upload</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+                <form>
+                
+                    <fieldset class="form-group">
+
+                        <label>Company Name:</label>
+                        <input type="text" class = "form-control control-input-border" id = "companyName" placeholder = "Type Company Name here"/>
+                        
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label>Address:</label>
+                        <textarea name="Compaddress" class = "form-control control-input-border", id = "CompAddress" placeholder = "Type Company Address here" rows = 10></textarea>
+                        
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label>Phone No:</label>
+                        <input type="text" name="PhoneNo" class = "form-control control-input-border" id = "PhoneNo" placeholder = "Type Company Phone Number here" />.
+                        <input type="hidden" id="comgImgUrl"/>
+                    
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label>E-mail Address:</label>
+                        <input type="text" name="email" class = "form-control control-input-border" id = "Email" placeholder = "Type Company E-mail Address here" />
+                       
+                    </fieldset>
+                    <button type="submit" class="btn btn-success" id="SaveComp">Save</button>
+                </form>
+            </div>
+            @*<div class="alert alert-info" id="loading" style="padding:10px; position:absolute;border:2px solid #33bb0b;left:50%;top:50%;">
+                Please wait.. <span>
+                    <img src="~/Images/ajax-loader7.gif" />
+                </span>
+            </div>*@
+        </div>
+
+    </div>
+    <div class="col-md-6">
+    </div>
+</div>
+
+@code {
+
+}

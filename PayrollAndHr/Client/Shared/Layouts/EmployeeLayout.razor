@@ -1,12 +1,12 @@
-﻿@using PayrollAndHr.Client.Services;
-@using PayrollAndHr.Client.Shared.Components
+﻿@using PayrollAndHr.Client.Shared.Components
 @inherits LayoutComponentBase
 
 @inject ISessionStorageService _sessionStorageService;
 
+
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        <EmployeeNavMenu />
     </div>
 
     <main>
@@ -26,7 +26,7 @@
                                     <i class="fa fa-user fa-fw"></i> @username <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user">
-                                    
+
                                     <li>
                                         <a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
                                     </li>
@@ -45,15 +45,15 @@
             </nav>
         </header>
         @*<div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
-*@
+        *@
         <article class="content px-4">
             @Body
         </article>
     </main>
 </div>
-@code{
+@code {
     private string username = "";
 
     protected override async Task OnInitializedAsync()

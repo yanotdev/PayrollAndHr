@@ -2,11 +2,13 @@
 @using PayrollAndHr.Client.Services;
 @using PayrollAndHr.Client.Shared.Components
 @using PayrollAndHr.Shared.Dtos
+
 @page "/"
 
 @inject ISessionStorageService _sessionStorageService;
 @inject IAuthService _authservice
 @inject NavigationManager NavigationManager;
+
 
 <PageTitle>Login</PageTitle>
 
@@ -16,9 +18,16 @@
             <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                 <div class="card bg-dark text-white" style="border-radius: 1rem;">
                     <div class="card-body p-5 text-center">
+                        @if(IsLoading)
+                        {
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        }
 
                         <EditForm Model="@loginDto" OnSubmit="@Login" class="mb-md-5 mt-4 md-2 pb-2">
                             @*<DataAnnotationsValidator />*@
+                           
                             <h2 class="fw-bold mb-2 text-uppercase">Payroll and Hr</h2>
                             <p class="text-white-50 mb-5">Please enter your login and password!</p>
 
@@ -47,25 +56,41 @@
 @code{
 
     LoginDto loginDto = new LoginDto();
+    private bool IsLoading = false;
 
     private async Task Login()
     {
-        var result =  await _authservice.Login(loginDto);
-
+        IsLoading = true;    
+        var result = await _authservice.Login(loginDto);
+        IsLoading = false;
         if (result.Success)
-        {
-            NavigationManager.NavigateTo("dashboard");
-            //var userrole =  await _sessionStorageService.GetItemAsStringAsync("UserRole");
-            //var department = await _sessionStorageService.GetItemAsync<string>("Department");
+        {            
 
-            //if(userrole.ToString() == "Admin" || department.ToString() == "HR")
-            //{
-            //    NavigationManager.NavigateTo("dashboard");
-            //}
-            //NavigationManager.NavigateTo("staffportal");
+            await _sessionStorageService.SetItemAsStringAsync("UserRole", result.UserRole);
+            await _sessionStorageService.SetItemAsStringAsync("UserName", result.UserName);
+
+            var userrole = result?.UserRole;
+            var department = result?.Department;
+
+
+            if(userrole == "Admin" || department == "HR")
+            {
+                NavigationManager.NavigateTo("dashboard");
+            }
+            else{
+                NavigationManager.NavigateTo("staffportal");
+            }
+
         }
-        
+
 
     }
-    
+    //private async Task LoadUser()
+    //{
+    //    System.Threading.Thread.Sleep(2000);
+    //    IsLoading = true;
+    //    // Retrieve data from the server and initialize
+    //    // Employees property which the View will bind
+    //}
+
 }

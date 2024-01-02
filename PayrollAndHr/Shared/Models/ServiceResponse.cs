@@ -12,5 +12,11 @@ namespace PayrollAndHr.Shared.Models
         public bool Success { get; set; } = true;
 
         public string Message { get; set; } = string.Empty;
+
+        public string UserName { get; set; } = string.Empty;
+
+        public string UserRole { get; set; } = string.Empty;
+
+        public string Department { get; set; } = string.Empty;
     }
 }

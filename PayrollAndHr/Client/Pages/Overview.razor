@@ -2,6 +2,7 @@
 @page "/dashboard/"
 @layout PayrollAndHr.Client.Shared.Layouts.MainLayout
 
+@inject HttpClient _httpClient;
 
 <PageTitle>Dashboard Overview</PageTitle>
 
@@ -21,7 +22,7 @@
                     <div class="icon"><i class="icon-check"></i></div>
                     <div class="name">
                         <strong class="text-uppercase">Employees</strong><span></span>
-                        <span class="blue bold" id="EmployeeCount">0</span>
+                        <span class="blue bold" id="EmployeeCount">@empcount.ToString()</span>
                     </div>
                 </div>
             </div>
@@ -30,7 +31,7 @@
                     <div class="icon"><i class="icon-user"></i></div>
                     <div class="name">
                         <strong class="text-uppercase">Users</strong><span></span>
-                        <span class="UserCount blue bold">0</span>
+                        <span class="UserCount blue bold">@usercount.ToString()</span>
                     </div>
                 </div>
             </div>
@@ -39,7 +40,7 @@
                     <div class="icon"><i class="icon-bill"></i></div>
                     <div class="name">
                         <strong class="text-uppercase">Staff on Leave</strong><span></span>
-                        <span class="LeaveCount blue bold">0</span>
+                        <span class="LeaveCount blue bold">@leavecount.ToString()</span>
                     </div>
                 </div>
             </div>
@@ -48,7 +49,7 @@
                     <div class="icon"><i class="icon-list"></i></div>
                     <div class="name">
                         <strong class="text-uppercase">Unapproved Reqs</strong><span></span>
-                        <span class="UnapproveCount blue bold">0</span>
+                        <span class="UnapproveCount blue bold">@unapprovecount.ToString()</span>
                     </div>
                 </div>
             </div>
@@ -80,16 +81,16 @@
                 </div>
                 <div class="col-md-2">
                     <div class="well applink">
-                        <a href="/Setup/Index" title="Company Info and other Setup" >
+                        <NavLink href="/setupindex" title="Company Info and other Setup" Match="NavLinkMatch.All">
                             <div style="color:#160202;"> <span class="fa fa-cog fa-4x"></span><br />  <span class="text-center;">Company Settings</span></div>
-                        </a>
+                        </NavLink>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="well applink">
-                        <a href="/Employee/Index" title="Employee Information Management" >
+                        <NavLink href="/employeeindex" title="Employee Information Management" Match="NavLinkMatch.All">
                             <div style="color:#160202;"> <span class="fa fa-user-circle fa-4x"></span><br />  <span class="text-center;">Employee</span></div>
-                        </a>
+                        </NavLink>
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -123,9 +124,19 @@
 
 
 @code {
-    //LoadEmpCount();
-    //LoadUserCount();
-    //LoadLeaveCount();
-    //LoadUnapproveCount();
+    private string empcount = "";
+    private string usercount = "";
+    private string leavecount = "";
+    private string unapprovecount = "";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        empcount += await _httpClient.GetStringAsync("api/AdminPortal/EmpCount");
+        usercount += await _httpClient.GetStringAsync("api/AdminPortal/UserCount");
+        leavecount += await _httpClient.GetStringAsync("api/AdminPortal/StaffLeaveCount");
+        unapprovecount += await _httpClient.GetStringAsync("api/AdminPortal/UnapproveCount");
+    }
+  
 
 }

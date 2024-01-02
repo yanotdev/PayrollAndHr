@@ -1,0 +1,22 @@
+﻿<style>
+   
+</style>
+<div class="tabs">
+    @TabLinks
+</div>
+
+<div class="tab-content">
+    @TabContents
+</div>
+
+@code {
+    [Parameter] public RenderFragment TabLinks { get; set; }
+    [Parameter] public RenderFragment TabContents { get; set; }
+
+    private int selectedTabIndex = 0;
+
+    public void SelectTab(int index)
+    {
+        selectedTabIndex = index;
+    }
+}
