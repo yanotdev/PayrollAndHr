@@ -13,6 +13,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAdminPortalService, AdminPortalService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IPayrollService, PayrollService>();
 
 builder.Services.AddBlazoredSessionStorage();
 

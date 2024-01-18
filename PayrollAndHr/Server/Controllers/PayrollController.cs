@@ -1,60 +1,263 @@
-﻿//using System;
-//using System.Data;
-//using System.IO;
-//using System.Linq;
-//using System.Web.Mvc;
-//using CrystalDecisions.CrystalReports.Engine;
-//using Payroll_Application.BusinessLayers;
-//using Payroll_Application.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using PayrollAndHr.Server.Services;
+using PayrollAndHr.Shared.Models;
+using System;
+using System.Data;
+using System.IO;
+using System.Linq;
 
-//namespace Payroll_Application.Controllers
-//{
-//	public class PayrollController : Controller
-//    {
-//            AppDbContext db = new AppDbContext();
-//            // GET: Payroll
-//            public ActionResult Index()
-//            {
-//                if (Session["Username"] == null)
-//                {
-//                    return RedirectToAction("Index", "Home");
-//                }
-//                return View();
-//            }
-//            public ActionResult GeneralSetup()
-//            {
-//                if (Session["Username"] == null)
-//                {
-//                    return RedirectToAction("Index", "Home");
-//                }
-//                return View();
-//            }
 
-//        // GET: StaffSetup
-//        public ActionResult StaffSetup()
-//        {
-//            if (Session["UserID"] == null)
-//            {
-//                return RedirectToAction("Index", "Home");
-//            }
-//            return View();
-//        }
-//        public ActionResult GeneratePayroll()
-//        {
-//            if (Session["UserID"] == null)
-//            {
-//                return RedirectToAction("Index", "Home");
-//            }
-//            return View();
-//        }
-//        public ActionResult BankSchedule()
-//        {
-//            if (Session["UserID"] == null)
-//            {
-//                return RedirectToAction("Index", "Home");
-//            }
-//            return View();
-//        }
+namespace Payroll_Application.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PayrollController : Controller
+    {
+        private readonly IPayrollService _payrollService;
+
+        public PayrollController(IPayrollService payrollService)
+        {
+            _payrollService = payrollService;
+        }
+
+        //=================================NEW ALLOWANCE===================================================
+        [HttpGet("GetAllowanceCode")]
+        public ActionResult GetAllowanceCode()
+        {
+            try
+            {
+                string code = _payrollService.GetNextDocumentNo("Allowance", 1100).ToString();
+                return Ok(code);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("SaveAllowance")]
+        public async Task<ActionResult<ServiceResponse<AllowanceEntity>>> SaveAllowancesSet([FromBody] AllowanceEntity allowance)
+        {
+
+            try
+            {
+                var result = await _payrollService.SaveAllowance(allowance);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        [HttpGet("GetAllowances")]
+        public async Task<ActionResult<ServiceResponse<List<AllowanceEntity>>>> LoadAllowances()
+        {
+            try
+            {
+                var result = await _payrollService.LoadAllowances();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
+        }
+        //==============================================================================================
+
+        //=================================NEW PENSION===================================================
+        //Get Pension Code
+        [HttpGet("GetPensionCode")]
+        public ActionResult GetPensionCode()
+        {
+            try
+            {
+                string code = _payrollService.GetNextDocumentNo("Pension", 2200).ToString();
+                return Ok(code);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("SavePension")]
+        public async Task<ActionResult<ServiceResponse<AllowanceEntity>>> SavePensionSet([FromBody] PensionEntity pension)
+        {
+
+            try
+            {
+                var result = await _payrollService.SavePension(pension);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpGet("GetPensions")]
+        public async Task<ActionResult<ServiceResponse<List<AllowanceEntity>>>> LoadPensions()
+        {
+            try
+            {
+                var result = await _payrollService.LoadPensions();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        //==============================================================================================
+
+        //        //=================================NEW LOAN===================================================
+        //        //Get Loan Code
+
+        [HttpGet("GetLoanCode")]
+        public ActionResult GetLoanCode()
+        {
+            try
+            {
+                string code = _payrollService.GetNextDocumentNo("Loan", 3300).ToString();
+                return Ok(code);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("SaveLoan")]
+        public async Task<ActionResult<ServiceResponse<LoanEntity>>> SaveLoanSet([FromBody] LoanEntity loan)
+        {
+
+            try
+            {
+                var result = await _payrollService.SaveLoan(loan);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        [HttpGet("GetLoans")]
+        public async Task<ActionResult<ServiceResponse<List<LoanEntity>>>> LoadLoans()
+        {
+            try
+            {
+                var result = await _payrollService.LoadLoans();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        //==============================================================================================
+
+        //        //=================================NEW PENALTY===================================================
+        //        //Get Penalty Code
+
+        [HttpGet("GetPenaltyCode")]
+        public ActionResult GetPenaltyCode()
+        {
+            try
+            {
+                string code = _payrollService.GetNextDocumentNo("Penalty", 4400).ToString();
+                return Ok(code);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("SavePenalty")]
+        public async Task<ActionResult<ServiceResponse<PenaltyEntity>>> SavePenaltySet([FromBody] PenaltyEntity penalty)
+        {
+
+            try
+            {
+                var result = await _payrollService.SavePenalty(penalty);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpGet("GetPenalty")]
+        public async Task<ActionResult<ServiceResponse<List<PenaltyEntity>>>> LoadPenalties()
+        {
+            try
+            {
+                var result = await _payrollService.LoadPenalties();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //==============================================================================================
+        //        //=================================NEW OTHER ALLOWANCE===================================================
+        //        //Get OtherAllowance Code
+        [HttpGet("GetOtherAllowanceCode")]
+        public ActionResult GetOtherAllowanceCode()
+        {
+            try
+            {
+                string code = _payrollService.GetNextDocumentNo("OtherAllowance", 5500).ToString();
+                return Ok(code);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("SaveOtherAllowance")]
+        public async Task<ActionResult<ServiceResponse<OtherAllowancesEntity>>> SaveOtherAllowancesSet([FromBody] OtherAllowancesEntity otherAllowancesEntity)
+        {
+
+            try
+            {
+                var result = await _payrollService.SaveOtherAllowance(otherAllowancesEntity);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpGet("GetOtherAllowances")]
+        public async Task<ActionResult<ServiceResponse<List<OtherAllowancesEntity>>>> LoadOtherAllowances()
+        {
+            try
+            {
+                var result = await _payrollService.LoadOtherAllowances();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+    }
+}
+
 //        // GET: Loan & PenaltyStatus
 //        public ActionResult PenaltyStatus()
 //        {
@@ -73,7 +276,7 @@
 //        //    rd.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, "Crystal");
 //        //} 
 //        [HttpGet]
-      
+
 //        public ActionResult exportReport(string format, string months)
 //        {
 //            PayrollClass.GeneratePayroll(months);
@@ -86,7 +289,7 @@
 //            Response.ClearHeaders();
 //            try
 //            {
-                
+
 //                if (format == "pdf")
 //                {
 //                    Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
@@ -98,7 +301,7 @@
 //                    stream.Seek(0, SeekOrigin.Begin);
 //                    return File(stream, "application/vnd.ms-excel", $"Payroll Sheet {Name}.xls");
 //                }
-                
+
 //            }
 //            catch
 //            {
@@ -120,7 +323,7 @@
 //            {
 //                return Json("Payroll already generated and confirmed", JsonRequestBehavior.AllowGet);
 //            }
-            
+
 //        }
 //        [HttpGet]
 //        public ActionResult DownloadPayrollHistory(string date ,string format)
@@ -163,8 +366,8 @@
 //            {
 //                return Json("Payroll not found", JsonRequestBehavior.AllowGet);
 //            }
-            
-            
+
+
 
 //        }
 //        //=================================NEW ALLOWANCE===================================================
@@ -673,7 +876,7 @@
 //        {
 //           // decimal nS = 0;
 //            var model = db.Salaries.Where(d => d.StaffNo == staffID).ToList();
-            
+
 //            return Json(model, JsonRequestBehavior.AllowGet);
 //        }
 

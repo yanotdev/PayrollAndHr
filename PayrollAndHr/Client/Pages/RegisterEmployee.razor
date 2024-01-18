@@ -1026,7 +1026,7 @@
     private string? selectedReligion;
 
     private int selectedTabIndex = 0;
-
+    private string Message = "";
     private string uploadStatus = string.Empty;
     private IBrowserFile selectedFile;
     private string uploadedImagePath = string.Empty;
@@ -1036,8 +1036,11 @@
 
     private async Task SaveEmployee()
     {
-        await _employeeService.SaveEmployee(personalInformationEntity);
-       
+        var result = await _employeeService.SaveEmployee(personalInformationEntity);
+        if (result.Success)
+        {
+            Message = result.Message;
+        }
     }
     private async Task HandleFileChange(InputFileChangeEventArgs e)
     {

@@ -30,3 +30,26 @@
 </body>
 
 </html>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    
+    function showCode(e) {
+
+        $.ajax({
+            url: "/Payroll/GetAllowanceCode",
+            type: "GET",
+            cache: false
+        }).done(function (result) {
+            $("#txtcodeAll").val(result);
+            //$("#txtdesAll").val("");
+            //$("#txtallowType").val("");
+            //$("#txtpercent").val("");
+            //$("#txtgrade").val("");
+            //$("#loading").hide();
+        }).fail(function (error) {
+            /*$("#loading").hide();*/
+        });
+        e.preventDefault();
+    };
+    $("#NewAllowance").click(showCode);
+</script>

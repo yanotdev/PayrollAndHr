@@ -17,19 +17,28 @@
             </NavLink>
         </div>
         <div class="nav-item px-3 text-white" @onclick="ToggleVisibility">
-            <i class="fa fa-cog"></i><span class="oi">Setup</span>
+            <i class="fa fa-cog"></i><span>Payroll Module</span>
             <div class="arrow pull-right"><i class="fa fa-angle-down"></i></div>
             @if (IsVisible)
             {
                 <ul id="setupList" class="collapse list-unstyled">
-                    <li> <a href="/setupcompanyinfo">Company Info</a></li>
-                    <li> <a href="/setupaddnewbranch">Branch</a></li>
-                    <li> <a href="/setupemployeeparameter">Employee Parameter</a></li>
-                    <li> <a href="#">Staff Status</a></li>
-                    <li> <a href="#">Document Upload</a></li>
+                    <li> <a href="/generalsetup" onclick="">General Setup</a></li>
+                    <li> <a href="/staffsetup">Staff Setup</a></li>
+                    
                 </ul>
             }
-
+        </div>
+        <div class="nav-item px-3 text-white" @onclick="ToggleVisibility2">
+            <i class="fa fa-bar-chart"></i><span>Payroll Reports</span>
+            <div class="arrow pull-right"><i class="fa fa-angle-down"></i></div>
+            @if (IsVisible2)
+            {
+                <ul id="reportList" class="collapse list-unstyled">
+                    <li><a href="/Payroll/GeneratePayroll">Payroll Report</a></li>
+                    <li> <a href="/Payroll/BankSchedule">Bank Schedule</a></li>
+                    <li> <a href="#">Pension Schedule</a></li>
+                </ul>
+            }
         </div>
 
     </nav>
@@ -38,9 +47,11 @@
 
 @code {
     private bool collapseNavMenu = true;
+    private bool collapseNavMenu2 = true;
     private bool IsVisible = false;
-
+    private bool IsVisible2 = false;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+  
 
     private void ToggleNavMenu()
     {
@@ -51,6 +62,11 @@
     {
         IsVisible = !IsVisible;
     }
+    private void ToggleVisibility2()
+    {
+        IsVisible2 = !IsVisible2;
+    }
 }
+
 
 

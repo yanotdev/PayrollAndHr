@@ -13,9 +13,11 @@ namespace PayrollAndHr.Client.Services
             _httpClient = httpClient;
         }
 
-        public async Task SaveEmployee(PersonalInformationEntity personalInformationEntity)
+        public async Task<ServiceResponse<PersonalInformationEntity>> SaveEmployee(PersonalInformationEntity personalInformationEntity)
         {
-            await _httpClient.PostAsJsonAsync("api/Employee/SavePersonalInformation", personalInformationEntity);            
+           var result = await _httpClient.PostAsJsonAsync("api/Employee/SavePersonalInformation", personalInformationEntity);                      
+           return await result.Content.ReadFromJsonAsync<ServiceResponse<PersonalInformationEntity>>();
+            
         }
     }
 

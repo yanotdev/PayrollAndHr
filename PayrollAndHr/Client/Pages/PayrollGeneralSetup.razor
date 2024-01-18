@@ -1,0 +1,721 @@
+﻿@page "/generalsetup/"
+@using PayrollAndHr.Client.Services;
+@using PayrollAndHr.Client.Shared.Components
+@using PayrollAndHr.Shared.Models;
+@layout PayrollAndHr.Client.Shared.Layouts.PayrollLayout
+@inject IPayrollService _payrollService;
+
+
+<style>
+    .control-space {
+        margin-top: 8px;
+    }
+
+    label {
+        font-weight: bold;
+        font-family: Arial,'Times New Roman', Times, serif;
+        font-size: 14px;
+    }
+
+    .tab-border {
+        border: 1px solid gray;
+        margin-right: 5px;
+        color: black;
+    }
+
+    .hide-txt {
+        display: none;
+    }
+
+    .actionbtn {
+        padding: 2px;
+        margin: 2px;
+    }
+
+</style>
+<div class="card">
+    <div class="card-header"><strong>General/Company Setup</strong></div>
+    <div class="card-body">
+
+
+        <div>
+        
+            <br />
+
+            @if (IsLoading)
+            {
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            }
+            @*<div class="alert alert-danger" id="lblErrorMsg">
+            </div>
+
+            <div class="alert alert-success" id="lblSuccessMsg">
+            </div>*@
+            <div class="row">
+                <div class="col-md-12">
+                    <div style="border:1px solid black; padding:10px;">
+                        <Tabs>
+                            <TabLinks>
+                                <Tab OnTabSelected="(() => SelectTab(0))">Allowance Setup</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(1))">Pension Setup</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(2))">Loan Setup</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(3))">Penalty Setup</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(4))">Other Allowance Setup</Tab>
+                                
+                            </TabLinks>
+
+                            <TabContents>
+                                @if (selectedTabIndex == 0)
+                                {
+                                    <div class="tab-pane fade show active" id="pills-allowance" role="tabpanel" aria-labelledby="pills-allowance-tab">
+                                        <button class="btn btn-primary ml-5" type="submit" style="margin-left: 100px; position:center;" id="NewAllowance" @onclick=@(()=>GetCode("Allowance"))><i class="fa fa-file-o"></i> New</button>
+
+                                @*<button class="btn btn-outline-info" type="submit" id="SaveAllowance"><i class="fa fa-save"></i> Save</button>*@
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-5">
+                                                <EditForm method="post" Model="@allowance" OnSubmit="@SaveAllowance" class="form-inline">
+                                                    <div class="text-danger">@AllowanceMessage</div>
+                                                    <div class="row">
+                                                        <input type="hidden" name="Id" @bind="@allowance.ID"/>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Code:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                    <input type="text" name="codeAll" class="form-control control-input-border" @bind-value="@allowance.Code" id="txtcodeAll" readonly/>
+                                                   
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Description:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                    <input type="text" name="desAll" @bind="@allowance.Description" class = "form-control control-input-border" id = "txtdesAll"/>
+                                                   
+                                                </div>
+                                                <div class="col-md-4 control-space ml-2">
+                                                    <label class="label">Allowance Type:</label>
+                                                </div>
+                                                <div class="col-md-6 control-space"> 
+                                                    <select class="form-control control-input-border"  id="txtallowType" @bind="@allowance.AllType">
+                                                        <option value="Basic">Basic</option>
+                                                        <option value="Housing">Housing</option>
+                                                        <option value="Transport">Transport</option>
+                                                        <option value="Utility">Utility</option>
+                                                        <option value="Lunch">Lunch</option>
+                                                        <option value="Others">Others</option>
+                                                    </select>                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Percentage:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                    <input type="text" name="percent" @bind="@allowance.Percentage" class = "form-control control-input-border" id = "txtpercent" placeholder = "Enter %"/>                                                  
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Grade/Level:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                    <select class="form-control control-input-border" @bind="@allowance.Grade" id="txtgrade">
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                    </select>
+                                                 </div>
+                                                <div class="col-md-4 mt-2">
+
+                                                </div>
+                                                <div class="col-md-4 mt-2">
+                                                    <input type="radio" name="monthly" @bind="@allowance.Period" class = "checkbox" id = "chkmonthly" />Monthly
+                                                    
+                                                </div>
+                                                <div class="col-md-4 mt-2">
+                                                    <input type="radio" name="yearly"  @bind="@allowance.Period" class = "checkbox" id = "chkyearly"/> Yearly
+                                            
+                                                </div>
+                                                <div class="col-md-4"></div>
+                                                <div class="col-md-8 control-space">
+                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="submit" id="SaveAllowance"><i class="fa fa-save"></i> Save </button>
+                                                </div>
+                                            </div>
+                                        </EditForm>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="card">
+                                            <div class="card-header"><strong>Allowances List</strong></div>
+                                            <div class="card-body" id="">
+                                                <table class="table table-bordered table-hover table-custom-border" id="allowancetable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>S/N</th>
+                                                            <th>DESCRIPTION</th>
+                                                            <th>ALLOWANCE</th>
+                                                            <th>%</th>
+                                                            <th>ACTION</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="allowanceBody">
+                                                                @foreach (var m in allowances)
+                                                                {
+                                                                    
+                                                                    <tr>
+                                                                        <td>@m.ID</td>
+                                                                        <td>@m.Description</td>
+                                                                        <td>@m.AllType</td>
+                                                                        <td>@m.Percentage</td>                                                                       
+                                                                        <td>
+                                                                            <a href="#" onclick="Edit(@m.Code)" title="Edit"><i class="fa fa-pencil"></i></a>
+                                                                            &nbsp;&nbsp;&nbsp;
+                                                                            <a href="#" onclick="Delete(@m.Code)" title="Delete"><i class="fa fa-trash"></i></a>
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    </div>
+
+                                }
+                                else if (selectedTabIndex == 1)
+                                {
+
+                                    <button class="btn btn-primary ml-5" type="submit" id="NewPension" @onclick=@(()=>GetCode("Pension")) style="margin-right: 5px;"><i class="fa fa-file-o"></i> New</button>
+
+                                        @*<button class="btn btn-outline-info" type="submit" id="SavePension"><i class="fa fa-save"></i> Save</button>*@
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                            <EditForm Model="@pension" OnSubmit="@SavePension" class="form-inline">
+                                                <div class="text-danger">@PensionMessage</div>
+                                                    <div class="row">
+                                                        <div class="col-md-3 control-space ml-2">
+                                                            <label class="label">Code:</label>
+                                                        </div>
+                                                        <div class="col-md-7 control-space">
+                                                            <input type="text" name="codePen" @bind="@pension.Code" class="form-control control-input-border" id="txtcodePen" disabled />
+
+                                                        </div>
+                                                        <div class="col-md-3 control-space ml-2">
+                                                            <label class="label">Description:</label>
+                                                        </div>
+                                                        <div class="col-md-7 control-space">
+                                                            <input type="text" name="desPen" class="form-control control-input-border" @bind="@pension.Description" id="txtdesPen" />
+
+                                                        </div>
+                                                        <div class="col-md-3 control-space ml-2">
+                                                            <label class="label">Employee %:</label>
+                                                        </div>
+                                                        <div class="col-md-7 control-space">
+                                                            <input type="text" name="empeePer" class="form-control control-input-border" @bind="@pension.EmployeePer" id="txtempeePer" placeholder="Enter %" />
+
+                                                        </div>
+                                                        <div class="col-md-3 control-space ml-2">
+                                                            <label class="label">Employer %:</label>
+                                                        </div>
+                                                        <div class="col-md-7 control-space">
+                                                            <input type="text" name="empPer" class="form-control control-input-border" @bind="@pension.EmployerPer" id="txtempPer" placeholder="Enter %" />
+
+                                                        </div>
+                                                        <div class="col-md-3"></div>
+                                                        <div class="col-md-4 control-space">
+                                                            <button class="btn btn-outline-info" style="margin-bottom:10px;" type="submit" id="SavePension"><i class="fa fa-save"></i> Save </button>
+                                                        </div>
+                                                    </div>
+                                                </EditForm>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="card">
+                                                    <div class="card-header"><strong>Pension Percentage</strong></div>
+                                                    <div class="card-body" id="">
+                                                        <table class="table table-bordered table-hover table-custom-border" id="">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>S/N</th>
+                                                                    <th>DESCRIPTION</th>
+                                                                    <th>EMPLOYEE %</th>
+                                                                    <th>EMPLOYER %</th>
+                                                                    <th>ACTION</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="pensionBody">
+                                                            @foreach (var m in pensions)
+                                                            {
+                                                               
+                                                                <tr>
+                                                                    <td>@m.ID</td>
+                                                                    <td>@m.Description</td>
+                                                                    <td>@m.EmployeePer</td>
+                                                                    <td>@m.EmployerPer</td>
+                                                                    <td>
+                                                                        <a href="#" onclick="Edit(@m.Code)" title="Edit"><i class="fa fa-pencil"></i></a>
+                                                                        &nbsp;&nbsp;&nbsp;
+                                                                        <a href="#" onclick="Delete(@m.Code)" title="Delete"><i class="fa fa-trash"></i></a>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                   
+                                    
+
+                                }
+                                else if (selectedTabIndex == 2)
+                                {
+                                    <button class="btn btn-primary ml-5" type="submit" id="NewLoan" @onclick=@(()=>GetCode("Loan")) style="margin-right: 5px;"><i class="fa fa-file-o"></i> New</button>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <EditForm method="post" Model="@loan" OnSubmit="@SaveLoan" class="form-inline">
+                                                    <div class="text-danger">@LoanMessage</div>
+                                                    <div class="row">
+                                                        <div class="col-md-3 control-space ml-2">
+                                                            <label class="label">Code:</label>
+                                                        </div>
+                                                        <div class="col-md-7 control-space">
+                                                            <input type="text" name="codeLoan" @bind="@loan.Code"class="form-control control-input-border" id="txtcodeLoan" disabled />
+
+                                                        </div>
+                                                        <div class="col-md-3 control-space ml-2">
+                                                            <label class="label">Description:</label>
+                                                        </div>
+                                                        <div class="col-md-7 control-space">
+                                                            <input type="text" name="desLoan" @bind="@loan.Description" class="form-control control-input-border" id="txtdesLoan" />
+
+                                                        </div>
+                                                        <div class="col-md-5 control-space ml-2">
+                                                            <label class="label">Min. Length of Repayment:</label>
+                                                        </div>
+                                                        <div class="col-md-5 control-space">
+                                                            <select name="minor" class="form-control control-input-border"@bind="@loan.MinPay" id="iteminor">
+                                                                <option value="1month">1month</option>
+                                                                <option value="2months">2months</option>
+                                                                <option value="3months">3months</option>
+                                                                <option value="4months">4months</option>
+                                                                <option value="5months">5months</option>
+                                                                <option value="6months">6months</option>
+                                                                <option value="7months">7months</option>
+                                                                <option value="8months">8months</option>
+                                                                <option value="9months">9months</option>
+                                                                <option value="10months">10months</option>
+                                                                <option value="11months">11months</option>
+                                                                <option value="12months">12months</option>
+                                                            </select>
+
+                                                        </div>
+                                                        <div class="col-md-5 control-space ml-2">
+                                                            <label class="label">Max. Length of Repayment:</label>
+                                                        </div>
+                                                        <div class="col-md-5 control-space">
+                                                            <select class="form-control control-input-border" @bind="@loan.MaxPay" id="itemmax">
+                                                            <option value="1month">1month</option>
+                                                            <option value="2months">2months</option>
+                                                            <option value="3months">3months</option>
+                                                            <option value="4months">4months</option>
+                                                            <option value="5months">5months</option>
+                                                            <option value="6months">6months</option>
+                                                            <option value="7months">7months</option>
+                                                            <option value="8months">8months</option>
+                                                            <option value="9months">9months</option>
+                                                            <option value="10months">10months</option>
+                                                            <option value="11months">11months</option>
+                                                            <option value="12months">12months</option>
+                                                            </select>
+
+                                                        </div>
+                                                        <div class="col-md-4"></div>
+                                                        <div class="col-md-8 control-space">
+                                                            <button class="btn btn-outline-info" style="margin-bottom:10px;" type="submit" id="SaveLoan"><i class="fa fa-save"></i> Save </button>
+                                                        </div>
+                                                    </div>
+                                                </EditForm>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="card">
+                                                    <div class="card-header"><strong>Loan List with Repayment Period</strong></div>
+                                                    <div class="card-body">
+                                                        <table class="table table-bordered table-hover table-custom-border">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>S/N</th>
+                                                                    <th>DESCRIPTION</th>
+                                                                    <th>MIN PAY LENGTH</th>
+                                                                    <th>MAX PAY LENGTH</th>
+                                                                    <th>ACTION</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="loanBody">
+                                                                @foreach (var m in loans)
+                                                            {
+                                                               
+                                                                <tr>
+                                                                    <td>@m.ID</td>
+                                                                    <td>@m.Description</td>
+                                                                    <td>@m.MinPay</td>
+                                                                    <td>@m.MaxPay</td>
+                                                                    <td>
+                                                                        <a href="#" onclick="Edit(@m.Code)" title="Edit"><i class="fa fa-pencil"></i></a>
+                                                                        &nbsp;&nbsp;&nbsp;
+                                                                        <a href="#" onclick="Delete(@m.Code)" title="Delete"><i class="fa fa-trash"></i></a>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                   
+
+                                    
+                                }
+                                else if (selectedTabIndex == 3)
+                                {
+
+                                    <button class="btn btn-primary ml-5" type="submit" id="NewPenalty" @onclick=@(()=>GetCode("Penalty")) style="margin-right: 5px;"><i class="fa fa-file-o"></i> New</button>
+
+                                        @*<button class="btn btn-outline-info" type="submit" id="SavePenalty"><i class="fa fa-save"></i> Save</button>*@
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <EditForm method="post" Model="@penalty" OnSubmit="@SavePenalty" class="form-inline">
+                                                    <div class="text-danger">@PenaltyMessage</div>
+                                                    <div class="row">
+                                                        <div class="col-md-3 control-space ml-2">
+                                                            <label class="label">Code:</label>
+                                                        </div>
+                                                        <div class="col-md-7 control-space">
+                                                            <input type="text" name="codePenal" @bind="@penalty.Code"class="form-control control-input-border" id="txtcodePenal" disabled />
+
+                                                        </div>
+                                                        <div class="col-md-3 control-space ml-2">
+                                                            <label class="label">Description:</label>
+                                                        </div>
+                                                        <div class="col-md-7 control-space">
+                                                            <input type="text" name="desPenal" @bind="@penalty.Description"class="form-control control-input-border" id="txtdesPenal" />
+
+                                                        </div>
+                                                        <div class="col-md-2 mt-2">
+                                                        </div>
+                                                        <div class="col-md-4 mt-2">
+                                                            <input type="radio" name="perPen" @bind="@penalty.DeductType"class="checkbox" id="chkperPen" />
+                                                            Percentage
+                                                        </div>
+                                                        <div class="col-md-4 mt-2">
+                                                            <input type="radio" name="loopSum" @bind="@penalty.DeductType"class="checkbox" id="chkloopSum" />
+                                                            Lump Sum
+                                                        </div>
+                                                        <div class="col-md-3 control-space ml-2">
+                                                            <label class="label">Percentage:</label>
+                                                        </div>
+                                                        <div class="col-md-7 control-space">
+                                                            <input type="text" name="percentPenal" @bind="@penalty.Percentage" class="form-control control-input-border" id="txtpercentPenal" placeholder="Enter %" />
+
+                                                        </div>
+                                                        <div class="col-md-4"></div>
+                                                        <div class="col-md-8 control-space">
+                                                            <button class="btn btn-outline-info" style="margin-bottom:10px;" type="submit" id="SavePenalty"><i class="fa fa-save"></i> Save </button>
+                                                        </div>
+                                                    </div>
+                                                </EditForm>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="card">
+                                                    <div class="card-header"><strong>List of Penalities for Employee</strong></div>
+                                                    <div class="card-body">
+                                                        <table class="table table-bordered table-hover table-custom-border">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>S/N</th>
+                                                                    <th>DESCRIPTION</th>
+                                                                    <th>DEDUCTION TYPE</th>
+                                                                    <th>PERCENT</th>
+                                                                    <th>ACTION</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="penaltiesBody">
+                                                            @foreach (var m in penalties)
+                                                            {
+
+                                                                <tr>
+                                                                    <td>@m.ID</td>
+                                                                    <td>@m.Description</td>
+                                                                    <td>@m.DeductType</td>
+                                                                    <td>@m.Percentage</td>
+                                                                    <td>
+                                                                        <a href="#" onclick="Edit(@m.Code)" title="Edit"><i class="fa fa-pencil"></i></a>
+                                                                        &nbsp;&nbsp;&nbsp;
+                                                                        <a href="#" onclick="Delete(@m.Code)" title="Delete"><i class="fa fa-trash"></i></a>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                   
+
+                    @*<div class="alert alert-info" id="loading" style="padding:10px; position:absolute;border:0px;left:50%;top:50%;">
+                        <span>
+                            <img src="~/Images/ajax-loader7.gif" />
+                        </span>
+                    </div>*@
+
+                                }
+                                else if (selectedTabIndex == 4)
+                                {
+                               
+
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                            <EditForm method="post" Model="@otherAllowancesEntity" OnSubmit="@SaveOtherAllowance" class="form-inline">
+
+                                                <button class="btn btn-primary ml-5" type="submit" @onclick=@(()=>GetCode("OtherAllowance")) id="NewOtherAllowance" style="margin-right: 5px;"><i class="fa fa-file-o"></i>New</button>
+                                                    <div class="row">
+                                                        <div class="text-danger">@OtherAllowanceMessage</div>
+                                                        <div class="col-md-3 control-space ml-2">
+                                                            <label class="label">Code:</label>
+                                                        </div>
+                                                        <div class="col-md-7 control-space">
+                                                            <input type="text" name="codeOtherAllowance" @bind="@otherAllowancesEntity.Code"class="form-control control-input-border" id="txtcodeOtherAllowance" disabled />
+
+                                                        </div>
+                                                        <div class="col-md-3 control-space ml-2">
+                                                            <label class="label">Description:</label>
+                                                        </div>
+                                                        <div class="col-md-7 control-space">
+                                                            <input type="text" name="desOtherAllowance" @bind="@otherAllowancesEntity.Description" class="form-control control-input-border" id="txtdesOtherAllowance" />
+
+                                                        </div>
+                                                        <div class="col-md-4"></div>
+                                                        <div class="col-md-8 control-space">
+                                                            <button class="btn btn-outline-info" style="margin-bottom:10px;" type="submit" id="SaveOtherAllowance"><i class="fa fa-save"></i> Save </button>
+                                                        </div>
+                                                    </div>
+                                                </EditForm>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="card">
+                                                    <div class="card-header"><strong>List of Other Allowances</strong></div>
+                                                    <div class="card-body">
+                                                        <table class="table table-bordered table-hover table-custom-border">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>S/N</th>
+                                                                    <th>DESCRIPTION</th>
+                                                                    <th>ACTION</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="otherAllowanceBody">
+                                                            @foreach (var m in otherAllowancesEntities)
+                                                            {
+
+                                                                <tr>
+                                                                    <td>@m.ID</td>
+                                                                    <td>@m.Description</td>                                                                  
+                                                                    
+                                                                    <td>
+                                                                        <a href="#" onclick="Edit(@m.Code)" title="Edit"><i class="fa fa-pencil"></i></a>
+                                                                        &nbsp;&nbsp;&nbsp;
+                                                                        <a href="#" onclick="Delete(@m.Code)" title="Delete"><i class="fa fa-trash"></i></a>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                
+                                }
+                            </TabContents>
+                         </Tabs>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+
+@code {
+
+    private int selectedTabIndex = 0;
+    private string generatedCode= "";
+    private string AllowanceMessage = "";
+    private string PensionMessage = "";
+    private string LoanMessage = "";
+    private string PenaltyMessage = "";
+    private string OtherAllowanceMessage = "";
+    private bool IsLoading = false;
+    [Inject]
+    HttpClient _httpClient { get; set; }
+
+    List<AllowanceEntity> allowances = new List<AllowanceEntity>();
+    List<PensionEntity> pensions = new List<PensionEntity>();
+    List<LoanEntity> loans = new List<LoanEntity>();
+    List<PenaltyEntity> penalties = new List<PenaltyEntity>();
+    List<OtherAllowancesEntity> otherAllowancesEntities = new List<OtherAllowancesEntity>();
+
+    AllowanceEntity allowance = new AllowanceEntity();
+    PensionEntity pension = new PensionEntity();
+    LoanEntity loan = new LoanEntity();
+    PenaltyEntity penalty = new PenaltyEntity();
+    OtherAllowancesEntity otherAllowancesEntity = new OtherAllowancesEntity();
+
+
+
+    public async Task GetCode(string codeType)
+    {
+        if(codeType == "Allowance")
+        {
+            var res = await _httpClient.GetStringAsync("api/Payroll/GetAllowanceCode");
+            allowance.Code = int.Parse(res);
+        }  
+        else if (codeType == "Pension")
+        {
+            var res = await _httpClient.GetStringAsync("api/Payroll/GetPensionCode");
+            pension.Code = int.Parse(res);
+        }
+        else if(codeType == "Loan")
+        {
+            var res = await _httpClient.GetStringAsync("api/Payroll/GetLoanCode");
+            loan.Code = int.Parse(res);
+        }
+        else if (codeType == "Penalty")
+        {
+            var res = await _httpClient.GetStringAsync("api/Payroll/GetPenaltyCode");
+            penalty.Code = int.Parse(res);
+        }
+        else if (codeType == "OtherAllowance")
+        {
+            var res = await _httpClient.GetStringAsync("api/Payroll/GetOtherAllowanceCode");
+            otherAllowancesEntity.Code = int.Parse(res);
+        }
+
+    }
+
+    public async Task SaveAllowance()
+    {
+        IsLoading = true; 
+        var result = await _payrollService.SaveAllowance(allowance);
+        IsLoading = false;
+        if (result.Success)
+        {
+            AllowanceMessage = result.Message;
+
+        }
+        else
+        {
+            AllowanceMessage = "Not Saved Successfully";
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await _payrollService.GetAllowances();
+        allowances = result.Data;
+
+        var res = await _payrollService.GetPensions();
+        pensions = res.Data;
+
+        var loansresult = await _payrollService.GetLoans();
+        loans = loansresult.Data;
+
+        var penaltyresult = await _payrollService.GetPenalties();
+        penalties = penaltyresult.Data;
+
+        var othersresult = await _payrollService.GetOtherAllowances();
+        otherAllowancesEntities = othersresult.Data;
+
+
+    }
+    public async Task SavePension()
+    {
+        IsLoading = true; 
+        var result = await _payrollService.SavePension(pension);
+        IsLoading = false; 
+        if (result.Success)
+        {
+            PensionMessage = result.Message;
+
+        }
+        else
+        {
+            PensionMessage = "Not Saved Successfully";
+        }
+    }
+    public async Task SaveLoan()
+    {
+        IsLoading = true; 
+        var result = await _payrollService.SaveLoan(loan);
+        IsLoading = false; 
+        if (result.Success)
+        {
+            LoanMessage = result.Message;
+
+        }
+        else
+        {
+            LoanMessage = "Not Saved Successfully";
+        }
+    }
+    public async Task SavePenalty()
+    {
+        IsLoading = true;
+        var result = await _payrollService.SavePenalty(penalty);
+        IsLoading = false; 
+        if (result.Success)
+        {
+            PenaltyMessage = result.Message;
+
+        }
+        else
+        {
+            PenaltyMessage = "Not Saved Successfully";
+        }
+    }
+
+    public async Task SaveOtherAllowance()
+    {
+        IsLoading = true; 
+        var result = await _payrollService.SaveOtherAllowance(otherAllowancesEntity);
+        IsLoading = false;
+        if (result.Success)
+        {
+            OtherAllowanceMessage = result.Message;
+
+        }
+        else
+        {
+            OtherAllowanceMessage = "Not Saved Successfully";
+        }
+    }
+    public void SelectTab(int index)
+    {
+        selectedTabIndex = index;
+    }
+}

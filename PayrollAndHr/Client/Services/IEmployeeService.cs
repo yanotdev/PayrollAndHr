@@ -4,6 +4,6 @@ namespace PayrollAndHr.Client.Services
 {
     public interface IEmployeeService
     {
-        Task SaveEmployee(PersonalInformationEntity personalInformationEntity);
+        Task<ServiceResponse<PersonalInformationEntity>> SaveEmployee(PersonalInformationEntity personalInformationEntity);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using PayrollAndHr.Server.Data;
 using PayrollAndHr.Server.Helpers;
 using PayrollAndHr.Shared.Models;
@@ -29,44 +31,83 @@ namespace PayrollAndHr.Server.Services
             var model = _appDbContext.States.Where(d => d.CountryName == CountryName).ToList();
             return model;
         }
-        public async Task SavePersonalInformation(PersonalInformationEntity personal)
-        {
+        //public int GetLastAssetNo()
+        //{
+        //    int lastNo = 0;
+        //    SqlConnection con = new SqlConnection("Data Source=localhost;Initial Catalog=posltd_payrolldb;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        //    string sqlscript = "SELECT MAX(ID) as LastNo FROM tblUser";
+        //    con.Open();
+        //    SqlCommand cmd = new SqlCommand(sqlscript, con);
+        //    SqlDataReader sqlReader = cmd.ExecuteReader();
+        //    while (sqlReader.Read())
+        //    {
+        //        string code = sqlReader.GetValue(0).ToString();
+        //        if (code == "")
+        //        {
+        //            code = "0";
+        //        }
 
-          
-            var oldper = _appDbContext.PersonalInfo.Where(d => d.RegistrationID == personal.RegistrationID).FirstOrDefault();
-            var userInfo = _appDbContext2.Users.FirstOrDefault();
-            if (oldper != null)
-            {
-                oldper.DateofBirth = personal.DateofBirth;
-                oldper.Disability = personal.Disability;
-                oldper.DisabilityDescription = personal.DisabilityDescription;
-                oldper.FirstName = personal.FirstName;
-                oldper.Gender = personal.Gender;
-                oldper.ImageUrl = personal.ImageUrl;
-                oldper.MaritalStatus = personal.MaritalStatus;
-                oldper.MiddleName = personal.MiddleName;
-                oldper.Nationality = personal.Nationality;
-                oldper.Religion = personal.Religion;
-                oldper.SpouseName = personal.SpouseName;
-                oldper.State = personal.State;
-                oldper.Surname = personal.State;
-                oldper.TitleCode = personal.TitleCode;
-            }
-            else
-            {
-                _appDbContext.PersonalInfo.Add(personal);
-            }
-            userInfo.OtherID = personal.StaffNo;
-            userInfo.FullName = personal.Surname + " " + personal.FirstName;
-            userInfo.Password = _authservice.Encrypt(personal.Surname);
-            userInfo.UserRole = personal.StaffStatus;
-            userInfo.Username = personal.FirstName;
-            userInfo.UserID = personal.ID;
-            userInfo.ImageUrl = personal.ImageUrl;
-            _appDbContext2.Users.Add(userInfo);
-            _appDbContext2.SaveChanges();
-            _appDbContext.SaveChanges();
+        //        lastNo = int.Parse(code);
+        //    }
+        //    con.Close();
+        //    return lastNo;
+        //}
+        public async Task<ServiceResponse<PersonalInformationEntity>> SavePersonalInformation(PersonalInformationEntity personal)
+        {
             
+            using (var transaction = _appDbContext.Database.BeginTransaction())
+            {
+                var oldper = _appDbContext.PersonalInfo.Where(d => d.RegistrationID == personal.RegistrationID).FirstOrDefault();
+                var userInfo = _appDbContext2.Users.FirstOrDefault();
+                if (oldper != null)
+                {
+                    oldper.DateofBirth = personal.DateofBirth;
+                    oldper.Disability = personal.Disability;
+                    oldper.DisabilityDescription = personal.DisabilityDescription;
+                    oldper.FirstName = personal.FirstName;
+                    oldper.Gender = personal.Gender;
+                    oldper.ImageUrl = personal.ImageUrl;
+                    oldper.MaritalStatus = personal.MaritalStatus;
+                    oldper.MiddleName = personal.MiddleName;
+                    oldper.Nationality = personal.Nationality;
+                    oldper.Religion = personal.Religion;
+                    oldper.SpouseName = personal.SpouseName;
+                    oldper.State = personal.State;
+                    oldper.Surname = personal.State;
+                    oldper.TitleCode = personal.TitleCode;
+                }
+                else
+                {
+                    //_appDbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[tblPersonalInformation] ON;");
+                    _appDbContext.PersonalInfo.Add(personal);
+                    
+                }
+
+                userInfo.OtherID = personal.StaffNo;
+                userInfo.FullName = personal.Surname + " " + personal.FirstName;
+                userInfo.Password = _authservice.Encrypt(personal.Surname);
+                userInfo.UserRole = personal.StaffStatus;
+                userInfo.Username = personal.FirstName;
+                userInfo.UserID = personal.ID;
+                userInfo.ImageUrl = personal.ImageUrl;
+                _appDbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[tblUser] ON;");
+                _appDbContext2.Users.Add(userInfo);
+                
+                _appDbContext2.SaveChanges();
+                _appDbContext.SaveChanges();
+                //_appDbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[tblPersonalInformation] OFF;");
+                //_appDbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[tblUser] OFF;");
+                
+                //transaction.Commit();
+            }
+            
+            return new ServiceResponse<PersonalInformationEntity>()
+            {
+                Data = personal,
+                Message = "Registration Successful",
+                Success = true,                
+
+            };
         }
 
         public List<EmployList> EmployeeListTa()
@@ -107,6 +148,8 @@ namespace PayrollAndHr.Server.Services
             return Record;
         }
         //Upload Image
+
+
 
         //public ActionResult UploadEmployeePhoto()
         //{

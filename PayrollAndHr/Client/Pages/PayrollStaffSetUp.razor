@@ -1,0 +1,736 @@
+﻿@page "/staffsetup/"
+@using PayrollAndHr.Client.Shared.Components
+@layout PayrollAndHr.Client.Shared.Layouts.PayrollLayout
+
+<style>
+    .control-space {
+        margin-top: 8px;
+    }
+
+    label {
+        font-weight: bold;
+        font-family: Arial,'Times New Roman', Times, serif;
+        font-size: 14px;
+    }
+
+    .tab-border {
+        border: 1px solid gray;
+        showNetTax margin-right: 5px;
+        color: black;
+    }
+
+    .hide-txt {
+        display: none !important;
+    }
+
+    .actionbtn {
+        padding: 2px;
+        margin: 2px;
+    }
+
+    .black {
+        color: rgba(0, 0, 0, 0.79);
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+</style>
+<div class="card">
+    <div class="card-header"><strong>Staff Salary Setup</strong></div>
+    <div class="card-body">
+        @*<div class="row">
+        <button class="btn btn-primary ml-5" type="submit" id="NewSalary" style="margin-left: 0px;"><i class="fa fa-file-o"></i> New</button>
+        </div>*@
+
+        <br />
+        <div class="col-md-10">
+            <div class="row">
+
+                <div class="col-md-3 ">
+                    <label class="label">Search:</label>
+                </div>
+                <div class="col-md-7">
+
+                    <select name="staffId" class="form-control control-input-border" id="cbostaffId">
+                        <option>- - - - - - - - - - Select - - - - - - - - - - </option>
+                    </select>                    
+                </div>
+                <div class="col-md-3 control-space">
+                    <label class="label">Staff Name:</label>
+                </div>
+                <div class="col-md-7 control-space">
+                    <input type="text" name="staffName" class = "form-control control-input-border" id = "cboStaffName" disabled/>
+                    <input type="text" name="staffName" class = "form-control control-input-border hide-txt" placeholder = "Type Name here"id  = "txtstaffNameAdd" />
+                    
+                </div>
+            </div>
+        </div>
+
+        <div>
+
+       
+       
+            <br />
+            @*<div class="alert alert-danger" id="lblErrorMsg">
+        </div>
+
+        <div class="alert alert-success" id="lblSuccessMsg">
+        </div>*@
+            <div class="row">
+                <div class="col-md-12">
+                    <div style="border:1px solid black;">
+                         <Tabs>
+                            <TabLinks>
+                                <Tab OnTabSelected="(() => SelectTab(0))">Salary Setup</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(1))">Staff Loan Setup</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(2))">Penalty Deduction</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(3))">Other Allowance</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(4))">A.V.C</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(5))">PAYE</Tab>
+                            </TabLinks>
+
+                            <TabContents>
+                                @if (selectedTabIndex == 0)
+                                {
+                                     <div class="row">
+                                    <div class="col-md-10">
+                                        <form method="post" class = "form-inline">
+                                        
+                                            <div class="row">
+
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Pay Period:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                        <select name="period" class="form-control control-input-border"  id="cboPeriod">
+                                                            <option>----Select----</option>
+                                                        <option>Monthly </option>
+                                                        <option>Annually </option>
+                                                    </select>                                                  
+                                           
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Basic Allowance:</label>
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                    <select name="allowanceDes1" class = "form-control control-input-border" id = "cboallowanceDes1">
+                                                            <option>----Select----</option>
+                                                    </select>
+                                                    
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <input type="text" name="allowanceType1" class = "form-control control-input-border" id = "cboallowanceType1" placeholder = "Allowance Type" disabled/>
+                                                    
+                                                </div>
+                                                <div class="col-md-1 control-space">
+                                                        <input type="text" name="allPercent1" class = "form-control control-input-border" id = "txtallPercent1" placeholder = "%" disabled/>                                                   
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <input type="text" name="allAmount1" class="form-control control-input-border" id="txtallAmount1" disabled/>
+                                                   
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Housing Allowance:</label>
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                    <select name="allowanceDes2" class = "form-control control-input-border" id = "cboallowanceDes2">
+                                                            <option>----Select----</option>
+                                                    </select>
+                                                    
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <input type="text" name="allowanceType2" class = "form-control control-input-border" id = "cboallowanceType2" disabled placeholder = "Allowance Type"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-1 control-space">
+                                                        <input type="text" name="allPercent2" class = "form-control control-input-border" id = "txtallPercent2" disabled placeholder = "%"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <input type="text" name="allAmount2" class = "form-control control-input-border" id = "txtallAmount2" readonly/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Transport Allowance:</label>
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <select name="allowanceDes3" class="form-control control-input-border"  id="cboallowanceDes3">
+                                                            <option>----Select----</option>
+                                                        </select>
+                                                    
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <input type="text" name="allowanceType3 class = "form-control control-input-border" id = "cboallowanceType3" disabled placeholder = "Allowance Type"/>
+
+                                                </div>
+                                                <div class="col-md-1 control-space">
+                                                        <input type="text" name="allPercent3" class = "form-control control-input-border" id = "txtallPercent3" disabled placeholder = "%"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <input type="text" name="allAmount3" class = "form-control control-input-border" id = "txtallAmount3" disabled/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Utility Allowance:</label>
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <select name="allowanceDes4" class = "form-control control-input-border" id = "cboallowanceDes4">
+                                                            <option>----Select----</option>
+                                                    </select>
+                                                    
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <input type="text" name="allowanceType4" class = "form-control control-input-border" id = "cboallowanceType4" disabled placeholder = "Allowance Type"/> 
+                                                    
+                                                </div>
+                                                <div class="col-md-1 control-space">
+                                                        <input type="text" name="allPercent4" class = "form-control control-input-border",id = "txtallPercent4" disabled placeholder = "%"/>
+
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <input type="text" name="allAmount4" class = "form-control control-input-border" id = "txtallAmount4" disabled/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Lunch Allowance:</label>
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <select name="allowanceDes5" class = "form-control control-input-border" id = "cboallowanceDes5">
+                                                            <option>----Select----</option>
+                                                    </select>
+                                                    
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <input type="text" name="allowanceType5" class = "form-control control-input-border" id = "cboallowanceType5" disabled placeholder = "Allowance Type"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-1 control-space">
+                                                        <input type="text" name="allPercent5" class = "form-control control-input-border" id = "txtallPercent5" disabled placeholder = "%"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <input type="text" name="allAmount5" class = "form-control control-input-border" id = "txtallAmount5" disabled/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Other Allowance:</label>
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <select name="allowanceDes6" class="form-control control-input-border" id="cboallowanceDes6">
+                                                            <option>----Select----</option>
+                                                        </select>
+                                                    
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <input type="text" name="allowanceType6" class = "form-control control-input-border" id = "cboallowanceType6" disabled placeholder = "Allowance Type"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-1 control-space">
+                                                        <input type="text" name="allPercent6" class = "form-control control-input-border" id = "txtallPercent6" disabled placeholder = "%"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-2 control-space">
+                                                        <input type="text" name="allAmount6" class = "form-control control-input-border" id = "txtallAmount6" disabled/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Gross Salary:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                    <input type="text" name="amount" @class = "form-control control-input-border" id = "txtamount"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3"></div>
+                                                @*<div class="col-md-3 control-space">
+                                        <button class="btn btn-dark" type="button" style="margin-bottom:10px;" id="calAllowance"><i class="fa fa-calculator"></i> Calculate Allowance </button>
+                                        </div>*@
+                                                <div class="col-md-3"></div>
+                                                <div class="col-md-3 control-space">
+                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="button" id="SaveSalary"><i class="fa fa-save"></i> Save </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    </div>
+                                }
+                                else if(selectedTabIndex == 1)
+                                {
+                                    <div class="row">
+                                    <div class="col-md-5">
+                                            <form method="post" class="form-inline">
+
+                                         
+                                       
+                                            <div class="row">
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Gross Salary:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                    <input type="text" name="staffSalary" class = "form-control control-input-border" id = "cbostaffSalary" disabled/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Loan Type:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                    <select name="staffLoan" class = "form-control control-input-border" id = "cbostaffLoanType">
+                                                            <option>----Select----</option>
+                                                    </select>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Loan Amount:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                        <input type="text" name="staffLoanAmt" class = "form-control control-input-border" id = "cbostaffLoanAmt" placeholder = "Enter Loan Amount"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Interest (%):</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                        <input type="text" name="interest" class = "form-control control-input-border" id = "txtinterest"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Total Loan Amount:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                        <input type="text" name="totalLoanAmt" class = "form-control control-input-border" id = "txttotalLoanAmt" placeholder = "" disabled"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">No of Installment:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                        <select name="installment" class="form-control control-input-border" id="txtinstallment">
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                        <option>4</option>
+                                                        <option>5</option>
+                                                        <option>6</option>
+                                                        <option>7</option>
+                                                        <option>8</option>
+                                                        <option>9</option>
+                                                        <option>10</option>                                                        
+                                                    </select>
+                                                   
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Repayment Amount:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                        <input type="text" name="repaymentAmt" class = "form-control control-input-border" id = "txtrepaymentAmt" placeholder = "" disabled/>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 ml-2 control-space"></div>
+                                                <div class="col-md-7 control-space">
+                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="button" id="SaveStaffLoan"><i class="fa fa-save"></i> Save </button>
+                                                </div>
+                                            </div>
+                                            </form>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header"><strong>Staff Loan</strong></div>
+                                            <div class="card-body" id="">
+                                                <table class="table table-bordered table-hover table-custom-border" id="">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>S/N</th>
+                                                            <th>Description</th>
+                                                            <th>Loan Amount</th>
+                                                            <th>Interest</th>
+
+                                                            <th>Installment Amount</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="loanBody">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                    <br /><br />
+
+                                }
+                                else if(selectedTabIndex == 2)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <form method="post" class="form-inline">
+                                           
+                                         
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Penalty Type:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                    <select name="penaltyType" class="form-control control-input-border"  id="cbopenaltyType">
+                                                        <option>----Select----</option>
+                                                    </select>
+                                                    
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Deduction Type:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                    <input type="text" name="deductionType" class = "form-control control-input-border" id = "cbodeductionType" disabled/>
+                                                   
+                                                </div>
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Penalty Amount:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                    <input type="text" name="staffDedAmt" class = "form-control control-input-border"id = "cbostaffDedAmt" placeholder = "Enter Amount"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-4"></div>
+                                                <div class="col-md-8 control-space">
+                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="button" id="SaveDeduction"><i class="fa fa-save"></i> Save </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header"><strong>Staff Penalties</strong></div>
+                                                <div class="card-body" id="">
+                                                    <table class="table table-bordered table-hover table-custom-border" id="">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S/N</th>
+                                                                <th>PENALTY</th>
+                                                                <th>DEDUCTION TYPE</th>
+                                                                <th>AMOUNT</th>
+                                                                <th>ACTION</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="penaltyBody">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                }
+                                else if (selectedTabIndex == 3)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <form method="post"class = "form-inline">
+
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Allowance Type:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                    <select name="AllowanceType" class="form-control control-input-border"  id="cboStallowanceType">
+                                                        <option>----Select----</option>
+                                                    </select>
+                                                    <input type="text" name="AllowanceCode" class = "form-control control-input-border hide-txt" id = "txtStaffallowanceCode" />
+                                                    
+                                                </div>
+
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">Allowance Amount:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                    <input type="text" name="staffAllowAmt" class = "form-control control-input-border" id = "cbostaffAllowAmt" placeholder = "Enter Amount" />
+                                                    
+                                                </div>
+                                                <div class="col-md-4"></div>
+                                                <div class="col-md-8 control-space">
+                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="button" id="SaveStaffOtherAllowance"><i class="fa fa-save"></i> Save </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header"><strong>Staff Allowances</strong></div>
+                                                <div class="card-body" id="">
+                                                    <table class="table table-bordered table-hover table-custom-border" id="">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S/N</th>
+                                                                <th>ALLOWANCE TYPE</th>
+                                                                <th>AMOUNT</th>
+                                                                <th>ACTION</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="StaffAllowanceBody">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                }
+                                else if (selectedTabIndex == 4)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <form method="post" class = "form-inline">
+                                            
+
+                                                <div class="col-md-3 control-space ml-2">
+                                                    <label class="label">AVC:</label>
+                                                </div>
+                                                <div class="col-md-7 control-space">
+                                                    <input name="staffAVCAmount" class = "form-control control-input-border" id = "txtStaffAVC" placeholder = "Enter Amount"/>
+                                                    
+                                                </div>
+                                                <div class="col-md-4"></div>
+                                                <div class="col-md-8 control-space">
+                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="button" id="SaveStaffAVC"><i class="fa fa-save"></i> Save </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header"><strong>Staff AVC</strong></div>
+                                                <div class="card-body" id="">
+                                                    <table class="table table-bordered table-hover table-custom-border" id="">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S/N</th>
+                                                                <th>AMOUNT</th>
+                                                                <th>ACTION</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="StaffAVCBody">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                }
+                                else if(selectedTabIndex == 5)
+                                {
+                                    <div class="row">
+                                    <div class="col-md-12">
+                                            <form method="post" class="form-inline">
+
+                                        
+                                       
+                                            <div class="col-md-6">
+                                                <div class="row">
+
+                                                    <div class="col-md-3 control-space">
+                                                        <label class="label">Pay Period:</label>
+                                                    </div>
+                                                    <div class="col-md-7 control-space">
+                                                        <select name="payPeriod" class = "form-control control-input-border" id = "cbopayPeriod">
+                                                            <option>Monthly</option>
+                                                            <option>Annually</option>
+                                                        </select>
+                                                        
+                                                    </div>
+                                                    <div class="col-md-3 control-space">
+                                                        <label class="label">Gross Income:</label>
+                                                    </div>
+                                                    <div class="col-md-9 control-space">
+                                                        <input type="text" name="income" class = "form-control control-input-border" id = "txtIncome" disabled/>
+                                                       
+                                                    </div>
+                                                    <div class="col-md-3 control-space">
+                                                        <label class="label">Basic Salary:</label>
+                                                    </div>
+                                                    <div class="col-md-9 control-space">
+                                                        <input type="text" name="basic" class = "form-control control-input-border" id = "txtbasic" disabled/>
+                                                        
+                                                    </div>
+                                                    <div class="col-md-3 control-space">
+                                                        <label class="label">Housing Allowance:</label>
+                                                    </div>
+                                                    <div class="col-md-9 control-space">
+                                                         <input type="text" name="housing" class = "form-control control-input-border id = "txthousing" disabled/>
+                                                 
+                                                    </div>
+                                                    <div class="col-md-3 control-space">
+                                                        <label class="label">Utility Allowance:</label>
+                                                    </div>
+                                                    <div class="col-md-9 control-space">
+                                                        <input type="text" name="Utility" class = "form-control control-input-border" id = "txtUtility" disabled/>
+                                                        
+                                                    </div>
+                                                    <div class="col-md-3 control-space">
+                                                        <label class="label">Lunch Allowance:</label>
+                                                    </div>
+                                                    <div class="col-md-9 control-space">
+                                                        <input name="Lunch" class = "form-control control-input-border" id = "txtLunch" disabled />
+                                                        
+                                                    </div>
+                                                    <div class="col-md-3 control-space">
+                                                        <label class="label">Transport Allowance:</label>
+                                                    </div>
+                                                    <div class="col-md-9 control-space">
+                                                        <input name="transport" class = "form-control control-input-border" id = "txtTransport" disabled/>
+                                                        
+                                                    </div>
+                                                    <div class="col-md-3 control-space">
+                                                        <label class="label">Others:</label>
+                                                    </div>
+                                                    <div class="col-md-9 control-space">
+                                                        <input type="text" name="others"class = "form-control control-input-border" id = "txtOthers" disabled/>
+                                                        
+                                                    </div>
+                                                    <div class="col-md-3"></div>
+                                                    <div class="col-md-9 control-space">
+                                                        @*<button class="btn btn-dark" type="button" style="margin-bottom:10px;" id="chkDeduction"><i class="fa fa-check-circle"></i> Check </button>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="card">
+                                                        <div class="card-header"> Deductions </div>
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-md-4 control-space">
+                                                                    <label class="label">Loan Deduction:</label>
+                                                                </div>
+                                                                <div class="col-md-8 control-space">
+                                                                    <input type="text" name="loanDeduct" class = "form-control control-input-border" id = "txtloanDeduct" disabled/>
+                                                                    
+                                                                </div>
+                                                                <div class="col-md-4 control-space">
+                                                                    <label class="label">Penalty Deduction:</label>
+                                                                </div>
+                                                                <div class="col-md-8 control-space">
+                                                                    <input type="text" name="penaDeduct" class = "form-control control-input-border" id = "txtpenaDeduct" disabled"/>
+                                                                    
+                                                                </div>
+                                                                <div class="col-md-4 control-space">
+                                                                    <label class="label">AVC:</label>
+                                                                </div>
+                                                                <div class="col-md-8 control-space">
+                                                                        <input type="text" name="avcDeduct" class = "form-control control-input-border" id = "txtavcDeduct" disabled/>
+                                                                    
+                                                                </div>
+                                                                <div class="col-md-9 control-space">
+                                                                    <button class="btn btn-dark hide-txt" type="button" style="margin-bottom:10px;" id="ShowDeduction"><i class="fa fa-circle-o"></i> Show All Deductions </button>
+                                                                </div>
+                                                                <div class="col-md-4 control-space">
+                                                                    <label class="label"> Pension: </label>
+                                                                </div>
+                                                                <div class="col-md-8 control-space">
+                                                                    <input type="text" name="pension" class = "form-control control-input-border" id = "showPension" disabled/>
+                                                                    
+                                                                </div>
+                                                                <div class="col-md-4 control-space">
+                                                                    <label class="label"> NHFC: </label>
+                                                                </div>
+                                                                <div class="col-md-8 control-space">
+                                                                    <input type="text" class = "form-control control-input-border" id = "showNHF" disabled/>
+                                                                </div>
+                                                                <div class="col-md-4 control-space">
+                                                                    <label class="label"> Consolidated Relief: </label>
+                                                                </div>
+                                                                <div class="col-md-8 control-space">
+                                                                        <input type="text" name="CRelief" class = "form-control control-input-border" id = "showCF" disabled/>
+                                                                    
+                                                                </div>
+                                                                <div class="col-md-4 control-space">
+                                                                    <label class="label"> Total Non-Taxable Deduction: </label>
+                                                                </div>
+                                                                <div class="col-md-8 control-space">
+                                                                        <input type="text" name="TNTD" class = "form-control control-input-border" id = "showTotT" disabled/>
+                                                                    
+                                                                </div>
+                                                                <div class="col-md-4 control-space">
+                                                                    <label class="label"> Total Deduction: </label>
+                                                                </div>
+                                                                <div class="col-md-8 control-space">
+                                                                    <input type="text" name="TD" class = "form-control control-input-border" id = "showTotDed" disabled/>
+                                                                    
+                                                                </div>
+                                                                <div class="col-md-4 control-space">
+                                                                    <label class="label"> Net Taxable Income: </label>
+                                                                </div>
+                                                                <div class="col-md-8 control-space">
+                                                                        <input type="text" name="NetTI" form-control control-input-border" id = "showNetTax" disabled/>
+                                                                    
+                                                                </div>
+                                                                <div class="col-md-4 control-space">
+                                                                    <label class="label"> PAYE : </label>
+                                                                </div>
+                                                                <div class="col-md-8 control-space">
+                                                                    <input type="text" name="PAYE form-control control-input-border" id = "showPayE" disabled/>
+                                                                    
+                                                                </div>
+                                                                <div class="col-md-4 control-space">
+                                                                    <label class="label"> Net Salary : </label>
+                                                                </div>
+                                                                <div class="col-md-8 control-space">
+                                                                        <input type="text" name="netSala" form-control control-input-border" id = "showNetSalary" disabled/>
+                                                                    
+                                                                </div>
+                                                                <div class="col-md-5"></div>
+                                                                <div class="col-md-4 control-space">
+                                                                    <button class="btn btn-info" type="button" style="margin-bottom:10px;" id="savePayE"><i class="fa fa-save"></i> Save PAYE </button>
+                                                                </div>
+                                                                @*<div class="col-md-4 control-space">
+                                                        <button class="btn btn-danger" type="button" style="margin-bottom:10px;" id="calculPAYE"><i class="fa fa-calculator"></i> Calculate PAYE </button>
+                                                        </div>*@
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </form>
+                                            <br />
+                                            <br />
+
+                                            <br />
+                                            <div class="col-md-12">
+                                                <div class="card hide-txt" id="payEBody">
+                                                    <div class="card-header"> PAYE for Selected Staff </div>
+                                                    <div class="card-body">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                    </div>
+                                    </div>
+                                }
+                            </TabContents>
+                            </Tabs>
+                        
+                        
+                                
+                            
+                            
+                            
+
+                            
+                     </div>
+                    </div>
+                       @* <div class="alert alert-info" id="loading" style="padding:10px; position:absolute;border:2px solid #33bb0b;left:50%;top:50%;">
+                            Please wait.. <span>
+                                <img src="~/Images/ajax-loader7.gif" />
+                            </span>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+@code {
+    private int selectedTabIndex = 0;
+
+
+    public void SelectTab(int index)
+    {
+        selectedTabIndex = index;
+    }
+}

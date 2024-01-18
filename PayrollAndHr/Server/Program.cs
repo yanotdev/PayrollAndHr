@@ -19,6 +19,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAdminPortalService, AdminPortalService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ISetUpService, SetUpService>();
+builder.Services.AddScoped<IPayrollService, PayrollService>();  
 
 
 

@@ -2,12 +2,11 @@
 @using PayrollAndHr.Client.Shared.Components
 @inherits LayoutComponentBase
 
-
 @inject ISessionStorageService _sessionStorageService;
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        <PayrollNavMenu />
     </div>
 
     <main>
@@ -18,7 +17,7 @@
                     <div class="navbar-holder d-flex align-items-center justify-content-between">
                         <div class="navbar-header">
                             <a id="toggle-btn" href="#" class="menu-btn"><i class="icon-bars"> </i></a><a href="/AdminPortal/Index" class="navbar-brand">
-                                <div class="brand-text hidden-sm-down">@*<span>Bootstrap </span>*@<strong class="text-primary"></strong></div>
+                                <div class="brand-text hidden-sm-down">@*<span>Bootstrap </span>*@<strong class="text-primary">@header</strong></div>
                             </a>
                         </div>
                         <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
@@ -27,7 +26,7 @@
                                     <i class="fa fa-user fa-fw"></i> @username <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user">
-                                    
+
                                     <li>
                                         <a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
                                     </li>
@@ -46,17 +45,17 @@
             </nav>
         </header>
         @*<div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
-*@
+        *@
         <article class="content px-4">
             @Body
         </article>
     </main>
 </div>
-@code{
+@code {
     private string username = "";
-    
+    private string header = "PAYROLL SYSTEM MODULE";
     protected override async Task OnInitializedAsync()
     {
         username += await _sessionStorageService.GetItemAsync<string>("UserName");

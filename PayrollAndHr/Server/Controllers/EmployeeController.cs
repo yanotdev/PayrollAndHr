@@ -34,10 +34,14 @@ namespace Payroll_Application.Controllers
         }
 
         [HttpPost("SavePersonalInformation")]
-        public async Task<ActionResult> SavePersonalInformation([FromBody]PersonalInformationEntity personal)
+        public async Task<ActionResult<ServiceResponse<PersonalInformationEntity>>> SavePersonalInformation([FromBody]PersonalInformationEntity personal)
         {
-            await _employeeService.SavePersonalInformation(personal);
-            return Ok();
+            var result = await _employeeService.SavePersonalInformation(personal);
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
         [HttpGet("EmployeeListTa")]          

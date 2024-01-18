@@ -6,7 +6,7 @@ namespace PayrollAndHr.Server.Services
     public interface IEmployeeService
     {
         List<StateEntity> GetStates(string CountryName);
-        Task SavePersonalInformation(PersonalInformationEntity personal);
+        Task<ServiceResponse<PersonalInformationEntity>> SavePersonalInformation(PersonalInformationEntity personal);
 
         List<EmployList> EmployeeListTa();
     }
