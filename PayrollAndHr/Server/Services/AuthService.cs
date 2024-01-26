@@ -44,8 +44,9 @@ namespace PayrollAndHr.Server.Services
             {
                 response.Success = false;
                 response.Message = "User not found.";
+                
             }
-            else if (!(Dencrypt(user.Password)==loginDto.Password))
+            else if (!(Dencrypt(user.Password) == (loginDto.Password)))
             {
                 response.Success = false;
                 response.Message = "Wrong password.";
@@ -55,6 +56,7 @@ namespace PayrollAndHr.Server.Services
                 response.UserRole = user.UserRole;
                 response.UserName = user.Username;
                 response.Department = user.Department;
+                user.IsLogin = true;
                 response.Data = CreateToken(user);
             }
 

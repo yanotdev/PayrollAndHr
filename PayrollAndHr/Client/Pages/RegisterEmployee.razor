@@ -1,12 +1,16 @@
 ﻿@page "/registeremployee"
+@using Microsoft.Extensions.Hosting;
 @using PayrollAndHr.Client.Services;
 @using PayrollAndHr.Client.Shared.Components
 @using Microsoft.AspNetCore.Components.Web.Extensions
 @layout PayrollAndHr.Client.Shared.Layouts.EmployeeLayout
 @using Microsoft.AspNetCore.Components.Forms
+@using PayrollAndHr.Shared.Dtos;
 @using PayrollAndHr.Shared.Models;
 @using SixLabors.ImageSharp.Processing;
 @using SixLabors.ImageSharp;
+
+
 
 @inject IEmployeeService _employeeService;
 
@@ -52,14 +56,15 @@
     }
 </style>
 <div class="card">
+    
     <div class="card-header"><strong>Employee Information</strong></div>
     <div class="card-body">
-        <button class="btn btn-primary" type="submit" id="NewRecord"><i class="fa fa-file-o"></i> New</button>
+        <button class="btn btn-primary" @onclick=@(()=> GetStaffRegNo()) type="submit" id="NewRecord"><i class="fa fa-file-o"></i> New</button>
 
         <button class="btn btn-primary" type="submit" id="searchRecord"><i class="fa fa-search"></i> Search</button>
 
-        <EditForm Model="@personalInformationEntity" OnSubmit="SaveEmployee" >
-        
+       @* <EditForm Model="@personalInformationEntity" OnSubmit="SaveEmployee" >
+        *@
             <br />
             @*<div class="alert alert-danger" id="lblErrorMsg">
             </div>
@@ -76,7 +81,7 @@
                             </div>
                             <div class="col-md-9">
                                 <input type="text" name="RegID" @bind="@personalInformationEntity.RegistrationID" class = "form-control control-input-border" disabled/>
-                                <input type="hidden" id="empImg" @bind="@personalInformationEntity.ID" />
+                                
                             </div>
 
                             <div class="col-md-3 control-space">
@@ -91,10 +96,8 @@
                             <div class="col-md-9 control-space">
                                 <select name="title" id="cboTitle" class="form-control control-input-border" @bind="@personalInformationEntity.TitleCode">
                                     <option value="">----Select----</option>
-                                    <option value="Mr">Mr</option>
-                                    <option value="Mrs">Mrs</option>
-                                    <option value="Dr">Dr</option>
-                                    <option value="Prof">Prof</option>
+                                    <option value=11>Supervisor</option>
+                                    
                                 </select>
                             </div>
 
@@ -119,25 +122,28 @@
                         </div>
                     </fieldset>
                 </div>
+               
                 <div class="col-md-3">
                     <div class="card">
                         <div class="card-header">Photograph</div>
                         <div class="card-body">
+                            <form method="post" @onsubmit="UploadImage">
                             <div>
-                                <img src="@uploadedImagePath" alt="Uploaded Image" style="width: 300px; height: 250px;" class="img-thumbnail" id="empImage" />
+                                <img src="@personalInformationEntity.ImageUrl" alt="Uploaded Image" style="width: 300px; height: 250px;" class="img-thumbnail" id="empImage" />
                                 
                             </div>
 
-                            <InputFile id="empfile" @bind-Value="@personalInformationEntity.ImageUrl" width="200" height="180" OnChange="HandleFileChange" />
+                            <InputFile  id="empfile" width="200" height="180" OnChange="HandleFileChange" />
                                 <div class="clearfix"></div>
 
                                 <br />
-                                <button class="btn btn-outline-info" @onclick="UploadImage" id="uploadPhoto"><i class="fa fa-upload"> Upload</i></button>
-                            
+                                <button type="submit" class="btn btn-outline-info" id="uploadPhoto"><i class="fa fa-upload"> Upload</i></button>
+                            </form>
                         </div>
                     </div>
 
                 </div>
+                
                 <div class="col-md-4">
                 </div>
             </div>
@@ -150,7 +156,7 @@
                                 <Tab OnTabSelected="(() => SelectTab(0))">Personal Info</Tab>
                                 <Tab OnTabSelected="(() => SelectTab(1))">Contact Info</Tab>
                                 <Tab OnTabSelected="(() => SelectTab(2))">Next of Kin</Tab>
-                                <Tab OnTabSelected="(() => SelectTab(3))">Guarantor and Reference</Tab>
+                                <Tab OnTabSelected="(() => SelectTab(3))">Guarantor & Reference</Tab>
                                 <Tab OnTabSelected="(() => SelectTab(4))">Medical History</Tab>
                                 <Tab OnTabSelected="(() => SelectTab(5))">Employment Info</Tab>
                                 <Tab OnTabSelected="(() => SelectTab(6))">Experience</Tab>
@@ -164,6 +170,7 @@
                                 {
                                     <div class="row">
                                     <div class="col-md-6">
+                                        
                                         <div class="row">
                                             <div class="col-md-3 control-space">
                                                 <label class="label">Date of Birth:</label>
@@ -201,6 +208,8 @@
                                             <div class="col-md-9 control-space">
                                                     <select id="cboNation" @bind="@personalInformationEntity.Nationality" class="form-control control-input-border">
                                                         <option value="">----Select----</option>
+                                                        <option value="Nigeria">Nigeria</option>
+                                                        <option value="Ghana">Ghana</option>
                                                     </select>
                                                 
                                             </div>
@@ -211,6 +220,8 @@
                                             <div class="col-md-9 control-space">
                                                     <select id="cboState" @bind="@personalInformationEntity.State" class="form-control control-input-border">
                                                         <option value="">----Select----</option>
+                                                        <option value="Lagos">Lagos</option>
+                                                        <option value="Benin">Benin</option>
                                                     </select>
                                                     <input type="text" name="state" class="form-control control-input-border hide-txt" placeholder="Type the State" , id="txtstate" />
                                                          
@@ -249,6 +260,7 @@
                                             </div>
                                             <div class="col-md-9 control-space">
                                                     <select id="cboDisability" @bind="@personalInformationEntity.Disability" class="form-control control-input-border">
+                                                        <option value="---Select---">---Select---</option>
                                                         <option value="No">No</option>
                                                         <option value="Yes">Yes</option>                                                        
                                                     </select>
@@ -265,7 +277,7 @@
                                             <div class="col-md-3 control-space">
                                             </div>
                                             <div class="col-md-9 control-space">
-                                                    <button class="btn btn-primary" type="submit" id="SavePersonal"><i class="fa fa-save"></i> Save</button>
+                                                <button class="btn btn-primary" @onclick="()=> SaveEmployee()" type="submit" id="SavePersonal"><i class="fa fa-save"></i> Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -274,43 +286,52 @@
                                 }
                                 else if (selectedTabIndex == 1)
                                 {
+                                 <EditForm Model="empContactInfoEntity" OnSubmit="SubmitContactInfo">   
                                     <div class="row">
+                                        
+                                               
                                         <div class="col-md-6">
+                                            <div class="text-danger">
+                                                @ContactMessage
+                                            </div>
                                             <div class="row">
+                                                @*<input type="hidden" @bind="empContactInfoEntity.ID"/>*@
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">Address:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <textarea name="address" class="form-control control-input-border" id="txtaddress" , rows=6></textarea>                                                    
+                                                    <textarea name="address" @bind="@empContactInfoEntity.Address" class="form-control control-input-border" id="txtaddress" rows=6></textarea>                                                    
                                                 </div>
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">City:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class="form-control control-input-border" , id="txtcity" />
+                                                    <input type="text" @bind="@empContactInfoEntity.City" class="form-control control-input-border" id="txtcity" />
                                                 </div>
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">Country:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <select name="country" class="form-control control-input-border"  id="cbocountry">
-                                                        <option>----Select----</option>
+                                                    <select name="country" @bind="@empContactInfoEntity.Country" class="form-control control-input-border"  id="cbocountry">
+                                                        <option value="Nigeria">Nigeria</option>
+                                                        <option value="Ghana">Ghana</option>
                                                     </select>                                                   
                                                 </div>
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">State:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <select name="state" class="form-control control-input-border" id="cboStateAdd">
-                                                        <option>----Select----</option>
+                                                    <select name="state" @bind="@empContactInfoEntity.State" class="form-control control-input-border" id="cboStateAdd">
+                                                        <option value="Lagos">Lagos</option>
+                                                        <option value="Benin">Benin</option>
                                                     </select>
-                                                    <input type="text" class = "form-control control-input-border hide-txt" placeholder = "Type the State" id = "txtstateAdd" />
+                                                    
                                                    </div>
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">L.G.A:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class = "form-control control-input-border" id = "txtlga"/>
+                                                    <input type="text" @bind="@empContactInfoEntity.LGA" class = "form-control control-input-border" id = "txtlga"/>
                                                     
                                                 </div>
                                             </div>
@@ -321,14 +342,14 @@
                                                     <label class="label">Landmark:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class = "form-control control-input-border"id = "txtlandmark" placeholder = "Enter Nearest Bus Stop"/>
+                                                    <input type="text"@bind="@empContactInfoEntity.Landmark" class = "form-control control-input-border"id = "txtlandmark" placeholder = "Enter Nearest Bus Stop"/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">Mobile No:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class = "form-control control-input-border" id = "txtMobileNo"/>
+                                                    <input type="text"@bind="@empContactInfoEntity.MobileNo" class = "form-control control-input-border" id = "txtMobileNo"/>
                                                     
                                                 </div>
 
@@ -336,7 +357,7 @@
                                                     <label class="label">Mobile No 2:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class = "form-control control-input-border" id = "txtMobileNo2"/>
+                                                    <input type="text" @bind="@empContactInfoEntity.MobileNo2" class = "form-control control-input-border" id = "txtMobileNo2"/>
                                                     
                                                 </div>
 
@@ -344,14 +365,14 @@
                                                     <label class="label">Work Phone:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text"class = "form-control control-input-border" id = "txtWorkPhone"/>
+                                                    <input type="text"  @bind="@empContactInfoEntity.WorkPhoneNo" class = "form-control control-input-border" id = "txtWorkPhone"/>
                                                 </div>
 
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">E-mail:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class = "form-control control-input-border" id = "txtemail"/>
+                                                    <input type="text" @bind="@empContactInfoEntity.Email" class = "form-control control-input-border" id = "txtemail"/>
                                                     
                                                 </div>
 
@@ -359,7 +380,7 @@
                                                     <label class="label">E-mail (work):</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class = "form-control control-input-border" id = "txtemailwork"/>
+                                                    <input type="text" @bind="@empContactInfoEntity.WorkEmail" class = "form-control control-input-border" id = "txtemailwork"/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space">
@@ -368,13 +389,20 @@
                                                     <button class="btn btn-primary" type="submit" id="SaveCont"><i class="fa fa-save"></i> Save</button>
                                                 </div>
                                             </div>
+                                            
                                         </div>
-                                    </div>
+                                     </div>
+                                </EditForm>
                                 }
                                 else if (selectedTabIndex == 2)
                                 {
+
+                                    <EditForm Model="@nextofKinEntity" OnSubmit="SubmitNextOfkin">
                                     <div class="row">
                                         <div class="col-md-12">
+                                            <div class="text-danger">
+                                                @NextofKinMessage
+                                            </div>
                                             <div class="card">
                                                 <div class="card-header">Next of Kin</div>
                                                 <div class="card-body">
@@ -383,48 +411,52 @@
                                                             <label class="label">Full Name:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <input type="text" class = "form-control control-input-border" id = "txtnokName"/>                                                            
+                                                            <input type="text" @bind="nextofKinEntity.Name"class = "form-control control-input-border" id = "txtnokName"/>                                                            
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">Phone No:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <input type="text" class = "form-control control-input-border" id = "txtnokPhoneNo"/>
+                                                            <input type="text" @bind="nextofKinEntity.Contact" class = "form-control control-input-border" id = "txtnokPhoneNo"/>
                                                             
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">Relationship:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <input type="text" class = "form-control control-input-border" id = "txtnokRelationship" />
+                                                            <input type="text" @bind="nextofKinEntity.Relationship" class = "form-control control-input-border" id = "txtnokRelationship" />
                                                             
                                                         </div>
                                                         <div class="col-md-3"></div>
                                                         <div class="col-md-9">
-                                                            <input type="checkbox" value="false" class = "checkbox" id = "chkNokAbove"/>
+                                                            <input type="checkbox" value="false" @onchange="Check" class = "checkbox" id = "chkNokAbove"/>
                                                             Same as Contact Address
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">Address:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <textarea name="nokaddress" class = "form-control control-input-border" id = "txtnokaddress" rows = 6></textarea>
+                                                            <textarea name="nokaddress" @bind="nextofKinEntity.Address" class = "form-control control-input-border" id = "txtnokaddress" rows=6></textarea>
                                                             
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">Country:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <select class="form-control control-input-border"  id="cboNOKcountry">
+                                                            <select @bind="nextofKinEntity.Country"class="form-control control-input-border"  id="cboNOKcountry">
                                                                 <option>----Select----</option>
+                                                                <option value="Nigeria">Nigeria</option>
+                                                                <option value="Ghana">Ghana</option>
                                                             </select>                                                            
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">State:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <select class="form-control control-input-border" id="cboNOKState">
+                                                            <select @bind="nextofKinEntity.State" class="form-control control-input-border" id="cboNOKState">
                                                                 <option>----Select----</option>
+                                                                <option value="Lagos">Lagos</option>
+                                                                <option value="Benin">Benin</option>
                                                             </select>
                                                             <input type="text" name="Nstate" class = "form-control control-input-border hide-txt" placeholder = "Type the State" id = "txtnokState"/>
                                                             
@@ -439,14 +471,14 @@
                                                             <label class="label">FullName:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <input type="text" name="sosName" class = "form-control control-input-border" id = "txtsosName"/>
+                                                            <input type="text" @bind="nextofKinEntity.FullName" name="sosName" class = "form-control control-input-border" id = "txtsosName"/>
                                                             
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">Phone Number:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <input type="text" name="sosPhoneNo" class = "form-control control-input-border" id = "txtsosPhoneNo"/>
+                                                            <input type="text" @bind="nextofKinEntity.PhoneNo" name="sosPhoneNo" class = "form-control control-input-border" id = "txtsosPhoneNo"/>
                                                             
                                                         </div>
                                                         <div class="col-md-3 control-space">
@@ -459,11 +491,17 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </EditForm>
                                 }
                                 else if (selectedTabIndex == 3)
                                 {
+
                                     <div class="row">
-                                        <div class="col-md-6">
+                                    <EditForm Model="gurrantorEntity" OnSubmit="SaveGuarantorInfo" class="col-md-6">
+                                        <div>
+                                            <div class="text-danger">
+                                                @GuarantorMessage
+                                            </div>
                                             <div class="card">
                                                 <div class="card-header">
                                                     Guarantor
@@ -476,41 +514,43 @@
                                                             <label class="label">Full Name:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <input type="text" class = "form-control control-input-border clear" id = "txtGName"/>
+                                                            <input type="text" @bind="gurrantorEntity.GFullName"class = "form-control control-input-border clear" id = "txtGName"/>
                                                             
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">Phone No:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <input type="text" class = "form-control control-input-border clear" id = "txtGPhoneNo"/>
+                                                            <input type="text" @bind="gurrantorEntity.GPhoneNo" class = "form-control control-input-border clear" id = "txtGPhoneNo"/>
                                                             
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">Pay Level:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <input type="text" class = "form-control control-input-border clear" id = "txtGPayLevel" />
+                                                            <input type="text" @bind="gurrantorEntity.GPayLevel" class = "form-control control-input-border clear" id = "txtGPayLevel" />
                                                             
                                                         </div>
                                                         <div class="col-md-3"></div>
                                                         <div class="col-md-9">
-                                                            <input type="checkbox" class = "checkbox clear" id = "chkGAbove"/>
+                                                            <input type="checkbox" @onchange="Check" class = "checkbox clear" id = "chkGAbove"/>
                                                             Same as Contact Address
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">Address:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <textarea name="Gaddress" class = "form-control control-input-border clear" id = "txtGaddress" rows = 6></textarea>
+                                                            <textarea name="Gaddress" @bind="gurrantorEntity.GAddress"class = "form-control control-input-border clear" id = "txtGaddress" rows=6></textarea>
                                                            
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">Country:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <select name="Gcountry" class="form-control control-input-border clear" id="cboGCountry">
+                                                            <select name="Gcountry" @bind="gurrantorEntity.GCountry"class="form-control control-input-border clear" id="cboGCountry">
                                                                 <option>----Select----</option>
+                                                                <option value="Nigeria">Nigeria</option>
+                                                                <option value="Ghana">Ghana</option>
                                                             </select>
                                                             
                                                         </div>
@@ -518,8 +558,10 @@
                                                             <label class="label">State:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <select name="Gstate" class="form-control control-input-border clear" id="cboGState">
+                                                            <select name="Gstate" @bind="gurrantorEntity.GState"class="form-control control-input-border clear" id="cboGState">
                                                                 <option>----Select----</option>
+                                                                <option value="Lagos">Lagos</option>
+                                                                <option value="Benin">Benin</option>
                                                             </select>
                                                             <input type="text" class = "form-control control-input-border hide-txt clear" placeholder = "Type the State" id = "txtGState"/>
                                                             
@@ -535,7 +577,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                    </EditForm>
+                                    <EditForm Model="referenceEntity" OnSubmit="SaveReferenceInfo" class="col-md-6">
+                                        <div>
+                                            <div class="text-danger">
+                                                @ReferenceMessage
+                                            </div>
                                             <div class="card">
                                                 <div class="card-header">
                                                     Reference
@@ -547,41 +594,43 @@
                                                             <label class="label">Full Name:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <input type="text" class="form-control control-input-border clear"  id="txtRName"/>
+                                                            <input type="text" @bind="referenceEntity.RFullName" class="form-control control-input-border clear"  id="txtRName"/>
                                                             
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">Phone No:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <input type="text" class = "form-control control-input-border clear" id = "txtRPhoneNo"/>
+                                                            <input type="text" @bind="referenceEntity.RPhoneNo" class = "form-control control-input-border clear" id = "txtRPhoneNo"/>
                                                             
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">Job Position:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <input type="text" class = "form-control control-input-border clear" id = "txtRJobPosition"/>
+                                                            <input type="text" @bind="referenceEntity.RJobPosition" class = "form-control control-input-border clear" id = "txtRJobPosition"/>
                                                             
                                                         </div>
                                                         <div class="col-md-3"></div>
                                                         <div class="col-md-9">
-                                                            <input type="checkbox" class = "checkbox clear" id = "chkRAbove" />
+                                                            <input type="checkbox" @onchange="CheckRefAd" class = "checkbox clear" id = "chkRAbove" />
                                                             Same as Contact Address
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">Address:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <textarea type="text" class = "form-control control-input-border clear" id = "txtRaddress" rows = 6 ></textarea>
+                                                            <textarea type="text" @bind="referenceEntity.RAddress" class = "form-control control-input-border clear" id = "txtRaddress" rows=6></textarea>
                                                           
                                                         </div>
                                                         <div class="col-md-3 control-space">
                                                             <label class="label">Country:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <select name="Rcountry" class = "form-control control-input-border clear" id = "cboRCountry">
+                                                            <select name="Rcountry" @bind="referenceEntity.RCountry"class = "form-control control-input-border clear" id = "cboRCountry">
                                                                 <option>----Select----</option>
+                                                                <option value="Nigeria">Nigeria</option>
+                                                                <option value="Ghana">Ghana</option>
                                                             </select>
                                                             
                                                         </div>
@@ -589,8 +638,10 @@
                                                             <label class="label">State:</label>
                                                         </div>
                                                         <div class="col-md-9 control-space">
-                                                            <select name="Rstate" class="form-control control-input-border clear"  id="cboRState">
+                                                            <select name="Rstate"@bind="referenceEntity.RState" class="form-control control-input-border clear"  id="cboRState">
                                                                 <option>----Select----</option>
+                                                                <option value="Lagos">Lagos</option>
+                                                                <option value="Benin">Benin</option>
                                                             </select>
                                                             <input type="text" class = "form-control control-input-border hide-txt clear" placeholder = "Type the State" id = "txtRState"/>
                                                             
@@ -606,61 +657,66 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </EditForm>
                                     </div>
                                 }
                                  else if (selectedTabIndex == 4)
                                 {
+                                    <EditForm Model="medicalEntity" OnSubmit="SaveMedicalHis">
                                     <div class="row">
                                         <div class="col-md-6">
+                                            <div class="text-danger">
+                                                @MedicalHisMessage
+                                            </div>
                                             <div class="row">
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">Blood Group:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class = "form-control control-input-border" id = "txtbgroup"/>
+                                                    <input type="text" @bind="medicalEntity.BGroup" class = "form-control control-input-border" id = "txtbgroup"/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">Genotype:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class = "form-control control-input-border" id = "txtgenot"/>
+                                                    <input type="text" @bind="medicalEntity.Genotype" class = "form-control control-input-border" id = "txtgenot"/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">Weight:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class = "form-control control-input-border" id = "txtweight" placeholder = "Specify in Kilogram (Kg)"/>
+                                                    <input type="text" @bind="medicalEntity.Weight"class = "form-control control-input-border" id = "txtweight" placeholder = "Specify in Kilogram (Kg)"/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">Height:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class = "form-control control-input-border" id = "txtheight" placeholder = "Specify in Inches (in)"/>
+                                                    <input type="text" @bind="medicalEntity.Height"class = "form-control control-input-border" id = "txtheight" placeholder = "Specify in Inches (in)"/>
                                                     
                                                 </div>
                                                 <div class="col-md-4 control-space">
                                                     <label class="label" id="smokeInd">Do you Smoke?:</label>
                                                 </div>
                                                 <div class="col-md-3 mt-3">
-                                                    <input type="checkbox" class = "checkbox" id = "chksmokeyes"/>
+                                                    <input type="checkbox" name="smoke" @onchange="CheckYes" class="checkbox" id="chksmokeyes" />
                                                      Yes
                                                 </div>
                                                 <div class="col-md-3 mt-3">
-                                                    <input type="checkbox" class = "checkbox" id = "chksmokeno"/>
+                                                    <input type="checkbox" name="smoke" @onchange="CheckNo" class = "checkbox" id = "chksmokeno"/>
                                                      No
                                                 </div>
                                                 <div class="col-md-3 control-space">
                                                     <label class="label" id="drinkInd">Do you Drink?:</label>
                                                 </div>
                                                 <div class="col-md-4 mt-2">
-                                                    <input type="checkbox" class = "checkbox" id = "chksocial"/>
+                                                    <input type="checkbox" name="drink" @onchange="CheckSocialDrinker"class = "checkbox" id = "chksocial"/>
                                                     Social Drinker
                                                 </div>
                                                 <div class="col-md-3 mt-2">
-                                                    <input type="checkbox" class = "checkbox" id = "chkmoderate"/>
+                                                    <input type="checkbox" name="drink" @onchange="CheckModDrinker" class="checkbox" id="chkmoderate" />
                                                     Moderately
                                                 </div>
                                                 <div class="col-md-3"></div>
@@ -725,6 +781,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </EditForm>
                                 }
                                 else if (selectedTabIndex == 5)
                                 {
@@ -935,7 +992,7 @@
                                 else if (selectedTabIndex == 8)
                                 {
                                     <div class="col-md-12">
-                                        <input type="hidden" @bind="empAtt" id = " empAtt" />
+                                        <input type="hidden"  id = "empAtt" />
                                         <div class="card">
                                             <div class="card-header">Upload Documents, Qualifications and Other relevant files</div>
                                             <div class="card-body">
@@ -1007,7 +1064,7 @@
                 <div class="col-md-2">
                 </div>
             </div>
-        </EditForm>
+        @*</EditForm>*@
         
     </div>
 </div>
@@ -1015,71 +1072,140 @@
 
 
 @code {
-    private int RegistrationId;
-    private int empImg;
-    private int empAtt;
-    private string? StaffNo;
-    private string? selectedGender;
-    private string? selectedMarital;
-    private string? selectedNation;
-    private string? selectedState;
-    private string? selectedReligion;
-
+    private bool _check = false;
     private int selectedTabIndex = 0;
     private string Message = "";
     private string uploadStatus = string.Empty;
     private IBrowserFile selectedFile;
     private string uploadedImagePath = string.Empty;
+    private string regNo = string.Empty;
+    private string ContactMessage = string.Empty;
+    private string NextofKinMessage = string.Empty;
+    private string GuarantorMessage = string.Empty;
+    private string ReferenceMessage = string.Empty;
+    private string MedicalHisMessage = string.Empty;
+
+    [Inject]
+
+    private HttpClient _httpClient { get; set; }
+
+
 
     PersonalInformationEntity personalInformationEntity = new PersonalInformationEntity();
+    RegistrationPara registrationPara = new RegistrationPara();
+    EmpContactInfoEntity empContactInfoEntity = new EmpContactInfoEntity();
+    NextofKinEntity nextofKinEntity = new NextofKinEntity();
+    GurrantorEntity gurrantorEntity = new GurrantorEntity();
+    ReferenceEntity referenceEntity = new ReferenceEntity();
+    MedicalEntity medicalEntity = new MedicalEntity();
+
     //private InputFile fileInput;
 
     private async Task SaveEmployee()
     {
+        personalInformationEntity.StaffStatus = "REGULAR";
         var result = await _employeeService.SaveEmployee(personalInformationEntity);
         if (result.Success)
         {
             Message = result.Message;
         }
     }
+    private async Task SubmitContactInfo()
+    {
+        empContactInfoEntity.RegistrationID = personalInformationEntity.RegistrationID;
+        empContactInfoEntity.StaffNo = personalInformationEntity.StaffNo;
+
+        var result = await _employeeService.SaveContact(empContactInfoEntity);
+        if (result.Success)
+        {
+            ContactMessage = result.Message;
+        }
+
+    }
+    private async Task SubmitNextOfkin()
+    {
+        if(_check == true)
+        {
+            nextofKinEntity.Address = empContactInfoEntity.Address;
+        }
+        nextofKinEntity.RegistrationID = personalInformationEntity.RegistrationID;
+        var result = await _employeeService.SaveNextOfKin(nextofKinEntity);
+        if (result.Success)
+        {
+            NextofKinMessage = result.Message;
+        }
+    }
+    private async Task SaveGuarantorInfo()
+    {
+        if(_check == true)
+        {
+            gurrantorEntity.GAddress = empContactInfoEntity.Address;
+        }
+        gurrantorEntity.RegistrationID = personalInformationEntity.RegistrationID;
+        var result = await _employeeService.SaveGuarantor(gurrantorEntity);
+        if (result.Success)
+        {
+            GuarantorMessage = result.Message;
+        }
+    }
+    private async Task SaveReferenceInfo()
+    {
+        
+        referenceEntity.RegistrationID = personalInformationEntity.RegistrationID;
+        var result = await _employeeService.SaveReference(referenceEntity);
+        if (result.Success)
+        {
+            ReferenceMessage = result.Message;
+        }
+    }
+    private async Task SaveMedicalHis()
+    {
+        if (_check == true)
+        {
+
+        }
+        medicalEntity.RegistrationID = personalInformationEntity.RegistrationID;
+        var result = await _employeeService.SaveMedicalHis(medicalEntity);
+        if (result.Success)
+        {
+            MedicalHisMessage = result.Message;
+        }
+    }
+    private async Task GetStaffRegNo()
+    {
+        var result = await _employeeService.GetRegistrationNo();
+
+        personalInformationEntity.RegistrationID = result.RegistrationID;
+        personalInformationEntity.StaffNo = result.StaffNo;
+
+    }
     private async Task HandleFileChange(InputFileChangeEventArgs e)
     {
         selectedFile = e.GetMultipleFiles().FirstOrDefault();
-        if (selectedFile != null)
-        {
-            await ProcessAndSetImage();
-        }
+        //if (selectedFile != null)
+        //{
+        //    await ProcessAndSetImage();
+        //}
     }
 
     private async Task ProcessAndSetImage()
     {
-        // Resize the image using SixLabors.ImageSharp
-        //var memoryStream = new MemoryStream();
-        //var imageStream = selectedFile.OpenReadStream().CopyToAsync(memoryStream);
-        //var image = SixLabors.ImageSharp.Image.Load(imageStream);
 
-        //// Resize the image to a specified width (e.g., 300 pixels)
-        //var resizedImage = image.Clone(x => x.Resize(new ResizeOptions
-        //    {
-        //        Size = new Size(200, 180), // 0 maintains the aspect ratio
-        //        Mode = ResizeMode.Max
-        //    }));
 
-        //// Save the resized image to a memory stream
-        //var resizedImageStream = new MemoryStream();
-        //resizedImage.SaveAsJpeg(resizedImageStream);
-
-        // Save the resized image to the server
-        var folderPath = "wwwroot/images/"; // Adjust the folder path as needed
+        var folderPath =  "wwwroot/images"; // Adjust the folder path as needed
         var filePath = Path.Combine(folderPath, selectedFile.Name);
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
 
-        await using (FileStream fileStream = new(filePath, FileMode.Create))
+        using (FileStream fileStream = new FileStream (filePath, FileMode.Create))
         {
             await selectedFile.OpenReadStream().CopyToAsync(fileStream);
         }
 
         uploadStatus = "Upload successful!";
-        uploadedImagePath = filePath.Substring(filePath.IndexOf("wwwroot", StringComparison.OrdinalIgnoreCase))
+        personalInformationEntity.ImageUrl = filePath.Substring(filePath.IndexOf("wwwroot", StringComparison.OrdinalIgnoreCase))
             .Replace("\\", "/"); // Adjust the path separator for cross-platform compatibility
     }
 
@@ -1099,10 +1225,50 @@
     {
         selectedTabIndex = index;
     }
-    private async Task HandleSubmit()
+
+
+    private void Check(ChangeEventArgs e)
     {
+        _check = (bool)e.Value;        
+    }
+    private void CheckRefAd(ChangeEventArgs e)
+    {
+        if((bool)e.Value == true){
+          
+            referenceEntity.RAddress = empContactInfoEntity.Address;
+        }
+    }
+    private void CheckYes(ChangeEventArgs e)
+    {
+        if((bool)e.Value == true)
+        {
+            medicalEntity.Smoke = "Yes";
+        }
+
+    }
+    private void CheckNo(ChangeEventArgs e)
+    {
+        if((bool)e.Value == true){
+            medicalEntity.Smoke = "No";
+        }
         
     }
+    private void CheckSocialDrinker(ChangeEventArgs e)
+    {
+        if ((bool)e.Value == true)
+        {
+            medicalEntity.Drink = "Social Drinker";
+        }
 
+    }
 
+    private void CheckModDrinker(ChangeEventArgs e)
+    {
+        if ((bool)e.Value == true)
+        {
+            medicalEntity.Drink = "Moderate";
+        }
+
+    }
+    
 }

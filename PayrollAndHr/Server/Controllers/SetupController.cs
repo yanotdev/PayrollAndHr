@@ -17,10 +17,12 @@ namespace Payroll_Application.Controllers
     public class SetupController : Controller
     {
         private readonly ISetUpService _SetUpService;
+        private readonly IPayrollService _PayrollService;
 
-        public SetupController(ISetUpService setUpService)
+        public SetupController(ISetUpService setUpService, IPayrollService payrollService)
         {
             _SetUpService = setUpService;
+            _PayrollService = payrollService;
         }
 
         [HttpGet("LoadBranchInfo")]
@@ -30,11 +32,47 @@ namespace Payroll_Application.Controllers
             var branchlist = _SetUpService.LoadBranchInfo();
             return Ok(branchlist);
         }
-//        {
-//            var model = db.Branches.Where(d => d.IsDeleted == false).OrderBy(d => d.BranchName).ToList();
-//            return PartialView("PartialBranchList", model);
-//        }
-    }
+
+
+        //==================================================BRANCH INFORMATION SETUP=========================================
+
+        [HttpGet("GetBranchCode")]
+
+        public ActionResult GetNextBranchCode()
+        {
+           
+            try
+            {
+                string Code = _PayrollService.GetNextDocumentNo("Branch", 1000).ToString();
+                return Ok(Code);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+        }
+
+        [HttpPost("SaveBranch")]
+        public async Task<ActionResult<ServiceResponse<BranchEntity>>> SaveBranchInfo(BranchEntity Bra)
+        {
+            try
+            {
+                var branch = await _SetUpService.SaveBranchInfo(Bra);
+                return Ok(branch);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+            //        {
+            //            var model = db.Branches.Where(d => d.IsDeleted == false).OrderBy(d => d.BranchName).ToList();
+            //            return PartialView("PartialBranchList", model);
+            //        }
+        }
 
     //        //saving company Info
     //        [HttpPost]

@@ -1,0 +1,38 @@
+﻿@page "/staffnoprefix";
+@using PayrollAndHr.Client.Services;
+@using PayrollAndHr.Shared.Models;
+@inject IEmployeeService _employeeService;
+@layout PayrollAndHr.Client.Shared.Layouts.EmployeeLayout
+
+<h3>StaffNoPrefix</h3>
+<EditForm Model="prefixEntity" OnSubmit="SavePrefix" class="form-group">
+    <div class="text-danger">
+        @Message
+    </div>
+    <div class="col">
+        <div class="col-md-3">
+            <label class="custom-control-description">Prefix</label>
+        </div>
+        <div class="col-6 control-space">
+            <input type="text" name="prefix" @bind="prefixEntity.Prefix" class="form-control control-input-border" id="txtPrefix" />
+        </div>
+    </div>
+
+    
+    <button type="submit" class="btn btn-primary" id="btnSaveChanges">Save changes</button>
+</EditForm>
+
+@code {
+    private string Message = string.Empty;
+    PrefixEntity prefixEntity = new PrefixEntity();
+
+    public async Task SavePrefix()
+    {
+        var result = await _employeeService.SavePrefix(prefixEntity);
+        if (result.Success)
+        {
+            Message = result.Message;
+        }
+
+    }
+}

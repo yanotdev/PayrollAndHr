@@ -54,7 +54,7 @@ namespace PayrollAndHr.Server.Services
             {
                 _context.Allowances.Add(allowance);
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return new ServiceResponse<AllowanceEntity>()
             {
@@ -76,7 +76,39 @@ namespace PayrollAndHr.Server.Services
                 Success = true,
             };
         }
-        //Save pension
+        //edit Allowance
+        public async Task<ServiceResponse<AllowanceEntity>> EditAllowance(AllowanceEntity allowanceEntity)
+        {
+            var dept = _context.Allowances.Where(d => d.Code == allowanceEntity.Code).FirstOrDefault();
+            
+            dept.Description = allowanceEntity.Description;
+            dept.Percentage = allowanceEntity.Percentage;
+            dept.Grade = allowanceEntity.Grade; 
+            dept.Period = allowanceEntity.Period;
+            dept.AllType = allowanceEntity.AllType;
+
+            _context.Entry(dept).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<AllowanceEntity>()
+            {
+                Data = dept,
+                Message = "Edit Successful",
+                Success = true,
+            };
+        }
+
+        
+        public async Task<bool> DeleteAllowance(int Code)
+        {
+            
+            var data = _context.Allowances.Where(d => d.Code == Code).FirstOrDefault();
+            _context.Entry(data).State = EntityState.Deleted;
+             await _context.SaveChangesAsync();
+
+            return true;
+             
+        }
         public async Task<ServiceResponse<PensionEntity>> SavePension(PensionEntity pension)
         {
             

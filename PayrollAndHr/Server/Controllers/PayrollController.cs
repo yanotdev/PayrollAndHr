@@ -65,11 +65,41 @@ namespace Payroll_Application.Controllers
 
 
         }
-        //==============================================================================================
+
+        [HttpPut("EditAllowance")]
+        public async Task<ActionResult<ServiceResponse<AllowanceEntity>>> EditAllowance(AllowanceEntity allowanceEntity)
+        {
+            try
+            {
+                var result = await _payrollService.EditAllowance(allowanceEntity);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteAllowance/{Code}")]
+
+        public async Task<ActionResult<bool>> DeleteAllowance(int Code)
+        {
+            try
+            {
+                var result = await _payrollService.DeleteAllowance(Code);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+                       
+        }
+            //==============================================================================================
 
         //=================================NEW PENSION===================================================
         //Get Pension Code
-        [HttpGet("GetPensionCode")]
+            [HttpGet("GetPensionCode")]
         public ActionResult GetPensionCode()
         {
             try

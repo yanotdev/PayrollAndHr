@@ -57,8 +57,16 @@ public ActionResult GetEmpCount()
 [HttpGet("UserCount")]
 public ActionResult GetUserCount()
 {
-    var EmpCount = _adminPortalService.GetUserCount();
-    return Ok(EmpCount);
+    try
+     {
+        var EmpCount = _adminPortalService.GetUserCount();
+       return Ok(EmpCount);
+     }
+     catch (Exception ex)
+     {
+          return BadRequest(ex.Message);
+     }
+    
 }
 
 [HttpGet("StaffLeaveCount")]

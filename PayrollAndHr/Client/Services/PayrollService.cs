@@ -19,7 +19,19 @@ namespace PayrollAndHr.Client.Services
 
         }
 
+        public async Task<ServiceResponse<AllowanceEntity>?> EditAllowance(AllowanceEntity allowanceEntity)
+        {
+            var result = await _httpClient.PutAsJsonAsync("api/Payroll/EditAllowance", allowanceEntity);
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<AllowanceEntity>>();
 
+        }
+
+        public async Task<bool> DeleteAllowance(int Code)
+        {
+            var result = await _httpClient.DeleteAsync("api/Payroll/DeleteAllowance/"+ Code);
+            return await result.Content.ReadFromJsonAsync<bool>();
+
+        }
         public async Task<ServiceResponse<PensionEntity>?> SavePension(PensionEntity pensionEntity)
         {
             var result = await _httpClient.PostAsJsonAsync("api/Payroll/SavePension", pensionEntity);

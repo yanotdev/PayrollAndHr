@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Web;
 
@@ -9,11 +11,14 @@ namespace PayrollAndHr.Shared.Models
     [Table("tblEmpContactInfo")]
     public class EmpContactInfoEntity
     {
+        [Required]
         public long RegistrationID { get; set; }
         public string StaffNo { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
+       
         public string Country { get; set; }
+       
         public string State { get; set; }
         public string MobileNo { get; set; }
         public string MobileNo2 { get; set; }
@@ -22,6 +27,7 @@ namespace PayrollAndHr.Shared.Models
         public string WorkEmail { get; set; }
         public string LGA { get; set; }
         public string Landmark { get; set; }
+        [Required]
         public long ID { get; set; }
     }
 }

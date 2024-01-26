@@ -22,7 +22,7 @@
                     <div class="icon"><i class="icon-check"></i></div>
                     <div class="name">
                         <strong class="text-uppercase">Employees</strong><span></span>
-                        <span class="blue bold" id="EmployeeCount">@empcount.ToString()</span>
+                        <span class="blue bold" id="EmployeeCount">@empcount</span>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                     <div class="icon"><i class="icon-user"></i></div>
                     <div class="name">
                         <strong class="text-uppercase">Users</strong><span></span>
-                        <span class="UserCount blue bold">@usercount.ToString()</span>
+                        <span class="UserCount blue bold">@usercount</span>
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                     <div class="icon"><i class="icon-bill"></i></div>
                     <div class="name">
                         <strong class="text-uppercase">Staff on Leave</strong><span></span>
-                        <span class="LeaveCount blue bold">@leavecount.ToString()</span>
+                        <span class="LeaveCount blue bold">@leavecount</span>
                     </div>
                 </div>
             </div>
@@ -133,7 +133,8 @@
     protected override async Task OnInitializedAsync()
     {
         empcount += await _httpClient.GetStringAsync("api/AdminPortal/EmpCount");
-        usercount += await _httpClient.GetStringAsync("api/AdminPortal/UserCount");
+        var res = await _httpClient.GetStringAsync("api/AdminPortal/UserCount");
+        usercount += res ?? "0";
         leavecount += await _httpClient.GetStringAsync("api/AdminPortal/StaffLeaveCount");
         unapprovecount += await _httpClient.GetStringAsync("api/AdminPortal/UnapproveCount");
     }

@@ -1,4 +1,6 @@
-﻿@using PayrollAndHr.Client.Pages;
+﻿@using Blazored.Modal.Services;
+@using PayrollAndHr.Client.Pages;
+@inject IModalService modal
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -16,12 +18,13 @@
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-        <div class="nav-item px-3 text-white" @onclick ="ToggleVisibility">            
-                <i class="fa fa-cog"></i><span class="oi" >Employee</span>
+        <div class="nav-item px-3 text-white" @onclick ="ToggleVisibility">
+            <i class="fa fa-cog"></i><span class="oi" style="cursor: pointer;">Employee</span>
                 <div class="arrow pull-right"><i class="fa fa-angle-down"></i></div>
             @if(IsVisible){
                 <ul id="setupList" class="collapse list-unstyled">
-                    <li><button @onclick="ShowMyModal">Staff Number Prefix</button></li>
+                    <li>
+                        <NavLink href="/staffnoprefix">Staff Number Prefix</NavLink></li>
                     <li> <NavLink href="/registeremployee">Register Employee</NavLink></li>
                     <li> <NavLink href="/employeesearch">Employee Search</NavLink></li>
                         <li> <a href="#">Staff Status</a></li>
@@ -35,36 +38,8 @@
 </div>
 
 
-<EmployeeStaffNoPrefix Title="My Modal" OnClose="CloseModal">
-    <form>
-
-        <div class="row">
-            <div class="col-md-3">
-                <label class="custom-control-description">Prefix</label>
-            </div>
-            <div class="col-md-9">
-                <input type="text" name="prefix" class="form-control" id="txtPrefix" />
-            </div>
-        </div>
-    </form>
-</EmployeeStaffNoPrefix>
-
 @code {
-    private EmployeeStaffNoPrefix? _modalRef;
 
-    private void ShowMyModal()
-    {
-        _modalRef?.ShowModal();
-    }
-
-    private void CloseModal()
-    {
-        
-        // Handle modal close event if needed
-    }
-}
-
-@code {
     private bool collapseNavMenu = true;
     private bool IsVisible = false;
 

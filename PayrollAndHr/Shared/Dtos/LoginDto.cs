@@ -9,11 +9,11 @@ namespace PayrollAndHr.Shared.Dtos
 {
     public class LoginDto
     {
-        [Required]
+        [Required(ErrorMessage = "Email is required")]
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
-        [Required]
-        [MinLength(8)]
+        [Required(ErrorMessage = "Password is required")]
+        [MinLength(6)]
         public string Password { get; set; } = string.Empty;
     }
 }

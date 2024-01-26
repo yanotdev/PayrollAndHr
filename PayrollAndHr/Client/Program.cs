@@ -1,4 +1,5 @@
 global using PayrollAndHr.Shared;
+using Blazored.Modal;
 using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -14,6 +15,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAdminPortalService, AdminPortalService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IPayrollService, PayrollService>();
+builder.Services.AddScoped<ISetUpService, SetUpService>();
+
+builder.Services.AddBlazoredModal();
 
 builder.Services.AddBlazoredSessionStorage();
 

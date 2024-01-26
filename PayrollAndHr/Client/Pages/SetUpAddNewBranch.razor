@@ -1,7 +1,9 @@
 ﻿@page "/setupaddnewbranch/"
+@using PayrollAndHr.Client.Services;
 @using PayrollAndHr.Shared.Models;
-@layout PayrollAndHr.Client.Shared.Layouts.SetUpLayout
-@inject HttpClient _httpClient
+@layout PayrollAndHr.Client.Shared.Layouts.SetUpLayout;
+@inject HttpClient _httpClient;
+@inject ISetUpService _setUpService;
 
 <div class="row">
     <div class="col-md-4">
@@ -9,38 +11,39 @@
             <div class="card-header"><strong>BRANCH INFORMATION</strong></div>
             <div class="card-body">
                 <div>
-                    <button class="btn btn-primary" id="NewBranch"><i class="fa fa-file-o"></i> New</button>
-                    <button class="btn btn-primary" type="submit" id="SaveBranch"><i class="fa fa-save"></i> Save</button>
+                    <button class="btn btn-primary" id="NewBranch" @onclick=@(()=>GetCode("Branch"))><i class="fa fa-file-o"></i> New</button>
+                    
                 </div>
-                <form>
+                <EditForm Model="branch" OnSubmit="SaveBranch">
                 
                     <br />
-                    <div class="alert alert-success" id="successSave">
+                    <div class="text-danger" id="successSave">
+                        @BranchMessage
                     </div>
                     <fieldset class="form-group">
-
+                        <input type="hidden" @bind="branch.ID"/>
                         <label>Code:</label>
-                        <input type="text" name="code" class = "form-control control-input-border" id = "code" disabled/>                        
+                        <input type="text" name="code" @bind-value="branch.BranchCode" class = "form-control control-input-border" id = "code" disabled/>                        
                     </fieldset>
                     <fieldset class="form-group">
 
                         <label class="label-success">Branch Name:</label>
-                        <input type="text" name="branchName" class = "form-control control-input-border" id = "branchName" placeholder = "Type Branch Name here"/>
+                        <input type="text" name="branchName" @bind="branch.BranchName" class = "form-control control-input-border" id = "branchName" placeholder = "Type Branch Name here"/>
                        
                     </fieldset>
                     <fieldset class="form-group">
                         <label>Address:</label>
-                        <textarea  name="address" class = "form-control control-input-border" id = "address" placeholder = "Type Branch Address here" rows = 10></textarea>                        
+                        <textarea  name="address" @bind="branch.Address" class = "form-control control-input-border" id = "address" placeholder = "Type Branch Address here" row=10></textarea>                        
                     </fieldset>
                     <fieldset class="form-group">
                         <label>Phone No:</label>
-                        <input type="text" name="PhoneNo" class = "form-control control-input-border" id = "PhoneNo" placeholder = "Type Branch Phone Number here"/>
+                        <input type="text" name="PhoneNo" @bind="branch.PhoneNo" class = "form-control control-input-border" id = "PhoneNo" placeholder = "Type Branch Phone Number here"/>
                         
 
                     </fieldset>
                     <fieldset class="form-group">
                         <label>E-mail Address:</label>
-                        <input type="text" name="Email" class = "form-control control-input-border" id = "Email" placeholder = "Type Branch E-mail Address here"/>
+                        <input type="text" name="Email" @bind="branch.Email" class = "form-control control-input-border" id = "Email" placeholder = "Type Branch E-mail Address here"/>
                         
                     </fieldset>
                     @*<div class="alert alert-info" id="loading" style="padding:10px; position:absolute;border:2px solid #33bb0b;left:50%;top:50%;">
@@ -48,7 +51,8 @@
                             <img src="~/Images/ajax-loader7.gif" />
                         </span>
                     </div>*@
-                </form>
+                    <button class="btn btn-primary" type="submit" id="SaveBranch"><i class="fa fa-save"></i> Save</button>
+                </EditForm>
             </div>
         </div>
     </div>
@@ -69,9 +73,9 @@
                 <tbody>
                     @foreach (var m in branchlist)
                     {
-                        sn++;
+                       
                         <tr>
-                            <td>@sn.ToString()</td>
+                            <td>@m.ID</td>
                             <td>@m.BranchName</td>
                             <td>@m.BranchCode.ToString()</td>
                             <td>@m.PhoneNo</td>
@@ -90,12 +94,32 @@
 </div>
 
 @code {
-    int sn = 0;
+
     private static List<BranchEntity>? branchlist = new List<BranchEntity>();
+    private string BranchMessage = "";
+
+    BranchEntity branch = new BranchEntity();
 
     protected override async Task OnInitializedAsync()
     {
         branchlist = await _httpClient.GetFromJsonAsync<List<BranchEntity>>("api/SetUp/LoadBranchInfo");
     }
+    public async Task GetCode(string codeType)
+    {
+        if (codeType == "Branch")
+        {
+            var res = await _httpClient.GetStringAsync("api/SetUp/GetBranchCode");
+            branch.BranchCode = int.Parse(res);
+        }
+    }
 
+    public async Task SaveBranch()
+    {
+        var result = await _setUpService.SaveBranchInfo(branch);
+        if (result != null)
+        {
+            BranchMessage = result.Message;
+            branchlist = await _httpClient.GetFromJsonAsync<List<BranchEntity>>("api/SetUp/LoadBranchInfo");
+        }
+    }
 }

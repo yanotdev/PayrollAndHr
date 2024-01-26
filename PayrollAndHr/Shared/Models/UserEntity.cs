@@ -9,16 +9,16 @@ namespace PayrollAndHr.Shared.Models
     [Table("tblUser")]
     public class UserEntity
     {
-        public string Username { get; set; }
+        public string? Username { get; set; }
         public long UserID { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNo { get; set; }
-        public string Password { get; set; }
-        public string UserRole { get; set; }
-        public string Department { get; set; }
-        public string OtherID { get; set; }
-        public string ImageUrl { get; set; }
+        public string? FullName { get; set; }
+        public string? Email { get; set; }
+        public string? PhoneNo { get; set; }
+        public string? Password { get; set; }
+        public string? UserRole { get; set; }
+        public string? Department { get; set; }
+        public string? OtherID { get; set; }
+        public string? ImageUrl { get; set; }
         public long ID { get; set; }
 
         public bool IsLogin { get; set; } = false;

@@ -8,6 +8,9 @@ namespace PayrollAndHr.Server.Services
         Task<ServiceResponse<AllowanceEntity>> SaveAllowance(AllowanceEntity allowance);
 
         Task<ServiceResponse<List<AllowanceEntity>>> LoadAllowances();
+
+        Task<ServiceResponse<AllowanceEntity>> EditAllowance(AllowanceEntity allowanceEntity);
+        Task<bool> DeleteAllowance(int Code);
         Task<ServiceResponse<PensionEntity>> SavePension(PensionEntity pension);
 
         Task<ServiceResponse<List<PensionEntity>>> LoadPensions();

@@ -1,15 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PayrollAndHr.Server.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using PayrollAndHr.Server.Services;
+using PayrollAndHr.Shared.Dtos;
 using PayrollAndHr.Shared.Models;
-using PayrollAndHr.Shared.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
 
 
 namespace Payroll_Application.Controllers
@@ -20,10 +12,13 @@ namespace Payroll_Application.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeService _employeeService;
+        private readonly IPayrollService _payrollService;
 
-        public EmployeeController(IEmployeeService employeeService)
+        
+        public EmployeeController(IEmployeeService employeeService, IPayrollService payrollService)
         {
             _employeeService = employeeService;
+            _payrollService = payrollService;
         }
        
         [HttpGet]
@@ -33,7 +28,7 @@ namespace Payroll_Application.Controllers
             return Ok(model);   
         }
 
-        [HttpPost("SavePersonalInformation")]
+        [HttpPost("SavePersonalInformation")]        
         public async Task<ActionResult<ServiceResponse<PersonalInformationEntity>>> SavePersonalInformation([FromBody]PersonalInformationEntity personal)
         {
             var result = await _employeeService.SavePersonalInformation(personal);
@@ -49,6 +44,133 @@ namespace Payroll_Application.Controllers
         {
             var employlist = _employeeService.EmployeeListTa();
             return Ok(employlist);
+        }
+        
+        //save the Staff Prefix
+        [HttpPost("SavePrefix")]
+        public async Task<ActionResult<ServiceResponse<PrefixEntity>>> SavePrefix ([FromBody]PrefixEntity prefix)
+        {
+            try
+            {
+                var res = await _employeeService.SavePrefix(prefix);
+                return Ok(res);
+            }
+            catch(Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        //load the prefix
+     
+        public ActionResult<PrefixEntity> LoadPrefix()
+        {
+            try
+            {
+                var res = _employeeService.GetPrefixNo();
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //Get reg number
+        [HttpGet("GetRegistrationNo")]
+        public ActionResult<RegistrationPara> GetRegistrationNo()
+        {
+            RegistrationPara para = new RegistrationPara();
+            try
+            {
+
+                var pref = _employeeService.GetPrefixNo();
+                long RegNo = _payrollService.GetNextDocumentNo("Registration Number", 1000);
+                string staffNo = pref + RegNo.ToString();
+                para.RegistrationID = RegNo;
+                para.StaffNo = staffNo;
+
+                return Ok(para);    
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+        }
+
+        //save contact info
+        [HttpPost("SaveContact")]
+
+        public async Task<ActionResult<ServiceResponse<EmpContactInfoEntity>>> SaveContact([FromBody]EmpContactInfoEntity empContactInfoEntity)
+        {
+            try
+            {
+                var res = await _employeeService.SaveContact(empContactInfoEntity);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("SaveNextOfKin")]
+
+        public async Task<ActionResult<ServiceResponse<EmpContactInfoEntity>>> SaveNextOfKin([FromBody] NextofKinEntity nextofKinEntity)
+        {
+            try
+            {
+                var res = await _employeeService.SaveNoKin(nextofKinEntity);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("SaveGuarantor")]
+
+        public async Task<ActionResult<ServiceResponse<GurrantorEntity>>> SaveGuarantor([FromBody] GurrantorEntity gurrantorEntity)
+        {
+            try
+            {
+                var res = await _employeeService.SaveGuarantor(gurrantorEntity);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("SaveReference")]
+
+        public async Task<ActionResult<ServiceResponse<ReferenceEntity>>> SaveReference([FromBody] ReferenceEntity referenceEntity)
+        {
+            try
+            {
+                var res = await _employeeService.SaveReference(referenceEntity);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("SaveMedicalHis")]
+
+        public async Task<ActionResult<ServiceResponse<MedicalEntity>>> SaveMedicalHis([FromBody] MedicalEntity medicalEntity)
+        {
+            try
+            {
+                var res = await _employeeService.SaveMedicalHis(medicalEntity);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         //Upload Image
         //[HttpPost]

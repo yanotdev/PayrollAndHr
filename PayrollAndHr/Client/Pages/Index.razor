@@ -24,9 +24,11 @@
                                 <span class="sr-only">Loading...</span>
                             </div>
                         }
-
-                        <EditForm Model="@loginDto" OnSubmit="@Login" class="mb-md-5 mt-4 md-2 pb-2">
-                            @*<DataAnnotationsValidator />*@
+                        <div class="text-danger">
+                            @message
+                        </div>
+                        <EditForm Model="@loginDto" OnValidSubmit="@Login" class="mb-md-5 mt-4 md-2 pb-2">
+                            <DataAnnotationsValidator />
                            
                             <h2 class="fw-bold mb-2 text-uppercase">Payroll and Hr</h2>
                             <p class="text-white-50 mb-5">Please enter your login and password!</p>
@@ -44,6 +46,7 @@
                             <p class="small mb-2 pb-2"><a class="text-white-50" href="#!">Forgot password?</a></p>
 
                             <button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
+                           
                         </EditForm>
 
                     </div>
@@ -57,33 +60,35 @@
 
     LoginDto loginDto = new LoginDto();
     private bool IsLoading = false;
-
+    private string message = "";
     private async Task Login()
     {
         IsLoading = true;    
         var result = await _authservice.Login(loginDto);
         IsLoading = false;
+        message = result.Message;
         if (result.Success)
         {            
 
             await _sessionStorageService.SetItemAsStringAsync("UserRole", result.UserRole);
             await _sessionStorageService.SetItemAsStringAsync("UserName", result.UserName);
 
-            var userrole = result?.UserRole;
-            var department = result?.Department;
+            var userrole = result.UserRole;
+            var department = result.Department;
 
 
             if(userrole == "Admin" || department == "HR")
             {
                 NavigationManager.NavigateTo("dashboard");
             }
-            else{
+            else
+            {
                 NavigationManager.NavigateTo("staffportal");
             }
 
         }
-
-
+           
+      
     }
     //private async Task LoadUser()
     //{
