@@ -263,7 +263,7 @@ namespace PayrollAndHr.Server.Services
             {
                 _appDbContext.EmpNextofKin.Add(nextofKin);
             }
-            _appDbContext.EmpNextofKin.Add(nextofKin);
+            
             await _appDbContext.SaveChangesAsync();
 
             return new ServiceResponse<NextofKinEntity>()
@@ -293,7 +293,7 @@ namespace PayrollAndHr.Server.Services
             {
                 _appDbContext.EmpGurrantor.Add(guarantor);
             }
-            _appDbContext.EmpGurrantor.Add(guarantor);
+            
             await _appDbContext.SaveChangesAsync();
 
             return new ServiceResponse<GurrantorEntity>()
@@ -321,7 +321,7 @@ namespace PayrollAndHr.Server.Services
             {
                 _appDbContext.EmpReference.Add(reference);
             }
-            _appDbContext.EmpReference.Add(reference);
+            
             await _appDbContext.SaveChangesAsync();
 
             return new ServiceResponse<ReferenceEntity>()
@@ -352,7 +352,7 @@ namespace PayrollAndHr.Server.Services
             {
                 _appDbContext.MedicalHistory.Add(history);
             }
-            _appDbContext.MedicalHistory.Add(history);
+            
             await _appDbContext.SaveChangesAsync();
 
             return new ServiceResponse<MedicalEntity>()
@@ -385,7 +385,7 @@ namespace PayrollAndHr.Server.Services
             {
                 _appDbContext.EmpEmploymentInfo.Add(employment);
             }
-            _appDbContext.EmpEmploymentInfo.Add(employment);
+            
             SqlConnection con = new SqlConnection(conString);
             con.Open();
             string sql = "Update tblUser set Department='" + employment.Department + "' where OtherID='" + employment.StaffNo + "'";
@@ -417,7 +417,7 @@ namespace PayrollAndHr.Server.Services
             {
                 _appDbContext.EmpExperiences.Add(experience);
             }
-            _appDbContext.EmpExperiences.Add(experience);
+            
             await _appDbContext.SaveChangesAsync();
             return new ServiceResponse<EmpExperienceEntity>()
             {
@@ -442,7 +442,7 @@ namespace PayrollAndHr.Server.Services
             {
                 _appDbContext.EmpQualifications.Add(qualification);
             }
-            _appDbContext.EmpQualifications.Add(qualification);
+            
             await _appDbContext.SaveChangesAsync();
 
             return new ServiceResponse<EmpQualificationEntity>()

@@ -1,5 +1,8 @@
 ﻿@page "/setupemployeeparameter/"
+@using PayrollAndHr.Client.Services;
+@using PayrollAndHr.Shared.Models;
 @layout PayrollAndHr.Client.Shared.Layouts.SetUpLayout
+@inject ISetUpService _setUpService;
 
 <style>
     .spacing {
@@ -16,30 +19,31 @@
         <div class="card">
             <div class="card-header"><strong>Staff Titles</strong></div>
             <div class="card-body">
+                <EditForm Model="title" OnSubmit="SaveTitleParam">
                 <div class="row">
                     <div class="col-md-3">
                     </div>
                     <div class="col-md-9">
-                        <button class="btn btn-primary" type="submit" id="NewTitle"><i class="fa fa-file-o"></i> New</button>
+                        <button class="btn btn-primary" @onclick=@(()=>GetCode("Title")) type="submit" id="NewTitle"><i class="fa fa-file-o"></i> New</button>
                         <button class="btn btn-primary" type="submit" id="SaveTitle"><i class="fa fa-save"></i> Save</button>
                     </div>
                 </div>
-                <form method="post" class="form-inline">            
+                        
                 
                     <div class="row">
                         <div class="col-md-3 spacing"><label class="form-control-label">Code:</label></div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtTitleCode" class = "form-control txt" id = "txtTitleCode" disabled />                            
+                            <input type="text" @bind="title.Code" name="txtTitleCode" class = "form-control txt" id = "txtTitleCode" disabled />                            
                         </div>
                         <div class="col-md-3 spacing">
                             <label class="form-control-label">Title:</label>
                         </div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtTitle" class = "form-control txt" id = "txtTitle" Placeholder = "Type Title"/>                            
+                            <input type="text" name="txtTitle" @bind="title.Description" class = "form-control txt" id = "txtTitle" Placeholder = "Type Title"/>                            
                         </div>
                     </div>
 
-                </form>
+                </EditForm>
                 <br />
                 <table class="table table-bordered table-hover table-custom-border" id="titletable">
                     <thead>
@@ -51,6 +55,19 @@
                         </tr>
                     </thead>
                     <tbody id="titlebody">
+                        @foreach(var m in titles)
+                        {
+                            <tr>
+                                <td>@m.ID</td>
+                                <td>@m.Description</td>
+                                <td>@m.Code</td>
+                                <td style="display:flex">
+                                    <div @onclick=@(()=>EditTitle(@m.Code)) title='Edit'><i class='fa fa-pencil'></i></div>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <div @onclick="() => DeleteTitle(m.Code)" title="Delete"><i class="fa fa-trash"></i></div>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                     <tfoot>
                     </tfoot>
@@ -63,29 +80,30 @@
         <div class="card">
             <div class="card-header"><strong>Employee Levels</strong></div>
             <div class="card-body">
+                <EditForm Model="level" OnSubmit="SaveLevels">
                 <div class="row">
                     <div class="col-md-3">
                     </div>
                     <div class="col-md-9">
-                        <button class="btn btn-primary" type="submit" id="NewLevel"><i class="fa fa-file-o"></i> New</button>
+                        <button class="btn btn-primary" @onclick=@(()=>GetCode("Level")) type="submit" id="NewLevel"><i class="fa fa-file-o"></i> New</button>
                         <button class="btn btn-primary" type="submit" id="SaveLevel"><i class="fa fa-save"></i> Save</button>
                     </div>
                 </div>
-                <form method="post" class = "form-inline" >
+                
               
                     <div class="row">
                         <div class="col-md-3 spacing"><label class="form-control-label">Code:</label></div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtLevelCode" class = "form-control txt" id = "txtLevelCode" disabled/>                            
+                            <input type="text" name="txtLevelCode" @bind="level.Code" class = "form-control txt" id = "txtLevelCode" disabled/>                            
                         </div>
                         <div class="col-md-3 spacing">
                             <label class="form-control-label">Level:</label>
                         </div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtLevel" class = "form-control txt" id = "txtLevel" Placeholder = "Type Level"/>                  
+                            <input type="text" name="txtLevel" @bind="level.Description" class = "form-control txt" id = "txtLevel" Placeholder = "Type Level"/>                  
                         </div>
                     </div>
-                </form>
+                </EditForm>
                 <br />
                 <table class="table table-bordered table-hover table-custom-border" id="leveltable">
                     <thead>
@@ -108,28 +126,29 @@
         <div class="card">
             <div class="card-header"><strong>Employment Types</strong></div>
             <div class="card-body">
+                <EditForm Model="employmentType" OnSubmit="SaveEmpType">
                 <div class="row">
                     <div class="col-md-3">
                     </div>
                     <div class="col-md-9">
-                        <button class="btn btn-primary" type="submit" id="NewEmpTypeCode"><i class="fa fa-file-o"></i> New</button>
+                        <button class="btn btn-primary" @onclick=@(()=>GetCode("EmployementType")) type="submit" id="NewEmpTypeCode"><i class="fa fa-file-o"></i> New</button>
                         <button class="btn btn-primary" type="submit" id="SaveempType"><i class="fa fa-save"></i> Save</button>
                     </div>
                 </div>
-                <form method="post" class="form-inline">               
+                              
                     <div class="row">
                         <div class="col-md-3 spacing"><label class="form-control-label">Code:</label></div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtempCode" class = "form-control txt" id = "txtempCode" disabled/>     
+                            <input type="text" name="txtempCode" @bind="employmentType.Code" class = "form-control txt" id = "txtempCode" disabled/>     
                         </div>
                         <div class="col-md-3 spacing">
                             <label class="form-control-label">Description:</label>
                         </div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtempType" class = "form-control txt" id = "txtempType" Placeholder = "Type Description"/>                            
+                            <input type="text" name="txtempType" class = "form-control txt" @bind="employmentType.Description" id = "txtempType" Placeholder = "Type Description"/>                            
                         </div>
                     </div>
-                </form>
+                </EditForm>
                 <br />
                 <table class="table table-bordered table-hover table-custom-border" id="empTypetable">
                     <thead>
@@ -155,31 +174,32 @@
         <div class="card">
             <div class="card-header"><strong>Staff Department</strong></div>
             <div class="card-body">
+                <EditForm Model="departmnt" OnSubmit="SaveDepartment">
                 <div class="row">
                     <div class="col-md-3">
                     </div>
                     <div class="col-md-9">
-                        <button class="btn btn-primary" type="submit" id="NewDept"><i class="fa fa-file-o"></i> New</button>
+                        <button class="btn btn-primary" type="submit" @onclick=@(()=>GetCode("Department")) id="NewDept"><i class="fa fa-file-o"></i> New</button>
                         <button class="btn btn-primary" type="submit" id="SaveDept"><i class="fa fa-save"></i> Save</button>
                     </div>
                 </div>
-                <form method="post" class="form-inline">
+               
                 
                     <div class="row">
                         <div class="col-md-3 spacing"><label class="form-control-label">Code:</label></div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtDeptCode" class = "form-control txt" id = "txtDeptCode" disabled/>
+                            <input type="text" name="txtDeptCode" @bind="departmnt.DeptCode" class = "form-control txt" id = "txtDeptCode" disabled/>
                            
                         </div>
                         <div class="col-md-3 spacing">
                             <label class="form-control-label">Department:</label>
                         </div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtdept" class = "form-control txt" id = "txtdept" Placeholder = "Type Department" />
+                            <input type="text" name="txtdept" @bind="departmnt.Description"class = "form-control txt" id = "txtdept" Placeholder = "Type Department" />
                             
                         </div>
                     </div>
-                </form>
+                </EditForm>
 
                 
                 <br />
@@ -204,31 +224,32 @@
         <div class="card">
             <div class="card-header"><strong>Staff Designation</strong></div>
             <div class="card-body">
+                <EditForm Model="designation" OnSubmit="SaveDesignation">
                 <div class="row">
                     <div class="col-md-3">
                     </div>
                     <div class="col-md-9">
-                        <button class="btn btn-primary" type="submit" id="NewDes"><i class="fa fa-file-o"></i> New</button>
+                        <button class="btn btn-primary" type="submit" @onclick=@(()=>GetCode("Designation")) id="NewDes"><i class="fa fa-file-o"></i> New</button>
                         <button class="btn btn-primary" type="submit" id="SaveDes"><i class="fa fa-save"></i> Save</button>
                     </div>
                 </div>
-                <form method="post" class="form-inline">
+                
                 
                     <div class="row">
                         <div class="col-md-3 spacing"><label class="form-control-label">Code:</label></div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtDesCode" class = "form-control txt" id = "txtDesCode" disabled/>
-                            
+                            <input type="text" name="txtDesCode" @bind="designation.Code" class = "form-control txt" id = "txtDesCode" disabled/>
+                           
                         </div>
                         <div class="col-md-3 spacing">
                             <label class="form-control-label">Designation:</label>
                         </div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtDes" class = "form-control txt" id = "txtDes" Placeholder = "Type Designation"/>
+                            <input type="text" name="txtDes" @bind="designation.Description" class = "form-control txt" id = "txtDes" Placeholder = "Type Designation"/>
                             
                         </div>
                     </div>
-                    </form>
+                </EditForm>
 
                 
                 <br />
@@ -254,32 +275,33 @@
         <div class="card">
             <div class="card-header"><strong>Academic Degree</strong></div>
             <div class="card-body">
+                <EditForm Model="degreeEntity" OnSubmit="SaveDegree">
                 <div class="row">
                     <div class="col-md-3">
                     </div>
                     <div class="col-md-9">
-                        <button class="btn btn-primary" type="submit" id="NewDeg"><i class="fa fa-file-o"></i> New</button>
+                        <button class="btn btn-primary" @onclick=@(()=>GetCode("Degree")) type="submit" id="NewDeg"><i class="fa fa-file-o"></i> New</button>
                         <button class="btn btn-primary" type="submit" id="SaveDeg"><i class="fa fa-save"></i> Save</button>
                     </div>
                 </div>
-                <form method="post" class="form-inline">
+               
                <div class="row">
                         <div class="col-md-3 spacing"><label class="form-control-label">Code:</label></div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtDegCode" class = "form-control txt" id = "txtDegCode" disabled/>
+                            <input type="text" name="txtDegCode" @bind="degreeEntity.Code" class = "form-control txt" id = "txtDegCode" disabled/>
                             
                         </div>
                         <div class="col-md-3 spacing">
                             <label class="form-control-label">Designation:</label>
                         </div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtDeg" class = "form-control txt" id = "txtDeg" Placeholder = "Type Degree"/>
+                            <input type="text" name="txtDeg" @bind="degreeEntity.Description" class = "form-control txt" id = "txtDeg" Placeholder = "Type Degree"/>
                            
                         </div>
                     </div>
 
 
-                </form>
+                </EditForm>
                 <br />
                 <table class="table table-bordered table-hover table-custom-border" id="DesTable">
                     <thead>
@@ -308,5 +330,100 @@
 </div>*@
 
 @code {
+    private string titleMessage = string.Empty;
 
+    TitleEntity title = new TitleEntity();
+    LevelEntity level = new LevelEntity();
+    DepartmentEntity departmnt = new DepartmentEntity();
+    DesignationEntity designation = new DesignationEntity();
+    EmploymentTypeEntity employmentType = new EmploymentTypeEntity();
+    DegreeEntity degreeEntity = new DegreeEntity();
+
+    List<TitleEntity> titles = new List<TitleEntity>();
+
+    [Inject]
+    HttpClient _httpClient { get; set; }
+
+    public async Task GetCode(string codeType)
+    {
+        if (codeType == "Title")
+        {
+            var res = await _httpClient.GetStringAsync("api/Setup/GetTitleCode");
+            title.Code = int.Parse(res);
+        }
+        else if(codeType == "Level")
+        {
+            var res = await _httpClient.GetStringAsync("api/Setup/GetLevelCode");
+            level.Code = int.Parse(res);
+        }
+        else if(codeType == "Department")
+        {
+            var res = await _httpClient.GetStringAsync("api/Setup/GetDeptCode");
+            departmnt.DeptCode = int.Parse(res);
+        }
+        else if(codeType == "Designation")
+        {            
+            var res = await _httpClient.GetStringAsync("api/Setup/GetDesignationCode");
+            designation.Code = int.Parse(res);
+        }
+        else if(codeType == "EmployementType")        
+        {            
+            var res = await _httpClient.GetStringAsync("api/Setup/GetNextEmpTypeCode");
+            employmentType.Code = int.Parse(res);
+        }
+        else if (codeType == "Degree")
+        {
+            var res = await _httpClient.GetStringAsync("api/Setup/GetDegreeCode");
+            degreeEntity.Code = int.Parse(res);
+        }
+
+    }
+    private async Task SaveTitleParam()
+    {
+        var result = await _setUpService.SaveTitle(title);
+        if (result.Success)
+        {
+            titleMessage = result.Message;
+
+        }
+        var reslt = await _httpClient.GetAsync("api/Setup/GetTitles");
+        titles = await reslt.Content.ReadFromJsonAsync<List<TitleEntity>>();
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await _httpClient.GetAsync("api/Setup/GetTitles");
+        titles = await result.Content.ReadFromJsonAsync<List<TitleEntity>>();
+    }
+    private async Task EditTitle(int Code)
+    {
+        var result = await _httpClient.GetAsync("api/Setup/EditTitle/" + Code);
+        title = await result.Content.ReadFromJsonAsync<TitleEntity>();
+    }
+    private async Task DeleteTitle(int Code)
+    {
+        await _httpClient.DeleteAsync("api/Setup/DeleteTitle/" + Code);
+        var result = await _httpClient.GetAsync("api/Setup/GetTitles");
+        titles = await result.Content.ReadFromJsonAsync<List<TitleEntity>>();
+        //bool reslt = await result.Content.ReadFromJsonAsync<bool>();
+    }
+    private async Task SaveLevels()
+    {
+
+    }
+    private async Task SaveEmpType()
+    {
+
+    }
+    private async Task SaveDepartment()
+    {
+
+    }
+    private async Task SaveDesignation()
+    {
+
+    }
+    private async Task SaveDegree()
+    {
+        
+    }
 }

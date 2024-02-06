@@ -57,7 +57,21 @@ namespace PayrollAndHr.Client.Services
             var result = await _httpClient.PostAsJsonAsync("api/Employee/SaveMedicalHis", medicalEntity);
             return await result.Content.ReadFromJsonAsync<ServiceResponse<MedicalEntity>>();
         }
-    }
-    
+        public async Task<ServiceResponse<EmpEmploymentEntity>> SaveEmp(EmpEmploymentEntity empEmploymentEntity)
+        {
+            var result = await _httpClient.PostAsJsonAsync("api/Employee/SaveEmp", empEmploymentEntity);
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<EmpEmploymentEntity>>();
+        }
+        public async Task<ServiceResponse<EmpExperienceEntity>> SaveEmpExp(EmpExperienceEntity empEmploymentEntity)
+        {
+            var result = await _httpClient.PostAsJsonAsync("api/Employee/SaveEmpExp", empEmploymentEntity);
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<EmpExperienceEntity>>();
+        }
+        public async Task<ServiceResponse<EmpQualificationEntity>> SaveEmpQua(EmpQualificationEntity empQualificationEntity)
+        {
+            var result = await _httpClient.PostAsJsonAsync("api/Employee/SaveEmpQua", empQualificationEntity);
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<EmpQualificationEntity>>();
+        }
+    } 
 
 }

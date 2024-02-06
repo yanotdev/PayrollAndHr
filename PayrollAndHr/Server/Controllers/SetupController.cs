@@ -17,12 +17,12 @@ namespace Payroll_Application.Controllers
     public class SetupController : Controller
     {
         private readonly ISetUpService _SetUpService;
-        private readonly IPayrollService _PayrollService;
+        private readonly IPayrollService _payrollService;
 
         public SetupController(ISetUpService setUpService, IPayrollService payrollService)
         {
             _SetUpService = setUpService;
-            _PayrollService = payrollService;
+            _payrollService = payrollService;
         }
 
         [HttpGet("LoadBranchInfo")]
@@ -40,10 +40,10 @@ namespace Payroll_Application.Controllers
 
         public ActionResult GetNextBranchCode()
         {
-           
+
             try
             {
-                string Code = _PayrollService.GetNextDocumentNo("Branch", 1000).ToString();
+                string Code = _payrollService.GetNextDocumentNo("Branch", 1000).ToString();
                 return Ok(Code);
 
             }
@@ -51,7 +51,7 @@ namespace Payroll_Application.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            
+
         }
 
         [HttpPost("SaveBranch")]
@@ -68,11 +68,228 @@ namespace Payroll_Application.Controllers
                 return BadRequest(ex.Message);
             }
         }
-            //        {
-            //            var model = db.Branches.Where(d => d.IsDeleted == false).OrderBy(d => d.BranchName).ToList();
-            //            return PartialView("PartialBranchList", model);
-            //        }
+
+        //===============================================================================================
+
+        //====================================EMPLOYEE PARAMETER SETUP===================================
+
+        //====================================title===================================
+        [HttpGet("GetTitleCode")]
+        public ActionResult GetTitleCode()
+        {
+            try
+            {
+                string code = _payrollService.GetNextDocumentNo("Title", 10).ToString();
+                return Ok(code);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
+
+       
+        [HttpPost("SaveTitle")]
+        public async Task<ActionResult<ServiceResponse<TitleEntity>>> SaveTitle([FromBody] TitleEntity title)
+        {
+            try
+            {
+                var tite = await _SetUpService.SaveTitles(title);
+                return Ok(tite);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("GetTitles")]
+        public async Task<ActionResult<List<TitleEntity>>> GetTitles()
+        {
+            try
+            {
+                var tite = await _SetUpService.LoadAllTitles();
+                return Ok(tite);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete("DeleteTitle/{Code}")]
+        public async Task<ActionResult<List<TitleEntity>>> deleteTitle(int Code)
+        {
+            try
+            {
+                var tite = await _SetUpService.DeleteTitle(Code);
+                return Ok(tite);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("EditTitle/{Code}")]
+
+        public async Task<ActionResult<TitleEntity>> EditTitle(int Code)
+        {
+            try
+            {
+                var tite = await _SetUpService.EditTitle(Code);
+                return Ok(tite);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+            //====================================Level===================================
+            //Get Level Code
+            [HttpGet("GetLevelCode")]
+        public ActionResult GetLevelCode()
+        {
+            try
+            {
+                string code = _payrollService.GetNextDocumentNo("Level", 100).ToString();
+                return Ok(code);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpPost("Savelevel")]
+        public async Task<ActionResult<ServiceResponse<LevelEntity>>> SaveLevel([FromBody] LevelEntity level)
+        {
+            try
+            {
+                var levl = await _SetUpService.SaveLevels(level);
+                return Ok(levl);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        //====================================Department==================================
+        //Get Dept Code
+        [HttpGet("GetDeptCode")]
+        public ActionResult GetDeptCode()
+        {
+            try
+            {
+                string code = _payrollService.GetNextDocumentNo("Department", 50).ToString();
+                return Ok(code);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("SaveDept")]
+        public async Task<ActionResult<ServiceResponse<DepartmentEntity>>> SaveDept([FromBody] DepartmentEntity departmnt)
+        {
+            try
+            {
+                var department = await _SetUpService.SaveDept(departmnt);
+                return Ok(department);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        //====================================Degree==================================
+        //Get Degree Code
+        [HttpGet("GetDegreeCode")]
+        public ActionResult GetDegreeCode()
+        {
+            try
+            {
+                string code = _payrollService.GetNextDocumentNo("Degree", 400).ToString();
+                return Ok(code);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("SaveDegrees")]
+        public async Task<ActionResult<ServiceResponse<DegreeEntity>>> SaveDegrees([FromBody] DegreeEntity degree)
+        {
+            try
+            {
+                var deg = await _SetUpService.SaveDegrees(degree);
+                return Ok(deg);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //====================================Designation==================================
+        //Get Designation Code
+        [HttpGet("GetDesignationCode")]
+        public ActionResult GetDesignationCode()
+        {
+            try
+            {
+                string code = _payrollService.GetNextDocumentNo("Designation", 300).ToString();
+                return Ok(code);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("SaveDesignation")]
+        public async Task<ActionResult<ServiceResponse<DesignationEntity>>> SaveDesignation([FromBody] DesignationEntity designation)
+        {
+            try
+            {
+                var desig = await _SetUpService.SaveDesignation(designation);
+                return Ok(desig);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //====================================Employemnt type==================================
+        //Get Employement Type Code
+        [HttpGet("GetNextEmpTypeCode")]
+        public ActionResult GetNextEmpTypeCode()
+        {
+            try
+            {
+                string code = _payrollService.GetNextDocumentNo("Employment type", 200).ToString();
+                return Ok(code);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("SaveEmpType")]
+        public async Task<ActionResult<ServiceResponse<EmploymentTypeEntity>>> SaveEmpType([FromBody] EmploymentTypeEntity employmentTypeEntity)
+        {
+            try
+            {
+                var emptype = await _SetUpService.SaveEmpType(employmentTypeEntity);
+                return Ok(emptype);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+    }
+}
+
 
     //        //saving company Info
     //        [HttpPost]
@@ -663,5 +880,5 @@ namespace Payroll_Application.Controllers
     //            return Json(dept, JsonRequestBehavior.AllowGet);
     //        }
     //    }
-}
+
 

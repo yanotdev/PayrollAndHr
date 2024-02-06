@@ -172,6 +172,50 @@ namespace Payroll_Application.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("SaveEmp")]
+
+        public async Task<ActionResult<ServiceResponse<EmpEmploymentEntity>>> SaveEmp([FromBody] EmpEmploymentEntity empEmploymentEntity)
+        {
+            try
+            {
+                var res = await _employeeService.SaveEmp(empEmploymentEntity);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("SaveEmpExp")]
+
+        public async Task<ActionResult<ServiceResponse<EmpExperienceEntity>>> SaveEmpExp([FromBody]EmpExperienceEntity empExperienceEntity)
+        {
+            try
+            {
+                var res = await _employeeService.SaveEmpExp(empExperienceEntity);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("SaveEmpQua")]
+
+        public async Task<ActionResult<ServiceResponse<EmpQualificationEntity>>> SaveEmpQua([FromBody]EmpQualificationEntity empQualificationEntity)
+        {
+            try
+            {
+                var res = await _employeeService.SaveEmpQua(empQualificationEntity);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         //Upload Image
         //[HttpPost]
         //public ActionResult UploadEmployeePhoto()

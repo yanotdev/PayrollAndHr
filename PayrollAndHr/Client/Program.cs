@@ -19,6 +19,7 @@ builder.Services.AddScoped<ISetUpService, SetUpService>();
 
 builder.Services.AddBlazoredModal();
 
+
 builder.Services.AddBlazoredSessionStorage();
 
 await builder.Build().RunAsync();

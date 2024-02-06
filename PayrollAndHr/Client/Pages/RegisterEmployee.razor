@@ -721,18 +721,18 @@
                                                 </div>
                                                 <div class="col-md-3"></div>
                                                 <div class="col-md-4">
-                                                    <input type="checkbox" class = "checkbox" id = "chkheavy"/>
+                                                    <input type="checkbox" @onchange="CheckHeavyDrinker" class = "checkbox" id = "chkheavy"/>
                                                     Heavy Drinker
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <input type="checkbox" class = "checkbox" id = "chknodrink"/>
+                                                    <input type="checkbox" @onchange="CheckNoDrinker" class = "checkbox" id = "chknodrink"/>
                                                     No
                                                 </div>
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">Allergies:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class = "form-control control-input-border" id = "txtallergies" placeholder = "Please indicate if any"/>
+                                                    <input type="text" @bind="medicalEntity.Allergies" class = "form-control control-input-border" id = "txtallergies" placeholder = "Please indicate if any"/>
                                                     
                                                 </div>
                                             </div>
@@ -742,35 +742,35 @@
                                                 <div class="col-md-10 control-space"><label class="label">Please Check according to previous/current medical history</label></div>
                                                 <div class="col-md-3"></div>
                                                 <div class="col-md-2">
-                                                    <input type="checkbox" class = "checkbox" id = "chkHBP"/>
+                                                    <input type="checkbox" @onchange="CheckHBP" class = "checkbox" id = "chkHBP"/>
                                                      HBP
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <input type="checkbox" class = "checkbox" id = "chkAsmathic"/>
+                                                    <input type="checkbox" @onchange="CheckAsmathic" class = "checkbox" id = "chkAsmathic"/>
                                                      Asmathic
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <input type="checkbox" class = "checkbox" id = "chkDiabetic" />
+                                                    <input type="checkbox" @onchange="CheckDiabetic" class = "checkbox" id = "chkDiabetic" />
                                                      Diabetic
                                                 </div>
                                                 <div class="col-md-3"></div>
                                                 <div class="col-md-2">
-                                                    <input type="checkbox" class = "checkbox" id = "chkCancer"/>
+                                                    <input type="checkbox" @onchange="CheckCancer" class = "checkbox" id = "chkCancer"/>
                                                     Cancer
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="checkbox" class = "checkbox" id = "chkTerminal"/>
+                                                    <input type="checkbox" @onchange="CheckTerminal" class = "checkbox" id = "chkTerminal"/>
                                                     Terminal Disease
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <input type="checkbox" class = "checkbox" id = "chkOther" />
+                                                    <input type="checkbox" @onchange="CheckOthers" class = "checkbox" id = "chkOther" />
                                                     Others
                                                </div>
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">Comments:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <textarea name="medComm" class = "form-control control-input-border" id = "txtmedComm" rows = 6></textarea>
+                                                    <textarea name="medComm" @bind="medicalEntity.Comments"class = "form-control control-input-border" id = "txtmedComm" rows=6></textarea>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space">
@@ -785,15 +785,22 @@
                                 }
                                 else if (selectedTabIndex == 5)
                                 {
+                                    <EditForm Model="empEmploymentEntity" OnSubmit="SaveEmploymentInfo">
                                     <div class="row">
+
                                         <div class="col-md-6">
+                                            <div class="text-danger">
+                                                @EmploymentInfoMessage
+                                            </div>
                                             <div class="row">
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">Branch:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <select name="branch" class = "form-control control-input-border" id = "cboBranch">
+                                                    <select name="branch" @bind="empEmploymentEntity.Branch"class = "form-control control-input-border" id = "cboBranch">
                                                         <option>----Select----</option>
+                                                        <option value="Ikeja">Ikeja</option>
+                                                        <option value="VI">VI</option>
                                                     </select>
                                                     
                                                 </div>
@@ -801,15 +808,17 @@
                                                     <label class="label">Date Joined:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class = "form-control control-input-border" id = "txtdateJoined" placeholder = "DD/MM/YYYY"/>
+                                                    <input type="text" @bind="empEmploymentEntity.DateJoined" class = "form-control control-input-border" id = "txtdateJoined" placeholder = "DD/MM/YYYY"/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">Grade/Level:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <select name="level" class = "form-control control-input-border" contextmenuid = "cboLevel">
+                                                    <select name="level" @bind="empEmploymentEntity.EmpLevel"class = "form-control control-input-border" contextmenuid = "cboLevel">
                                                         <option>----Select----</option>
+                                                        <option value="1">I</option>
+                                                        <option value="2">II</option>
                                                     </select>
                                                     
                                                 </div>
@@ -817,16 +826,18 @@
                                                     <label class="label">Date Started:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <input type="text" class = "form-control control-input-border" id = "txtdateStarted" placeholder = "DD/MM/YYYY"/>
+                                                    <input type="text" @bind="empEmploymentEntity.DateStarted"class = "form-control control-input-border" id = "txtdateStarted" placeholder = "DD/MM/YYYY"/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space">
                                                     <label class="label">Designation:</label>
                                                 </div>
                                                 <div class="col-md-9 control-space">
-                                                    <select class="form-control control-input-border"  id="cbodesignation">
+                                                    <select @bind="empEmploymentEntity.Designation"class="form-control control-input-border"  id="cbodesignation">
                                                         <option>----Select----</option>
-                                                    </select>>
+                                                        <option value="Manager">Manager</option>
+                                                        <option value="Supervisor">Supervisor</option>
+                                                    </select>
                                                     
                                                 </div>
                                             </div>
@@ -837,8 +848,10 @@
                                                     <label class="label">Employement Type:</label>
                                                 </div>
                                                 <div class="col-md-8 control-space">
-                                                    <select class = "form-control control-input-border" id = "cboempType">
+                                                    <select class = "form-control control-input-border" @bind="empEmploymentEntity.EmploymentType"id = "cboempType">
                                                         <option>----Select----</option>
+                                                        <option value="FullTime">FullTime</option>
+                                                        <option value="PartTime">PartTime</option>
                                                     </select>
                                                      
                                                 </div>
@@ -846,8 +859,10 @@
                                                     <label class="label">Department:</label>
                                                 </div>
                                                 <div class="col-md-8 control-space">
-                                                    <select name="dept" class = "form-control control-input-border" id = "cbodept">
+                                                    <select name="dept" @bind="empEmploymentEntity.Department"class = "form-control control-input-border" id = "cbodept">
                                                         <option>----Select----</option>
+                                                        <option value="Software">Software</option>
+                                                        <option value="HR">HR</option>
                                                     </select>
                                                    
                                                 </div>
@@ -855,7 +870,7 @@
                                                     <label class="label">Job Description:</label>
                                                 </div>
                                                 <div class="col-md-8 control-space">
-                                                    <textarea name="jobDescription" class = "form-control control-input-border" id = "txtjobDescription" rows = 6></textarea>
+                                                    <textarea name="jobDescription" @bind="empEmploymentEntity.JobDescription" class = "form-control control-input-border" id = "txtjobDescription" rows=6></textarea>
                                                     
                                                 </div>
                                                 <div class="col-md-4 control-space">
@@ -866,12 +881,17 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </EditForm>
                                 }
                                 else if (selectedTabIndex == 6)
                                 {
+                                  <EditForm Model="empExperienceEntity" OnSubmit="SaveEmpExperience">
                                     <div class="col-md-12">
                                         <div class="card">
                                             <div class="card-header"><strong>Work Experience Information </strong></div>
+                                            <div class="text-danger">
+                                                @EmployeeExpMessage
+                                            </div>
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-md-6">
@@ -879,14 +899,14 @@
                                                             <label class="label">Company Name:</label>
                                                         </div>
                                                         <div class="col-md-7 control-space">
-                                                            <input type="text" class="form-control clear control-input-border" id="txtcompName" placeholder="Type Company Name here" />
+                                                            <input type="text" @bind="empExperienceEntity.CompName"class="form-control clear control-input-border" id="txtcompName" placeholder="Type Company Name here" />
 
                                                         </div>
                                                         <div class="col-md-5 control-space">
                                                             <label class="label">Job Position:</label>
                                                         </div>
                                                         <div class="col-md-7 control-space">
-                                                            <input type="text" class="form-control clear control-input-border" id="txtjobPosition" placeholder="Type Job Position Name here" />
+                                                            <input type="text" @bind="empExperienceEntity.JobPosition"class="form-control clear control-input-border" id="txtjobPosition" placeholder="Type Job Position Name here" />
 
                                                         </div>
                                                     </div>
@@ -895,14 +915,14 @@
                                                             <label class="label">Date Joined:</label>
                                                         </div>
                                                         <div class="col-md-8 control-space">
-                                                            <input type="text" class="form-control clear control-input-border" id="txtdJoined" placeholder="DD/MM/YYYY" />
+                                                            <input type="text" @bind="empExperienceEntity.DJoined"class="form-control clear control-input-border" id="txtdJoined" placeholder="DD/MM/YYYY" />
 
                                                         </div>
                                                         <div class="col-md-4 control-space">
                                                             <label class="label">Date Left:</label>
                                                         </div>
                                                         <div class="col-md-8 control-space">
-                                                            <input type="text" class="form-control clear control-input-border" id="txtdLeft" placeholder="DD/MM/YYYY" />
+                                                            <input type="text" @bind="empExperienceEntity.DLeft"class="form-control clear control-input-border" id="txtdLeft" placeholder="DD/MM/YYYY" />
 
                                                         </div>
                                                         <div class="col-md-4 control-space">
@@ -923,13 +943,17 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                </EditForm>
                                 }
                                 else if (selectedTabIndex == 7)
                                 {
+                                <EditForm Model="qualification" OnSubmit="SaveEmpQualification">
                                     <div class="col-md-12">
                                         <div class="card">
                                             <div class="card-header"><strong>Educational and Other Qualifications Information </strong></div>
+                                            <div class="text-danger">
+                                                @EmployeeQuaMessage
+                                            </div>
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-md-6">
@@ -937,7 +961,7 @@
                                                             <label class="label">Institution Attended:</label>
                                                         </div>
                                                         <div class="col-md-12 control-space">
-                                                            <input type="text" class = "form-control clear control-input-border clear" id = "txtinstiAtt" placeholder = "Type Institution here..."/>
+                                                            <input type="text" @bind="qualification.Institution" class = "form-control clear control-input-border clear" id = "txtinstiAtt" placeholder = "Type Institution here..."/>
                                                             
                                                         </div>
                                                         <div class="col-md-12 control-space">
@@ -945,7 +969,7 @@
                                                         </div>
                                                         <div class="col-md-12 control-space" style="margin-bottom:10px;">
                                                             <div class="col-md-12 control-space" style="margin-bottom:10px;">
-                                                                <select name="edudegree" class = "form-control control-input-border clear" id = "txtedudegree">
+                                                                <select name="edudegree" @bind="qualification.EducationQua"class = "form-control control-input-border clear" id = "txtedudegree">
                                                                     <option value="Masters Degree">Masters Degree</option>
                                                                     <option value="Bachelor Degreee">Bachelor Degreee</option>
                                                                     <option value="SSCE">SSCE</option>
@@ -954,7 +978,7 @@
                                                                
                                                             </div>
                                                             <div class="col-md-12 control-space">
-                                                                <input type="text class = "form-control clear control-input-border clear" id = "txtOthQuali" placeholder = "Please Specify---"/>
+                                                                <input type="text" class="form-control clear control-input-border clear" id = "txtOthQuali" placeholder = "Please Specify---"/>
                                                                 
                                                             </div>
 
@@ -965,8 +989,9 @@
                                                             <label class="label">Year:</label>
                                                         </div>
                                                         <div class="col-md-8 control-space">
-                                                            <select name="year" class="form-control clear control-input-border"  id="txtyear">
-                                                                <option>--Year--</option>
+                                                            <select name="year" @bind="qualification.Year"class="form-control clear control-input-border"  id="txtyear">
+                                                                <option value="year">--Year--</option>
+                                                                <option value="2024">2024</option>
                                                             </select>
                                                            
                                                         </div>
@@ -988,6 +1013,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                </EditForm>
                                 }
                                 else if (selectedTabIndex == 8)
                                 {
@@ -996,14 +1022,15 @@
                                         <div class="card">
                                             <div class="card-header">Upload Documents, Qualifications and Other relevant files</div>
                                             <div class="card-body">
-                                                <div class="col-sm-6" id="FileBrowse">
-                                                    <input type="file" id="empfileAtt" /><br />
+                                                <form method="post">                                                <div class="col-sm-6" id="FileBrowse">
+                                                <InputFile type="file" OnChange="HandleFileChangeUpload" id="empfileAtt" /><br />
                                                     <div id="progressbar-5" class="mt-3">
                                                         <div class="        ">
                                                         </div>
                                                     </div><br />
-                                                    <button class="btn btn-outline-info" id="uploadAttachment" type="submit"><i class="fa fa-upload"> Upload File</i></button>
+                                                    <button class="btn btn-outline-info" onclick="()=>UploadFileAsync()" id="uploadAttachment" type="submit"><i class="fa fa-upload"> Upload File</i></button>
                                                 </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -1084,6 +1111,10 @@
     private string GuarantorMessage = string.Empty;
     private string ReferenceMessage = string.Empty;
     private string MedicalHisMessage = string.Empty;
+    private string EmploymentInfoMessage = string.Empty;
+    private string EmployeeExpMessage = string.Empty;
+    private string EmployeeQuaMessage = string.Empty;
+    private IBrowserFile file;
 
     [Inject]
 
@@ -1098,6 +1129,9 @@
     GurrantorEntity gurrantorEntity = new GurrantorEntity();
     ReferenceEntity referenceEntity = new ReferenceEntity();
     MedicalEntity medicalEntity = new MedicalEntity();
+    EmpEmploymentEntity empEmploymentEntity = new EmpEmploymentEntity();
+    EmpExperienceEntity empExperienceEntity = new EmpExperienceEntity();
+    EmpQualificationEntity qualification = new EmpQualificationEntity();
 
     //private InputFile fileInput;
 
@@ -1150,7 +1184,7 @@
     }
     private async Task SaveReferenceInfo()
     {
-        
+
         referenceEntity.RegistrationID = personalInformationEntity.RegistrationID;
         var result = await _employeeService.SaveReference(referenceEntity);
         if (result.Success)
@@ -1160,10 +1194,7 @@
     }
     private async Task SaveMedicalHis()
     {
-        if (_check == true)
-        {
 
-        }
         medicalEntity.RegistrationID = personalInformationEntity.RegistrationID;
         var result = await _employeeService.SaveMedicalHis(medicalEntity);
         if (result.Success)
@@ -1171,6 +1202,38 @@
             MedicalHisMessage = result.Message;
         }
     }
+    private async Task SaveEmploymentInfo()
+    {
+
+        empEmploymentEntity.RegistrationID = personalInformationEntity.RegistrationID;
+        empEmploymentEntity.StaffNo = personalInformationEntity.StaffNo;
+        var result = await _employeeService.SaveEmp(empEmploymentEntity);
+        if (result.Success)
+        {
+            EmploymentInfoMessage = result.Message;
+        }
+    }
+    private async Task SaveEmpExperience()
+    {
+        empExperienceEntity.RegistrationID = personalInformationEntity.RegistrationID;
+
+        var result = await _employeeService.SaveEmpExp(empExperienceEntity);
+        if (result.Success)
+        {
+            EmployeeExpMessage = result.Message;
+        }
+    }
+    private async Task SaveEmpQualification()
+    {
+        qualification.RegistrationID = personalInformationEntity.RegistrationID;
+
+        var result = await _employeeService.SaveEmpQua(qualification);
+        if (result.Success)
+        {
+            EmployeeQuaMessage = result.Message;
+        }
+    }
+
     private async Task GetStaffRegNo()
     {
         var result = await _employeeService.GetRegistrationNo();
@@ -1186,6 +1249,41 @@
         //{
         //    await ProcessAndSetImage();
         //}
+    }
+    private async Task HandleFileChangeUpload(InputFileChangeEventArgs e)
+    {
+        file = e.File;
+        if (file != null)
+        {            
+            await UploadFileAsync(file);
+        }
+    }
+    private async Task UploadFileAsync(IBrowserFile file)
+    {
+        try
+        {
+            var ms = new MemoryStream();
+
+            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            string fileName = $"{Guid.NewGuid()}_{file.Name}";
+
+            // Combine folder path and file name to get the full file path
+            string filePath = Path.Combine(folderPath, fileName);
+
+            // Create the folder if it doesn't exist
+            Directory.CreateDirectory(folderPath);
+            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+            {
+                ms.Seek(0, SeekOrigin.Begin);
+                await ms.CopyToAsync(fs);             
+            }
+            Console.WriteLine($"File uploaded to: {filePath}");
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error uploading file: {ex.Message}");
+        }
+
     }
 
     private async Task ProcessAndSetImage()
@@ -1234,7 +1332,7 @@
     private void CheckRefAd(ChangeEventArgs e)
     {
         if((bool)e.Value == true){
-          
+
             referenceEntity.RAddress = empContactInfoEntity.Address;
         }
     }
@@ -1251,7 +1349,7 @@
         if((bool)e.Value == true){
             medicalEntity.Smoke = "No";
         }
-        
+
     }
     private void CheckSocialDrinker(ChangeEventArgs e)
     {
@@ -1259,7 +1357,6 @@
         {
             medicalEntity.Drink = "Social Drinker";
         }
-
     }
 
     private void CheckModDrinker(ChangeEventArgs e)
@@ -1268,7 +1365,65 @@
         {
             medicalEntity.Drink = "Moderate";
         }
-
     }
-    
+
+    private void CheckHeavyDrinker(ChangeEventArgs e)
+    {
+        if ((bool)e.Value == true)
+        {
+            medicalEntity.Drink = "Heavy";
+        }
+    }
+    private void CheckNoDrinker(ChangeEventArgs e)
+    {
+        if ((bool)e.Value == true)
+        {
+            medicalEntity.Drink = "No";
+        }
+    }
+    private void CheckHBP(ChangeEventArgs e)
+    {
+        if ((bool)e.Value == true)
+        {
+            medicalEntity.MedHistory = "HBP";
+        }
+    }
+    private void CheckAsmathic(ChangeEventArgs e)
+    {
+        if ((bool)e.Value == true)
+        {
+            medicalEntity.MedHistory = "Asmathic";
+        }
+    }
+    private void CheckDiabetic(ChangeEventArgs e)
+    {
+        if ((bool)e.Value == true)
+        {
+            medicalEntity.MedHistory = "Diabetic";
+        }
+    }
+    private void CheckCancer(ChangeEventArgs e)
+    {
+        if ((bool)e.Value == true)
+        {
+            medicalEntity.MedHistory = "Cancer";
+        }
+    }
+    private void CheckTerminal(ChangeEventArgs e)
+    {
+        if ((bool)e.Value == true)
+        {
+            medicalEntity.MedHistory = "Terminal";
+        }
+    }
+    private void CheckOthers(ChangeEventArgs e)
+    {
+        if ((bool)e.Value == true)
+        {
+            medicalEntity.MedHistory = "Others";
+        }
+    }
+
+
+
 }

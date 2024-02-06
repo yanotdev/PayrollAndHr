@@ -19,6 +19,9 @@ namespace PayrollAndHr.Server.Services
         Task<ServiceResponse<GurrantorEntity>> SaveGuarantor(GurrantorEntity guarantor);
         Task<ServiceResponse<ReferenceEntity>> SaveReference(ReferenceEntity reference);
         Task<ServiceResponse<MedicalEntity>> SaveMedicalHis(MedicalEntity history);
+        Task<ServiceResponse<EmpEmploymentEntity>> SaveEmp(EmpEmploymentEntity employment);
+        Task<ServiceResponse<EmpExperienceEntity>> SaveEmpExp(EmpExperienceEntity experience);
+        Task<ServiceResponse<EmpQualificationEntity>> SaveEmpQua(EmpQualificationEntity qualification);
 
     }
 }

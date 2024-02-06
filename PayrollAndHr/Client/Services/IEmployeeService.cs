@@ -14,5 +14,8 @@ namespace PayrollAndHr.Client.Services
         Task<ServiceResponse<GurrantorEntity>> SaveGuarantor(GurrantorEntity gurrantorEntity);
         Task<ServiceResponse<ReferenceEntity>> SaveReference(ReferenceEntity referenceEntity);
         Task<ServiceResponse<MedicalEntity>> SaveMedicalHis(MedicalEntity medicalEntity);
+        Task<ServiceResponse<EmpEmploymentEntity>> SaveEmp(EmpEmploymentEntity empEmploymentEntity);
+        Task<ServiceResponse<EmpExperienceEntity>> SaveEmpExp(EmpExperienceEntity empEmploymentEntity);
+        Task<ServiceResponse<EmpQualificationEntity>> SaveEmpQua(EmpQualificationEntity empQualificationEntity);
     }
 }

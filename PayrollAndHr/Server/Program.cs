@@ -19,9 +19,10 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAdminPortalService, AdminPortalService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ISetUpService, SetUpService>();
-builder.Services.AddScoped<IPayrollService, PayrollService>();  
+builder.Services.AddScoped<IPayrollService, PayrollService>();
 
-
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
 
 builder.Services.AddSession();
 

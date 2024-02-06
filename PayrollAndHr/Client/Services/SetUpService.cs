@@ -19,5 +19,11 @@ namespace PayrollAndHr.Client.Services
             return await result.Content.ReadFromJsonAsync<ServiceResponse<BranchEntity>>();
 
         }
+        public async Task<ServiceResponse<TitleEntity>?> SaveTitle(TitleEntity title)
+        {
+            var result = await _httpClient.PostAsJsonAsync("api/SetUp/SaveTitle", title);
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<TitleEntity>>();
+
+        }
     }
 }
