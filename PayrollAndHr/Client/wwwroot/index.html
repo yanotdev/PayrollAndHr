@@ -28,6 +28,11 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        window.alert = function (message) {
+            return window.confirm(message);
+        };
+    </script>
 </body>
 
 </html>

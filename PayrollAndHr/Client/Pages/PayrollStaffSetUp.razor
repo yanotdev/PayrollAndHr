@@ -1,6 +1,9 @@
 ﻿@page "/staffsetup/"
+@using PayrollAndHr.Client.Services;
 @using PayrollAndHr.Client.Shared.Components
+@using PayrollAndHr.Shared.Models;
 @layout PayrollAndHr.Client.Shared.Layouts.PayrollLayout
+@inject IPayrollService _payrollService
 
 <style>
     .control-space {
@@ -51,15 +54,20 @@
                 </div>
                 <div class="col-md-7">
 
-                    <select name="staffId" class="form-control control-input-border" id="cbostaffId">
+                    <select name="staffId" @onchange="OnDropdownChange" class="form-control control-input-border" id="cbostaffId">
                         <option>- - - - - - - - - - Select - - - - - - - - - - </option>
+                        @foreach(var m in personalInformation)
+                        {
+                            <option value="@m.StaffNo">@m.StaffNo- @m.Surname @m.FirstName </option>
+                        }
+                        
                     </select>                    
                 </div>
                 <div class="col-md-3 control-space">
                     <label class="label">Staff Name:</label>
                 </div>
                 <div class="col-md-7 control-space">
-                    <input type="text" name="staffName" class = "form-control control-input-border" id = "cboStaffName" disabled/>
+                    <input type="text" name="staffName" @bind="loadedvalue" class="form-control control-input-border" id="cboStaffName" disabled />
                     <input type="text" name="staffName" class = "form-control control-input-border hide-txt" placeholder = "Type Name here"id  = "txtstaffNameAdd" />
                     
                 </div>
@@ -727,7 +735,30 @@
 
 @code {
     private int selectedTabIndex = 0;
+    private string loadedvalue = string.Empty;
+    List<PersonalInformationEntity> personalInformation = new List<PersonalInformationEntity>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await _payrollService.GetallStaff();
+        personalInformation = result;
+
+    }
+    private async Task OnDropdownChange(ChangeEventArgs e)
+    {
+        
+
+        // Load information based on the selected value
+        Task.Delay(500);
+        var result = await _payrollService.GetallStaff();
+        foreach (var m in result)
+        {
+            if (e.Value.ToString() == m.StaffNo)
+            {
+                loadedvalue = m.Surname + " " + m.FirstName;
+            }
+        }
+    }
 
     public void SelectTab(int index)
     {

@@ -171,24 +171,9 @@
                                                                         <td>@m.ID</td>
                                                                         <td>@m.Description</td>
                                                                         <td>@m.AllType</td>                                                                        
-                                                                        <td>
-                                                                        @if (IsEditOn)
-                                                                        {
-                                                                            <input type="text" @bind="@m.Percentage" />
-                                                                                <button class="btn btn-primary" @onclick=@(()=>SaveEdit(@m))>Save</button>
-                                                                        }
-                                                                        else
-                                                                        {
-
-                                                                            @m.Percentage
-
-                                                                        }
-                                                                        </td>
-
-                                                                      
-                                                                                                                                   
-                                                                        <td style="display:flex">
-                                                                            <div @onclick=@(()=>EditAllowance()) title="Edit"><i class="fa fa-pencil"></i></div>
+                                                                        <td>@m.Percentage</td>
+                                                                         <td style="display:flex">
+                                                                            <div @onclick=@(()=>EditAllowance(m.Code)) title="Edit"><i class="fa fa-pencil"></i></div>
                                                                             &nbsp;&nbsp;&nbsp;
                                                                             <div @onclick="() => DeleteAllowance(m.Code)" title="Delete"><i class="fa fa-trash"></i></div>
                                                                         </td>
@@ -273,10 +258,10 @@
                                                                     <td>@m.Description</td>
                                                                     <td>@m.EmployeePer</td>
                                                                     <td>@m.EmployerPer</td>
-                                                                    <td>
-                                                                        <a href="#" onclick="Edit(@m.Code)" title="Edit"><i class="fa fa-pencil"></i></a>
+                                                                    <td style="display:flex;">
+                                                                        <div  @onclick=@(()=>EditPension(@m.Code)) title="Edit"><i class="fa fa-pencil"></i></div>
                                                                         &nbsp;&nbsp;&nbsp;
-                                                                        <a href="#" onclick="Delete(@m.Code)" title="Delete"><i class="fa fa-trash"></i></a>
+                                                                        <div  @onclick="() => DeletePension(m.Code)" title="Delete"><i class="fa fa-trash"></i></div>
                                                                     </td>
                                                                 </tr>
                                                             }
@@ -383,10 +368,10 @@
                                                                     <td>@m.Description</td>
                                                                     <td>@m.MinPay</td>
                                                                     <td>@m.MaxPay</td>
-                                                                    <td>
-                                                                        <a href="#" onclick="Edit(@m.Code)" title="Edit"><i class="fa fa-pencil"></i></a>
+                                                                    <td style="display:flex;">
+                                                                        <div @onclick="()=>EditLoan(m.Code)" title="Edit"><i class="fa fa-pencil"></i></div>
                                                                         &nbsp;&nbsp;&nbsp;
-                                                                        <a href="#" onclick="Delete(@m.Code)" title="Delete"><i class="fa fa-trash"></i></a>
+                                                                        <div @onclick="()=>DeleteLoan(m.Code)" title="Delete"><i class="fa fa-trash"></i></div>
                                                                     </td>
                                                                 </tr>
                                                             }
@@ -474,11 +459,11 @@
                                                                     <td>@m.Description</td>
                                                                     <td>@m.DeductType</td>
                                                                     <td>@m.Percentage</td>
-                                                                    <td>
+                                                                    <td style="display: flex;">
                                                                         
-                                                                        <a href="#" onclick="Edit(@m.Code)" title="Edit"><i class="fa fa-pencil"></i></a>
+                                                                        <div @onclick="() => EditPenalty(m.Code)" title="Edit"><i class="fa fa-pencil"></i></div>
                                                                         &nbsp;&nbsp;&nbsp;
-                                                                        <a href="#" onclick="Delete(@m.Code)" title="Delete"><i class="fa fa-trash"></i></a>
+                                                                        <div @onclick="() => DeletePenalty(m.Code)" title="Delete"><i class="fa fa-trash"></i></div>
                                                                     </td>
                                                                 </tr>
                                                             }
@@ -504,9 +489,9 @@
 
                                         <div class="row">
                                             <div class="col-md-5">
-                                            <EditForm method="post" Model="@otherAllowancesEntity" OnSubmit="@SaveOtherAllowance" class="form-inline">
+                                            <EditForm  Model="@otherAllowancesEntity" OnSubmit="@SaveOtherAllowance" class="form-inline">
 
-                                                <button class="btn btn-primary ml-5" type="submit" @onclick=@(()=>GetCode("OtherAllowance")) id="NewOtherAllowance" style="margin-right: 5px;"><i class="fa fa-file-o"></i>New</button>
+                                                <button class="btn btn-primary ml-5" @onclick=@(()=>GetCode("OtherAllowance")) id="NewOtherAllowance" style="margin-right: 5px;"><i class="fa fa-file-o"></i>New</button>
                                                     <div class="row">
                                                         <div class="text-danger">@OtherAllowanceMessage</div>
                                                         <div class="col-md-3 control-space ml-2">
@@ -550,10 +535,10 @@
                                                                     <td>@m.ID</td>
                                                                     <td>@m.Description</td>                                                                  
                                                                     
-                                                                    <td>
-                                                                        <a href="#" onclick="Edit(@m.Code)" title="Edit"><i class="fa fa-pencil"></i></a>
+                                                                    <td style="display:flex;">
+                                                                        <div @onclick="() => EditOtherAllowance(m.Code)" title="Edit"><i class="fa fa-pencil"></i></div>
                                                                         &nbsp;&nbsp;&nbsp;
-                                                                        <a href="#" onclick="Delete(@m.Code)" title="Delete"><i class="fa fa-trash"></i></a>
+                                                                        <div @onclick="() => DeleteOtherAllowance(m.Code)" title="Delete"><i class="fa fa-trash"></i></div>
                                                                     </td>
                                                                 </tr>
                                                             }
@@ -686,6 +671,8 @@
         {
             PensionMessage = "Not Saved Successfully";
         }
+        var res = await _payrollService.GetPensions();
+        pensions = res.Data;
     }
     public async Task SaveLoan()
     {
@@ -701,6 +688,8 @@
         {
             LoanMessage = "Not Saved Successfully";
         }
+        var loansresult = await _payrollService.GetLoans();
+        loans = loansresult.Data;
     }
     public async Task SavePenalty()
     {
@@ -716,6 +705,8 @@
         {
             PenaltyMessage = "Not Saved Successfully";
         }
+        var penaltyresult = await _payrollService.GetPenalties();
+        penalties = penaltyresult.Data;
     }
 
     public async Task SaveOtherAllowance()
@@ -732,24 +723,69 @@
         {
             OtherAllowanceMessage = "Not Saved Successfully";
         }
+        var othersresult = await _payrollService.GetOtherAllowances();
+        otherAllowancesEntities = othersresult.Data;
     }
 
-    public async Task EditAllowance()
+    public async Task EditAllowance(int Code)
     {
-        IsEditOn = !IsEditOn;
+        var result = await _payrollService.EditAllowance(Code);
+        allowance = result;
     }
 
-    public async Task SaveEdit(AllowanceEntity allowanceEntity)
+    private async Task EditPension(int Code)
     {
-        await _payrollService.EditAllowance(allowanceEntity);
-        IsEditOn = false;
+        var result = await _payrollService.EditPension(Code);
+        pension = result;
+    }
+    private async Task DeletePension(int code)
+    {
+        await _payrollService.DeletePension(code);
+        var res = await _payrollService.GetPensions();
+        pensions = res.Data;
+    }
+    private async Task EditLoan(int Code)
+    {
+        var result = await _payrollService.EditLoan(Code);
+        loan = result;
     }
 
+    private async Task DeleteLoan(int Code)
+    {
+        await _payrollService.DeleteLoan(Code);
+        var loansresult = await _payrollService.GetLoans();
+        loans = loansresult.Data;
+    }
     public async Task DeleteAllowance(int Code)
     {
         await _payrollService.DeleteAllowance(Code);
         var result = await _payrollService.GetAllowances();
         allowances = result.Data;
+    }
+
+    private async Task EditPenalty(int Code)
+    {
+        var reuslt =await _payrollService.EditPenalty(Code);
+        penalty = reuslt;
+    }
+
+    private async Task DeletePenalty(int code)
+    {
+        await _payrollService.DeletePenalty(code);
+        var penaltyresult = await _payrollService.GetPenalties();
+        penalties = penaltyresult.Data;
+    }
+
+    private async Task EditOtherAllowance(int code)
+    {
+        var result = await _payrollService.EditOtherAllowances(code);
+        otherAllowancesEntity = result;
+    }
+    private async Task DeleteOtherAllowance(int Code)
+    {
+        await _payrollService.DeleteOtherAllowances(Code);
+        var othersresult = await _payrollService.GetOtherAllowances();
+        otherAllowancesEntities = othersresult.Data;
     }
     public void SelectTab(int index)
     {

@@ -77,25 +77,10 @@ namespace PayrollAndHr.Server.Services
             };
         }
         //edit Allowance
-        public async Task<ServiceResponse<AllowanceEntity>> EditAllowance(AllowanceEntity allowanceEntity)
+        public async Task<AllowanceEntity> EditAllowance(int Code)
         {
-            var dept = _context.Allowances.Where(d => d.Code == allowanceEntity.Code).FirstOrDefault();
-            
-            dept.Description = allowanceEntity.Description;
-            dept.Percentage = allowanceEntity.Percentage;
-            dept.Grade = allowanceEntity.Grade; 
-            dept.Period = allowanceEntity.Period;
-            dept.AllType = allowanceEntity.AllType;
-
-            _context.Entry(dept).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return new ServiceResponse<AllowanceEntity>()
-            {
-                Data = dept,
-                Message = "Edit Successful",
-                Success = true,
-            };
+            var dept = _context.Allowances.Where(d => d.Code == Code).FirstOrDefault();
+            return dept;              
         }
 
         
@@ -144,6 +129,23 @@ namespace PayrollAndHr.Server.Services
                 Success = true,
             };
         }
+        //Edit pension
+        public async Task<PensionEntity> EditPension(int code)
+        {
+            var data = _context.Pensions.Where(d => d.Code == code).FirstOrDefault();
+            return data;
+        }
+        //delete pension
+        public async Task<bool> DeletePension(int Code)
+        {
+
+            var data = _context.Pensions.Where(d => d.Code == Code).FirstOrDefault();
+            _context.Entry(data).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+
+            return true;
+
+        }
         //Save loan
         public async Task<ServiceResponse<LoanEntity>> SaveLoan(LoanEntity loan)
         {
@@ -180,6 +182,24 @@ namespace PayrollAndHr.Server.Services
                 Message = "Successful",
                 Success = true,
             };
+        }
+        //Edit loans
+        public async Task<LoanEntity> EditLoans(int code)
+        {
+            var data = _context.Loans.Where(d => d.Code == code).FirstOrDefault();
+            return data;
+        }
+
+        //delete loans
+        public async Task<bool> DeleteLoans(int Code)
+        {
+
+            var data = _context.Loans.Where(d => d.Code == Code).FirstOrDefault();
+            _context.Entry(data).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+
+            return true;
+
         }
         //save penalty
         public async Task<ServiceResponse<PenaltyEntity>> SavePenalty(PenaltyEntity penalty)
@@ -218,6 +238,25 @@ namespace PayrollAndHr.Server.Services
                 Success = true,
             };
         }
+
+        //Edit penalty
+        public async Task<PenaltyEntity> EditPenalty(int code)
+        {
+            var data = _context.Penalties.Where(d => d.Code == code).FirstOrDefault();
+            return data;
+        }
+
+        //delete penalty
+        public async Task<bool> DeletePenalty(int Code)
+        {
+
+            var data = _context.Penalties.Where(d => d.Code == Code).FirstOrDefault();
+            _context.Entry(data).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+
+            return true;
+
+        }
         //Save Other Allowance
         public async Task<ServiceResponse<OtherAllowancesEntity>> SaveOtherAllowance(OtherAllowancesEntity otherAllowances)
         {
@@ -253,6 +292,30 @@ namespace PayrollAndHr.Server.Services
                 Message = "Successful",
                 Success = true,
             };
+        }
+        //Edit other allowances
+        public async Task<OtherAllowancesEntity> EditOtherAllowances(int code)
+        {
+            var data = _context.otherAllowances.Where(d => d.Code == code).FirstOrDefault();
+            return data;
+        }
+
+        //delete other allowances
+        public async Task<bool> DeleteOtherAllowances(int Code)
+        {
+
+            var data = _context.otherAllowances.Where(d => d.Code == Code).FirstOrDefault();
+            _context.Entry(data).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+
+            return true;
+
+        }
+        //load all staff
+        public async Task<List<PersonalInformationEntity>> LoadAllStaff()
+        {
+            var result = _context.PersonalInfo.OrderBy(d => d.StaffNo).ToList();
+            return result;
         }
     }
 }

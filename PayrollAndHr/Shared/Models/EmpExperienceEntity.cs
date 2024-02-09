@@ -13,8 +13,8 @@ namespace PayrollAndHr.Shared.Models
         public long RegistrationID { get; set; }
         public string CompName { get; set; }
         public string JobPosition { get; set; }
-        public DateTime DJoined { get; set; }
-        public DateTime DLeft { get; set; }
+        public DateTime DJoined { get; set; } = DateTime.Now;
+        public DateTime DLeft { get; set; } = DateTime.Now;
         public bool IsDeleted { get; set; }
         public long ID { get; set; }
     }

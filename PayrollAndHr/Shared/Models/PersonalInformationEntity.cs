@@ -18,7 +18,7 @@ namespace PayrollAndHr.Shared.Models
         public string Surname { get; set; }
         public string MiddleName { get; set; }
         public string FirstName { get; set; }
-        public DateTime DateofBirth { get; set; }
+        public DateTime DateofBirth { get; set; } = DateTime.Now;
         public string MaritalStatus { get; set; }
         public string Gender { get; set; }
         public string Nationality { get; set; }

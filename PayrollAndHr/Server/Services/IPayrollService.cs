@@ -9,19 +9,29 @@ namespace PayrollAndHr.Server.Services
 
         Task<ServiceResponse<List<AllowanceEntity>>> LoadAllowances();
 
-        Task<ServiceResponse<AllowanceEntity>> EditAllowance(AllowanceEntity allowanceEntity);
+        Task<AllowanceEntity> EditAllowance(int Code);
         Task<bool> DeleteAllowance(int Code);
         Task<ServiceResponse<PensionEntity>> SavePension(PensionEntity pension);
 
         Task<ServiceResponse<List<PensionEntity>>> LoadPensions();
+        Task<PensionEntity> EditPension(int code);
+        Task<bool> DeletePension(int Code);
         Task<ServiceResponse<LoanEntity>> SaveLoan(LoanEntity loan);
+        Task<bool> DeleteLoans(int Code);
+        Task<LoanEntity> EditLoans(int code);
         Task<ServiceResponse<List<LoanEntity>>> LoadLoans();
 
 
         Task<ServiceResponse<PenaltyEntity>> SavePenalty(PenaltyEntity penalty);
         Task<ServiceResponse<List<PenaltyEntity>>> LoadPenalties();
+        Task<bool> DeletePenalty(int Code);
+        Task<PenaltyEntity> EditPenalty(int code);
 
         Task<ServiceResponse<OtherAllowancesEntity>> SaveOtherAllowance(OtherAllowancesEntity otherAllowances);
         Task<ServiceResponse<List<OtherAllowancesEntity>>> LoadOtherAllowances();
+        Task<bool> DeleteOtherAllowances(int Code);
+        Task<OtherAllowancesEntity> EditOtherAllowances(int code);
+        Task<List<PersonalInformationEntity>> LoadAllStaff();
+
     }
 }

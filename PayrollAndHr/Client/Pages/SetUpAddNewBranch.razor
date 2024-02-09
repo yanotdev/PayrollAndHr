@@ -10,11 +10,12 @@
         <div class="card">
             <div class="card-header"><strong>BRANCH INFORMATION</strong></div>
             <div class="card-body">
+                <EditForm Model="branch" OnSubmit="SaveBranch">
                 <div>
                     <button class="btn btn-primary" id="NewBranch" @onclick=@(()=>GetCode("Branch"))><i class="fa fa-file-o"></i> New</button>
-                    
+                    <button class="btn btn-primary" type="submit" id="SaveBranch"><i class="fa fa-save"></i> Save</button>
                 </div>
-                <EditForm Model="branch" OnSubmit="SaveBranch">
+               
                 
                     <br />
                     <div class="text-danger" id="successSave">
@@ -51,7 +52,7 @@
                             <img src="~/Images/ajax-loader7.gif" />
                         </span>
                     </div>*@
-                    <button class="btn btn-primary" type="submit" id="SaveBranch"><i class="fa fa-save"></i> Save</button>
+                    
                 </EditForm>
             </div>
         </div>
@@ -80,10 +81,10 @@
                             <td>@m.BranchCode.ToString()</td>
                             <td>@m.PhoneNo</td>
                             <td>@m.Email</td>
-                            <td>
-                                <a href="#" onclick="EditBranchInfo(@m.BranchCode)" title="Edit @m.BranchName"><i class="fa fa-pencil"></i></a>
+                            <td style="display:flex">
+                                <div @onclick=@(() => EditBranchInfo(@m.BranchCode)) title="Edit @m.BranchName"><i class="fa fa-pencil"></i></div>
                                 &nbsp;&nbsp;&nbsp;
-                                <a href="#" onclick="DeleteBranchInfo(@m.BranchCode)" title="Delete @m.BranchName"><i class="fa fa-trash"></i></a>
+                                <div @onclick=@(()=>ShowConfirmation(@m.BranchCode)) title="Delete @m.BranchName"><i class="fa fa-trash"></i></div>
                             </td>
                         </tr>
                     }
@@ -94,6 +95,9 @@
 </div>
 
 @code {
+
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
 
     private static List<BranchEntity>? branchlist = new List<BranchEntity>();
     private string BranchMessage = "";
@@ -121,5 +125,23 @@
             BranchMessage = result.Message;
             branchlist = await _httpClient.GetFromJsonAsync<List<BranchEntity>>("api/SetUp/LoadBranchInfo");
         }
+    }
+    private async Task EditBranchInfo(int Code)
+    {
+        var brnch = await _httpClient.GetFromJsonAsync<BranchEntity>("api/Setup/EditBranch/" + Code);
+        branch = brnch;
+    }
+
+  
+    private async Task ShowConfirmation(int Code)
+    {
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete?");
+
+        if (confirmed)
+        {
+            await _httpClient.DeleteAsync("api/Setup/DeleteBranch/" + Code);
+            branchlist = await _httpClient.GetFromJsonAsync<List<BranchEntity>>("api/SetUp/LoadBranchInfo");
+        }
+       
     }
 }

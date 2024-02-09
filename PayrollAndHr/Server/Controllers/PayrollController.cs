@@ -66,12 +66,12 @@ namespace Payroll_Application.Controllers
 
         }
 
-        [HttpPut("EditAllowance")]
-        public async Task<ActionResult<ServiceResponse<AllowanceEntity>>> EditAllowance(AllowanceEntity allowanceEntity)
+        [HttpGet("EditAllowance/{Code}")]
+        public async Task<ActionResult<AllowanceEntity>> EditAllowance(int Code)
         {
             try
             {
-                var result = await _payrollService.EditAllowance(allowanceEntity);
+                var result = await _payrollService.EditAllowance(Code);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -143,6 +143,35 @@ namespace Payroll_Application.Controllers
             }
 
         }
+        [HttpGet("EditPension/{Code}")]
+        public async Task<ActionResult<PensionEntity>> EditPension(int Code)
+        {
+            try
+            {
+                var result = await _payrollService.EditPension(Code);   
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeletePension/{Code}")]
+
+        public async Task<ActionResult<bool>> DeletePension(int Code)
+        {
+            try
+            {
+                var result = await _payrollService.DeletePension(Code);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
         //==============================================================================================
 
         //        //=================================NEW LOAN===================================================
@@ -189,6 +218,36 @@ namespace Payroll_Application.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("EditLoan/{Code}")]
+        public async Task<ActionResult<LoanEntity>> EditLoan(int Code)
+        {
+            try
+            {
+                var result = await _payrollService.EditLoans(Code);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteLoan/{Code}")]
+
+        public async Task<ActionResult<bool>> DeleteLoan(int Code)
+        {
+            try
+            {
+                var result = await _payrollService.DeleteLoans(Code);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
         //==============================================================================================
 
@@ -239,6 +298,35 @@ namespace Payroll_Application.Controllers
             }
         }
 
+        [HttpGet("EditPenalty/{Code}")]
+        public async Task<ActionResult<PenaltyEntity>> EditPenalty(int Code)
+        {
+            try
+            {
+                var result = await _payrollService.EditPenalty(Code);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeletePenalty/{Code}")]
+
+        public async Task<ActionResult<bool>> DeletePenalty(int Code)
+        {
+            try
+            {
+                var result = await _payrollService.DeletePenalty(Code);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
         //==============================================================================================
         //        //=================================NEW OTHER ALLOWANCE===================================================
         //        //Get OtherAllowance Code
@@ -284,6 +372,53 @@ namespace Payroll_Application.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+        [HttpGet("EditOtherAllowances/{Code}")]
+        public async Task<ActionResult<OtherAllowancesEntity>> EditOtherAllowances(int Code)
+        {
+            try
+            {
+                var result = await _payrollService.EditOtherAllowances(Code);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteOtherAllowances/{Code}")]
+
+        public async Task<ActionResult<bool>> DeleteOtherAllowances(int Code)
+        {
+            try
+            {
+                var result = await _payrollService.DeleteOtherAllowances(Code);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        //==============================================================================================
+        //        //=================================NEW STAFF SALARY===================================================
+
+        [HttpGet("GetallStaff")]
+
+        public async Task<ActionResult<List<PersonalInformationEntity>>> GetallStaff()
+        {
+            try
+            {
+                var result = await _payrollService.LoadAllStaff();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
     }
 }

@@ -68,7 +68,46 @@ namespace Payroll_Application.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("GetBranches")]
+        public async Task<ActionResult<List<BranchEntity>>> GetBranches()
+        {
+            try
+            {
+                var res = await _SetUpService.LoadAllBranchInfo();
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete("DeleteBranch/{Code}")]
+        public async Task<ActionResult<List<BranchEntity>>> DeleteBranch(int Code)
+        {
+            try
+            {
+                var res = await _SetUpService.DeleteBranch(Code);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("EditBranch/{Code}")]
 
+        public async Task<ActionResult<BranchEntity>> EditBranch(int Code)
+        {
+            try
+            {
+                var res = await _SetUpService.EditBranchInfo(Code);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         //===============================================================================================
 
         //====================================EMPLOYEE PARAMETER SETUP===================================
@@ -172,6 +211,46 @@ namespace Payroll_Application.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("GetLevels")]
+        public async Task<ActionResult<List<TitleEntity>>> GetLevels()
+        {
+            try
+            {
+                var levels = await _SetUpService.LoadAllLevels();
+                return Ok(levels);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete("DeleteLevel/{Code}")]
+        public async Task<ActionResult<List<TitleEntity>>> DeleteLevel(int Code)
+        {
+            try
+            {
+                var res = await _SetUpService.DeleteLevel(Code);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("EditLevel/{Code}")]
+
+        public async Task<ActionResult<TitleEntity>> EditLevel(int Code)
+        {
+            try
+            {
+                var res = await _SetUpService.EditLevel(Code);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         //====================================Department==================================
         //Get Dept Code
         [HttpGet("GetDeptCode")]
@@ -195,6 +274,47 @@ namespace Payroll_Application.Controllers
             {
                 var department = await _SetUpService.SaveDept(departmnt);
                 return Ok(department);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetDepts")]
+        public async Task<ActionResult<List<TitleEntity>>> GetDepts()
+        {
+            try
+            {
+                var depts = await _SetUpService.LoadAllDepartment();
+                return Ok(depts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete("DeleteDept/{Code}")]
+        public async Task<ActionResult<List<TitleEntity>>> DeleteDept(int Code)
+        {
+            try
+            {
+                var res = await _SetUpService.DeleteDepartment(Code);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("EditDept/{Code}")]
+
+        public async Task<ActionResult<TitleEntity>> EditDept(int Code)
+        {
+            try
+            {
+                var res = await _SetUpService.EditDepartment(Code);
+                return Ok(res);
             }
             catch (Exception ex)
             {
@@ -230,6 +350,46 @@ namespace Payroll_Application.Controllers
             }
         }
 
+        [HttpGet("GetDegrees")]
+        public async Task<ActionResult<List<TitleEntity>>> GetDegrees()
+        {
+            try
+            {
+                var degs = await _SetUpService.LoadAllDegrees();
+                return Ok(degs);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete("DeleteDegree/{Code}")]
+        public async Task<ActionResult<List<TitleEntity>>> DeleteDegree(int Code)
+        {
+            try
+            {
+                var res = await _SetUpService.DeleteDegree(Code);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("EditDegree/{Code}")]
+
+        public async Task<ActionResult<TitleEntity>> EditDegree(int Code)
+        {
+            try
+            {
+                var res = await _SetUpService.EditDegrees(Code);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         //====================================Designation==================================
         //Get Designation Code
         [HttpGet("GetDesignationCode")]
@@ -259,6 +419,46 @@ namespace Payroll_Application.Controllers
             }
         }
 
+        [HttpGet("GetDesignation")]
+        public async Task<ActionResult<List<DesignationEntity>>> GetDesignation()
+        {
+            try
+            {
+                var degs = await _SetUpService.LoadAllDesignation();
+                return Ok(degs);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete("DeleteDesignation/{Code}")]
+        public async Task<ActionResult<List<TitleEntity>>> DeleteDesignation(int Code)
+        {
+            try
+            {
+                var res = await _SetUpService.DeleteDesignation(Code);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("EditDesignation/{Code}")]
+
+        public async Task<ActionResult<TitleEntity>> EditDesignation(int Code)
+        {
+            try
+            {
+                var res = await _SetUpService.EditDesignations(Code);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         //====================================Employemnt type==================================
         //Get Employement Type Code
         [HttpGet("GetNextEmpTypeCode")]
@@ -281,6 +481,46 @@ namespace Payroll_Application.Controllers
             {
                 var emptype = await _SetUpService.SaveEmpType(employmentTypeEntity);
                 return Ok(emptype);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("GetEmpType")]
+        public async Task<ActionResult<List<TitleEntity>>> GetEmpType()
+        {
+            try
+            {
+                var degs = await _SetUpService.LoadAllEmpType();
+                return Ok(degs);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete("DeleteEmpType/{Code}")]
+        public async Task<ActionResult<List<TitleEntity>>> DeleteEmpType(int Code)
+        {
+            try
+            {
+                var res = await _SetUpService.DeleteEmpType(Code);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("EditEmpType/{Code}")]
+
+        public async Task<ActionResult<TitleEntity>> EditEmpType(int Code)
+        {
+            try
+            {
+                var res = await _SetUpService.EditEmpType(Code);
+                return Ok(res);
             }
             catch (Exception ex)
             {

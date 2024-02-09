@@ -33,13 +33,13 @@
                     <div class="row">
                         <div class="col-md-3 spacing"><label class="form-control-label">Code:</label></div>
                         <div class="col-md-9 spacing">
-                            <input type="text" @bind="title.Code" name="txtTitleCode" class = "form-control txt" id = "txtTitleCode" disabled />                            
+                            <input type="text" style="width:100%;min-width:fit-content" @bind="title.Code" name="txtTitleCode" class = "form-control txt" id = "txtTitleCode" disabled />                            
                         </div>
                         <div class="col-md-3 spacing">
                             <label class="form-control-label">Title:</label>
                         </div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtTitle" @bind="title.Description" class = "form-control txt" id = "txtTitle" Placeholder = "Type Title"/>                            
+                            <input type="text" name="txtTitle" style="width:100%;min-width:fit-content" @bind="title.Description" class="form-control txt" id="txtTitle" Placeholder="Type Title" />
                         </div>
                     </div>
 
@@ -94,13 +94,13 @@
                     <div class="row">
                         <div class="col-md-3 spacing"><label class="form-control-label">Code:</label></div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtLevelCode" @bind="level.Code" class = "form-control txt" id = "txtLevelCode" disabled/>                            
+                            <input type="text" name="txtLevelCode" style="width:100%;min-width:fit-content" @bind="level.Code" class="form-control txt" id="txtLevelCode" disabled />
                         </div>
                         <div class="col-md-3 spacing">
                             <label class="form-control-label">Level:</label>
                         </div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtLevel" @bind="level.Description" class = "form-control txt" id = "txtLevel" Placeholder = "Type Level"/>                  
+                            <input type="text" name="txtLevel" style="width:100%;min-width:fit-content" @bind="level.Description" class="form-control txt" id="txtLevel" Placeholder="Type Level" />
                         </div>
                     </div>
                 </EditForm>
@@ -114,7 +114,21 @@
                             <th>ACTION</th>
                         </tr>
                     </thead>
-                    <tbody id="levelbody"></tbody>
+                    <tbody id="levelbody">
+                        @foreach (var m in levels)
+                        {
+                            <tr>
+                                <td>@m.ID</td>
+                                <td>@m.Description</td>
+                                <td>@m.Code</td>
+                                <td style="display:flex">
+                                    <div @onclick=@(()=>EditLevel(@m.Code)) title='Edit'><i class='fa fa-pencil'></i></div>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <div @onclick="() => DeleteLevel(m.Code)" title="Delete"><i class="fa fa-trash"></i></div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
                     <tfoot>
                     </tfoot>
                 </table>
@@ -139,13 +153,13 @@
                     <div class="row">
                         <div class="col-md-3 spacing"><label class="form-control-label">Code:</label></div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtempCode" @bind="employmentType.Code" class = "form-control txt" id = "txtempCode" disabled/>     
+                            <input type="text" name="txtempCode" style="width:100%;min-width:fit-content" @bind="employmentType.Code" class="form-control txt" id="txtempCode" disabled />
                         </div>
                         <div class="col-md-3 spacing">
                             <label class="form-control-label">Description:</label>
                         </div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtempType" class = "form-control txt" @bind="employmentType.Description" id = "txtempType" Placeholder = "Type Description"/>                            
+                            <input type="text" name="txtempType" style="width:100%;min-width:fit-content" class="form-control txt" @bind="employmentType.Description" id="txtempType" Placeholder="Type Description" />
                         </div>
                     </div>
                 </EditForm>
@@ -159,7 +173,21 @@
                             <th>ACTION</th>
                         </tr>
                     </thead>
-                    <tbody id="empTypebody"></tbody>
+                    <tbody id="empTypebody">
+                        @foreach (var m in employmentTypes)
+                        {
+                            <tr>
+                                <td>@m.ID</td>
+                                <td>@m.Description</td>
+                                <td>@m.Code</td>
+                                <td style="display:flex">
+                                    <div @onclick=@(()=>EditEmpType(@m.Code)) title='Edit'><i class='fa fa-pencil'></i></div>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <div @onclick="() => DeleteEmpType(m.Code)" title="Delete"><i class="fa fa-trash"></i></div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
                     <tfoot>
                     </tfoot>
                 </table>
@@ -188,14 +216,14 @@
                     <div class="row">
                         <div class="col-md-3 spacing"><label class="form-control-label">Code:</label></div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtDeptCode" @bind="departmnt.DeptCode" class = "form-control txt" id = "txtDeptCode" disabled/>
+                            <input type="text" name="txtDeptCode" style="width:100%;min-width:fit-content" @bind="departmnt.DeptCode" class="form-control txt" id="txtDeptCode" disabled />
                            
                         </div>
                         <div class="col-md-3 spacing">
                             <label class="form-control-label">Department:</label>
                         </div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtdept" @bind="departmnt.Description"class = "form-control txt" id = "txtdept" Placeholder = "Type Department" />
+                            <input type="text" name="txtdept" style="width:100%;min-width:fit-content" @bind="departmnt.Description"class = "form-control txt" id = "txtdept" Placeholder = "Type Department" />
                             
                         </div>
                     </div>
@@ -212,7 +240,21 @@
                             <th>ACTION</th>
                         </tr>
                     </thead>
-                    <tbody id="deptbody"></tbody>
+                    <tbody id="deptbody">
+                        @foreach (var m in departments)
+                        {
+                            <tr>
+                                <td>@m.ID</td>
+                                <td>@m.Description</td>
+                                <td>@m.DeptCode</td>
+                                <td style="display:flex">
+                                    <div @onclick=@(()=>EditDept(@m.DeptCode)) title='Edit'><i class='fa fa-pencil'></i></div>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <div @onclick="() => DeleteDept(m.DeptCode)" title="Delete"><i class="fa fa-trash"></i></div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
                     <tfoot>
                     </tfoot>
                 </table>
@@ -238,14 +280,14 @@
                     <div class="row">
                         <div class="col-md-3 spacing"><label class="form-control-label">Code:</label></div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtDesCode" @bind="designation.Code" class = "form-control txt" id = "txtDesCode" disabled/>
+                            <input type="text" name="txtDesCode" style="width:100%;min-width:fit-content" @bind="designation.Code" class="form-control txt" id="txtDesCode" disabled />
                            
                         </div>
                         <div class="col-md-3 spacing">
                             <label class="form-control-label">Designation:</label>
                         </div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtDes" @bind="designation.Description" class = "form-control txt" id = "txtDes" Placeholder = "Type Designation"/>
+                            <input type="text" name="txtDes" style="width:100%;min-width:fit-content" @bind="designation.Description" class="form-control txt" id="txtDes" Placeholder="Type Designation" />
                             
                         </div>
                     </div>
@@ -262,7 +304,21 @@
                             <th>ACTION</th>
                         </tr>
                     </thead>
-                    <tbody id="descbody"></tbody>
+                    <tbody id="descbody">
+                        @foreach (var m in designations)
+                        {
+                            <tr>
+                                <td>@m.ID</td>
+                                <td>@m.Description</td>
+                                <td>@m.Code</td>
+                                <td style="display:flex">
+                                    <div @onclick=@(()=>EditDesignation(@m.Code)) title='Edit'><i class='fa fa-pencil'></i></div>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <div @onclick="() => DeleteDesignation(m.Code)" title="Delete"><i class="fa fa-trash"></i></div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
                     <tfoot>
                     </tfoot>
                 </table>
@@ -288,14 +344,14 @@
                <div class="row">
                         <div class="col-md-3 spacing"><label class="form-control-label">Code:</label></div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtDegCode" @bind="degreeEntity.Code" class = "form-control txt" id = "txtDegCode" disabled/>
+                            <input type="text" name="txtDegCode" style="width:100%;min-width:fit-content" @bind="degreeEntity.Code" class="form-control txt" id="txtDegCode" disabled />
                             
                         </div>
                         <div class="col-md-3 spacing">
                             <label class="form-control-label">Designation:</label>
                         </div>
                         <div class="col-md-9 spacing">
-                            <input type="text" name="txtDeg" @bind="degreeEntity.Description" class = "form-control txt" id = "txtDeg" Placeholder = "Type Degree"/>
+                            <input type="text" name="txtDeg" style="width:100%;min-width:fit-content" @bind="degreeEntity.Description" class="form-control txt" id="txtDeg" Placeholder="Type Degree" />
                            
                         </div>
                     </div>
@@ -312,7 +368,21 @@
                             <th>ACTION</th>
                         </tr>
                     </thead>
-                    <tbody id="degbody"></tbody>
+                    <tbody id="degbody">
+                        @foreach (var m in degrees)
+                        {
+                            <tr>
+                                <td>@m.ID</td>
+                                <td>@m.Description</td>
+                                <td>@m.Code</td>
+                                <td style="display:flex">
+                                    <div @onclick=@(()=>EditDegree(@m.Code)) title='Edit'><i class='fa fa-pencil'></i></div>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <div @onclick="() => DeleteDegree(m.Code)" title="Delete"><i class="fa fa-trash"></i></div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
                     <tfoot>
                     </tfoot>
                 </table>
@@ -331,6 +401,11 @@
 
 @code {
     private string titleMessage = string.Empty;
+    private string LevelMessage = string.Empty;
+    private string EmptypeMessage = string.Empty;
+    private string DepatmetMessage = string.Empty;
+    private string DesignationMessage = string.Empty;
+    private string DegreeMessage = string.Empty;
 
     TitleEntity title = new TitleEntity();
     LevelEntity level = new LevelEntity();
@@ -340,6 +415,11 @@
     DegreeEntity degreeEntity = new DegreeEntity();
 
     List<TitleEntity> titles = new List<TitleEntity>();
+    List<LevelEntity> levels = new List<LevelEntity>();
+    List<DepartmentEntity> departments = new List<DepartmentEntity>();
+    List<DegreeEntity> degrees = new List<DegreeEntity>();
+    List<DesignationEntity> designations = new List<DesignationEntity>();
+    List<EmploymentTypeEntity> employmentTypes = new List<EmploymentTypeEntity>();
 
     [Inject]
     HttpClient _httpClient { get; set; }
@@ -393,6 +473,21 @@
     {
         var result = await _httpClient.GetAsync("api/Setup/GetTitles");
         titles = await result.Content.ReadFromJsonAsync<List<TitleEntity>>();
+
+        var res1 = await _httpClient.GetAsync("api/Setup/GetLevels");
+        levels = await res1.Content.ReadFromJsonAsync<List<LevelEntity>>();
+
+        var res2 = await _httpClient.GetAsync("api/Setup/GetDepts");
+        departments = await res2.Content.ReadFromJsonAsync<List<DepartmentEntity>>();
+
+        var res3= await _httpClient.GetAsync("api/Setup/GetDegrees");
+        degrees = await res3.Content.ReadFromJsonAsync<List<DegreeEntity>>();
+
+        var res4 = await _httpClient.GetAsync("api/Setup/GetDesignation");
+        designations = await res4.Content.ReadFromJsonAsync<List<DesignationEntity>>();
+
+        var res5 = await _httpClient.GetAsync("api/Setup/GetEmpType");
+        employmentTypes = await res5.Content.ReadFromJsonAsync<List<EmploymentTypeEntity>>();
     }
     private async Task EditTitle(int Code)
     {
@@ -408,22 +503,108 @@
     }
     private async Task SaveLevels()
     {
+        var result = await _setUpService.SaveLevel(level);
+        if (result.Success)
+        {
+            LevelMessage = result.Message;
+        }
+        var res1 = await _httpClient.GetAsync("api/Setup/GetLevels");
+        levels = await res1.Content.ReadFromJsonAsync<List<LevelEntity>>();
+    }
 
+    private async Task EditLevel(int Code)
+    {
+        var result = await _httpClient.GetAsync("api/Setup/EditLevel/" + Code);
+        level = await result.Content.ReadFromJsonAsync<LevelEntity>();
+    }
+    private async Task DeleteLevel(int Code)
+    {
+        await _httpClient.DeleteAsync("api/Setup/DeleteLevel/" + Code);
+        var result = await _httpClient.GetAsync("api/Setup/GetLevels");
+        levels = await result.Content.ReadFromJsonAsync<List<LevelEntity>>();        
     }
     private async Task SaveEmpType()
     {
-
+        var result = await _setUpService.SaveEmpType(employmentType);
+        if (result.Success)
+        {
+            EmptypeMessage = result.Message;
+        }
+        var res5 = await _httpClient.GetAsync("api/Setup/GetEmpType");
+        employmentTypes = await res5.Content.ReadFromJsonAsync<List<EmploymentTypeEntity>>();
+    }
+    private async Task EditEmpType(int Code)
+    {
+        var result = await _httpClient.GetFromJsonAsync<EmploymentTypeEntity>("api/Setup/EditEmpType/" + Code);
+        employmentType = result;
+    }
+    private async Task DeleteEmpType(int Code)
+    {
+        await _httpClient.DeleteAsync("api/Setup/DeleteEmpType/" + Code);
+        var res5 = await _httpClient.GetAsync("api/Setup/GetEmpType");
+        employmentTypes = await res5.Content.ReadFromJsonAsync<List<EmploymentTypeEntity>>();
     }
     private async Task SaveDepartment()
     {
-
+        var result = await _setUpService.SaveDept(departmnt);
+        if (result.Success)
+        {
+            DepatmetMessage = result.Message;
+        }
+        var res2 = await _httpClient.GetAsync("api/Setup/GetDepts");
+        departments = await res2.Content.ReadFromJsonAsync<List<DepartmentEntity>>();
+    }
+    private async Task EditDept(int Code)
+    {
+        var result = await _httpClient.GetFromJsonAsync<DepartmentEntity>("api/Setup/EditDept/" + Code);
+        departmnt = result;
+    }
+    private async Task DeleteDept(int Code)
+    {
+        await _httpClient.DeleteAsync("api/Setup/DeleteDept/" + Code);
+        var res2 = await _httpClient.GetAsync("api/Setup/GetDepts");
+        departments = await res2.Content.ReadFromJsonAsync<List<DepartmentEntity>>();
     }
     private async Task SaveDesignation()
     {
-
+        var result = await _setUpService.SaveDesignation(designation);
+        if (result.Success)
+        {
+            DesignationMessage = result.Message;
+        }
+        var res4 = await _httpClient.GetAsync("api/Setup/GetDesignation");
+        designations = await res4.Content.ReadFromJsonAsync<List<DesignationEntity>>();
+    }
+    private async Task EditDesignation(int Code)
+    {
+        var result = await _httpClient.GetFromJsonAsync<DesignationEntity>("api/Setup/EditDesignation/"+ Code);
+        designation = result;
+    }
+    private async Task DeleteDesignation(int Code)
+    {
+        await _httpClient.DeleteAsync("api/Setup/DeleteDesignation/" + Code);
+        var res4 = await _httpClient.GetAsync("api/Setup/GetDesignation");
+        designations = await res4.Content.ReadFromJsonAsync<List<DesignationEntity>>();
     }
     private async Task SaveDegree()
     {
-        
+        var result = await _setUpService.SaveDegrees(degreeEntity);
+        if (result.Success)
+        {
+            DegreeMessage = result.Message;
+        }
+        var res3 = await _httpClient.GetAsync("api/Setup/GetDegrees");
+        degrees = await res3.Content.ReadFromJsonAsync<List<DegreeEntity>>();
+    }
+    private async Task EditDegree(int Code)
+    {
+        var result = await _httpClient.GetFromJsonAsync<DegreeEntity>("api/Setup/EditDegree/" + Code);
+        degreeEntity = result;
+    }
+    private async Task DeleteDegree(int Code)
+    {
+        await _httpClient.DeleteAsync("api/Setup/DeleteDegree/" + Code);
+        var res3 = await _httpClient.GetAsync("api/Setup/GetDegrees");
+        degrees = await res3.Content.ReadFromJsonAsync<List<DegreeEntity>>();
     }
 }
