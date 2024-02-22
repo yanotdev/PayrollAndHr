@@ -1,6 +1,7 @@
 ﻿@using PayrollAndHr.Client.Shared.Components
+@using System.IdentityModel.Tokens.Jwt;
 @inherits LayoutComponentBase
-
+@inject NavigationManager navigationManager
 @inject ISessionStorageService _sessionStorageService;
 
 
@@ -55,9 +56,43 @@
 </div>
 @code {
     private string username = "";
-
+    private string jwtToken = "";
     protected override async Task OnInitializedAsync()
     {
+        jwtToken = await _sessionStorageService.GetItemAsStringAsync("jwtToken");
+
+        if (IsTokenExpired(jwtToken))
+        {
+            // Token is expired, redirect to login page
+            navigationManager.NavigateTo("/");
+        }
         username += await _sessionStorageService.GetItemAsync<string>("UserName");
     }
+    private bool IsTokenExpired(string token)
+    {
+        if (DateTime.UtcNow >= GetTokenExpirationTime(jwtToken))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public DateTime? GetTokenExpirationTime(string token)
+    {
+        if (string.IsNullOrEmpty(token))
+        {
+            return null;
+        }
+
+        var handler = new JwtSecurityTokenHandler();
+
+        var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+        if (jsonToken != null && jsonToken.ValidTo != DateTime.MinValue)
+        {
+            return jsonToken.ValidTo;
+        }
+        return null;
+    }
+
 }

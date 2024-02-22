@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Mvc;
 using PayrollAndHr.Server.Services;
 using PayrollAndHr.Shared.Dtos;
 using PayrollAndHr.Shared.Models;
@@ -8,17 +10,19 @@ namespace Payroll_Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    
+  
     public class EmployeeController : Controller
     {
         private readonly IEmployeeService _employeeService;
         private readonly IPayrollService _payrollService;
+        private readonly IWebHostEnvironment _env;
 
         
-        public EmployeeController(IEmployeeService employeeService, IPayrollService payrollService)
+        public EmployeeController(IEmployeeService employeeService, IPayrollService payrollService, IWebHostEnvironment env)
         {
             _employeeService = employeeService;
             _payrollService = payrollService;
+            _env = env;
         }
        
         [HttpGet]
@@ -61,7 +65,35 @@ namespace Payroll_Application.Controllers
             }
         }
         //load the prefix
-     
+
+        //upload employee photo
+        [HttpPost("UploadEmployeePhoto")]
+
+        public async Task<ActionResult<ServiceResponse<string>>> UploadEmployeePhoto([FromForm]List<IFormFile> selectedFiles)
+        {
+            List<ServiceResponse<string>> serviceResponse = new List<ServiceResponse<string>>();
+            string imageuploadpath = "";
+            //var format = "image/jpeg";
+            //var resizedImage = await selectedFile.RequestImageFileAsync(format, 200, 200);
+            foreach (var selectedFile in selectedFiles)
+            {
+                var filePath = Path.Combine(_env.ContentRootPath, "images", selectedFile.Name);
+
+
+                await using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await selectedFile.OpenReadStream().CopyToAsync(fileStream);
+                }
+
+                //uploadStatus = "Upload successful!";
+
+                imageuploadpath = filePath.Substring(filePath.IndexOf("Server", StringComparison.OrdinalIgnoreCase))
+            .Replace("\\", "/");
+            }
+            serviceResponse.Add(new ServiceResponse<string> { Data = imageuploadpath, Success= true, Message ="Upload successful" });
+            return Ok(serviceResponse);
+        }
+        
         public ActionResult<PrefixEntity> LoadPrefix()
         {
             try

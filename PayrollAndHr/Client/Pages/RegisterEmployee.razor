@@ -1,4 +1,6 @@
 ﻿@page "/registeremployee"
+
+@using Microsoft.AspNetCore.Http;
 @using Microsoft.Extensions.Hosting;
 @using PayrollAndHr.Client.Services;
 @using PayrollAndHr.Client.Shared.Components
@@ -7,10 +9,10 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using PayrollAndHr.Shared.Dtos;
 @using PayrollAndHr.Shared.Models;
-@using SixLabors.ImageSharp.Processing;
-@using SixLabors.ImageSharp;
 
 
+@inject HttpClient _httpClient;
+@inject IJSRuntime JSRuntime
 
 @inject IEmployeeService _employeeService;
 
@@ -70,7 +72,7 @@
             </div>
             <div class="alert alert-success" id="lblSuccessMsg">
             </div>*@
-            <div class="row">
+            <div class="row" style="padding-top:30px;">
 
                 <div class="col-md-5">
                     <fieldset class="form-group">
@@ -127,13 +129,13 @@
                     <div class="card">
                         <div class="card-header">Photograph</div>
                         <div class="card-body">
-                            <form method="post" @onsubmit="UploadImage">
+                            
                             <div>
-                                <img src="@personalInformationEntity.ImageUrl" alt="Uploaded Image" style="width: 300px; height: 250px;" class="img-thumbnail" id="empImage" />
+                                <img src="@imagePath" width="300" height="250" class="img-thumbnail" id="empImage" />
                                 
                             </div>
-
-                            <InputFile  id="empfile" width="200" height="180" OnChange="HandleFileChange" />
+                                <form method="post" @onsubmit="UploadImage">
+                                    <InputFile type="file"  id="empfile" OnChange="HandleFileChange" />
                                 <div class="clearfix"></div>
 
                                 <br />
@@ -170,6 +172,9 @@
                                 {
                                     <div class="row">
                                     <div class="col-md-6">
+                                        <div class="text-danger">
+                                            @Message
+                                        </div>
                                         
                                         <div class="row">
                                             <div class="col-md-3 control-space">
@@ -313,6 +318,7 @@
                                                 </div>
                                                 <div class="col-md-9 control-space">
                                                     <select name="country" @bind="@empContactInfoEntity.Country" class="form-control control-input-border"  id="cbocountry">
+                                                        <option>----Select----</option>
                                                         <option value="Nigeria">Nigeria</option>
                                                         <option value="Ghana">Ghana</option>
                                                     </select>                                                   
@@ -322,6 +328,7 @@
                                                 </div>
                                                 <div class="col-md-9 control-space">
                                                     <select name="state" @bind="@empContactInfoEntity.State" class="form-control control-input-border" id="cboStateAdd">
+                                                        <option>----Select----</option>
                                                         <option value="Lagos">Lagos</option>
                                                         <option value="Benin">Benin</option>
                                                     </select>
@@ -1104,7 +1111,8 @@
     private string Message = "";
     private string uploadStatus = string.Empty;
     private IBrowserFile selectedFile;
-    private string uploadedImagePath = string.Empty;
+    private int maxAllowedFiles = int.MaxValue;
+    private string imagePath = string.Empty;
     private string regNo = string.Empty;
     private string ContactMessage = string.Empty;
     private string NextofKinMessage = string.Empty;
@@ -1116,9 +1124,7 @@
     private string EmployeeQuaMessage = string.Empty;
     private IBrowserFile file;
 
-    [Inject]
 
-    private HttpClient _httpClient { get; set; }
 
 
 
@@ -1243,12 +1249,9 @@
 
     }
     private async Task HandleFileChange(InputFileChangeEventArgs e)
-    {
-        selectedFile = e.GetMultipleFiles().FirstOrDefault();
-        //if (selectedFile != null)
-        //{
-        //    await ProcessAndSetImage();
-        //}
+    {        
+        selectedFile = e.File;
+
     }
     private async Task HandleFileChangeUpload(InputFileChangeEventArgs e)
     {
@@ -1285,33 +1288,37 @@
         }
 
     }
+    //[JSInvokable]
+    //public async Task HandleResizedImage(string resizedImageData)
+    //{
+    //    personalInformationEntity.ImageUrl = resizedImageData;
+    //}
 
-    private async Task ProcessAndSetImage()
-    {
 
-
-        var folderPath =  "wwwroot/images"; // Adjust the folder path as needed
-        var filePath = Path.Combine(folderPath, selectedFile.Name);
-        if (!Directory.Exists(folderPath))
-        {
-            Directory.CreateDirectory(folderPath);
-        }
-
-        using (FileStream fileStream = new FileStream (filePath, FileMode.Create))
-        {
-            await selectedFile.OpenReadStream().CopyToAsync(fileStream);
-        }
-
-        uploadStatus = "Upload successful!";
-        personalInformationEntity.ImageUrl = filePath.Substring(filePath.IndexOf("wwwroot", StringComparison.OrdinalIgnoreCase))
-            .Replace("\\", "/"); // Adjust the path separator for cross-platform compatibility
-    }
 
     private async Task UploadImage()
     {
         if (selectedFile != null)
         {
-            await ProcessAndSetImage();
+            //var _ext = Path.GetExtension(selectedFile.Name);
+            var format = "image/jpeg";
+            var resizedImage = await selectedFile.RequestImageFileAsync(format, 200, 180);
+            // Blazor component code
+            using var content = new MultipartFormDataContent();
+            using var filecontent = new StreamContent(selectedFile.OpenReadStream());
+            filecontent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(resizedImage.ContentType);
+
+            content.Add(filecontent, "selectedFiles", resizedImage.Name);
+
+            var result = await _httpClient.PostAsync("api/Employee/UploadEmployeePhoto", content);
+            var url = await result.Content.ReadFromJsonAsync<List<ServiceResponse<string>>>();
+            if (url != null)
+            {
+                foreach(var m  in url)
+                {                    
+                    imagePath = m.Data;
+                }
+            }
         }
         else
         {

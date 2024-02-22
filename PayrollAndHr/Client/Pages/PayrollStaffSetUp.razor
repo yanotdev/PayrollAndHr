@@ -67,7 +67,7 @@
                     <label class="label">Staff Name:</label>
                 </div>
                 <div class="col-md-7 control-space">
-                    <input type="text" name="staffName" @bind="loadedvalue" class="form-control control-input-border" id="cboStaffName" disabled />
+                    <input type="text" name="staffName" @bind="salaryEntity.StaffName" class="form-control control-input-border" id="cboStaffName" disabled />
                     <input type="text" name="staffName" class = "form-control control-input-border hide-txt" placeholder = "Type Name here"id  = "txtstaffNameAdd" />
                     
                 </div>
@@ -102,18 +102,19 @@
                                 {
                                      <div class="row">
                                     <div class="col-md-10">
-                                        <form method="post" class = "form-inline">
-                                        
+                                        <div class="text-danger">
+                                                @salaryMessage
+                                        </div>
                                             <div class="row">
 
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Pay Period:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                        <select name="period" class="form-control control-input-border"  id="cboPeriod">
+                                                        <select name="period" @bind="salaryEntity.Period"class="form-control control-input-border"  id="cboPeriod">
                                                             <option>----Select----</option>
-                                                        <option>Monthly </option>
-                                                        <option>Annually </option>
+                                                        <option value="Monthly">Monthly </option>
+                                                        <option value="Annually">Annually </option>
                                                     </select>                                                  
                                            
                                                 </div>
@@ -121,132 +122,157 @@
                                                     <label class="label">Basic Allowance:</label>
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                    <select name="allowanceDes1" class = "form-control control-input-border" id = "cboallowanceDes1">
+                                                    <select name="allowanceDes1" value="@salaryEntity.BasicDescription" @onchange="OnChangeBasicDesc" class="form-control control-input-border" id="cboallowanceDes1">
                                                             <option>----Select----</option>
+                                                        @foreach(var m in allowances)
+                                                        {
+                                                            <option value="@m.Description">@m.Description</option>
+                                                        }
+                                                        
                                                     </select>
                                                     
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <input type="text" name="allowanceType1" class = "form-control control-input-border" id = "cboallowanceType1" placeholder = "Allowance Type" disabled/>
+                                                        <input type="text" @bind=salaryEntity.BasicType name="allowanceType1" class = "form-control control-input-border" id = "cboallowanceType1" placeholder = "Allowance Type" disabled/>
                                                     
                                                 </div>
                                                 <div class="col-md-1 control-space">
-                                                        <input type="text" name="allPercent1" class = "form-control control-input-border" id = "txtallPercent1" placeholder = "%" disabled/>                                                   
+                                                        <input type="text" @bind="salaryEntity.BasicPer "name="allPercent1" class = "form-control control-input-border" id = "txtallPercent1" placeholder = "%" disabled/>                                                   
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <input type="text" name="allAmount1" class="form-control control-input-border" id="txtallAmount1" disabled/>
+                                                        <input type="text" @bind="salaryEntity.BasicAmt" name="allAmount1" class="form-control control-input-border" id="txtallAmount1" disabled/>
                                                    
                                                 </div>
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Housing Allowance:</label>
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                    <select name="allowanceDes2" class = "form-control control-input-border" id = "cboallowanceDes2">
+                                                    <select name="allowanceDes2" value="@salaryEntity.HousingDescription" @onchange="OnChangeHousingDesc" class="form-control control-input-border" id="cboallowanceDes2">
                                                             <option>----Select----</option>
+                                                        @foreach (var m in allowances1)
+                                                        {
+                                                            <option value="@m.Description">@m.Description</option>
+                                                        }
                                                     </select>
                                                     
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <input type="text" name="allowanceType2" class = "form-control control-input-border" id = "cboallowanceType2" disabled placeholder = "Allowance Type"/>
+                                                        <input type="text" @bind="salaryEntity.HousingType" name="allowanceType2" class = "form-control control-input-border" id = "cboallowanceType2" disabled placeholder = "Allowance Type"/>
                                                     
                                                 </div>
                                                 <div class="col-md-1 control-space">
-                                                        <input type="text" name="allPercent2" class = "form-control control-input-border" id = "txtallPercent2" disabled placeholder = "%"/>
+                                                        <input type="text" @bind="salaryEntity.HousingPer" name="allPercent2" class = "form-control control-input-border" id = "txtallPercent2" disabled placeholder = "%"/>
                                                     
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <input type="text" name="allAmount2" class = "form-control control-input-border" id = "txtallAmount2" readonly/>
+                                                        <input type="text" name="allAmount2" @bind="salaryEntity.HousingAmt"class = "form-control control-input-border" id = "txtallAmount2" disabled/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Transport Allowance:</label>
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <select name="allowanceDes3" class="form-control control-input-border"  id="cboallowanceDes3">
+                                                    <select name="allowanceDes3" value="@salaryEntity.TransportDescription" @onchange="OnChangeTransportDesc" class="form-control control-input-border" id="cboallowanceDes3">
                                                             <option>----Select----</option>
+                                                        @foreach (var m in allowances2)
+                                                        {
+                                                            <option value="@m.Description">@m.Description</option>
+                                                        }
                                                         </select>
                                                     
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <input type="text" name="allowanceType3 class = "form-control control-input-border" id = "cboallowanceType3" disabled placeholder = "Allowance Type"/>
+                                                        <input type="text"@bind="salaryEntity.TransportType" name="allowanceType3" class = "form-control control-input-border" id = "cboallowanceType3" disabled placeholder = "Allowance Type"/>
 
                                                 </div>
                                                 <div class="col-md-1 control-space">
-                                                        <input type="text" name="allPercent3" class = "form-control control-input-border" id = "txtallPercent3" disabled placeholder = "%"/>
+                                                        <input type="text"@bind="salaryEntity.TransportPer" name="allPercent3" class = "form-control control-input-border" id = "txtallPercent3" disabled placeholder = "%"/>
                                                     
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <input type="text" name="allAmount3" class = "form-control control-input-border" id = "txtallAmount3" disabled/>
+                                                        <input type="text" @bind="salaryEntity.TransportAmt"name="allAmount3" class = "form-control control-input-border" id = "txtallAmount3" disabled/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Utility Allowance:</label>
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <select name="allowanceDes4" class = "form-control control-input-border" id = "cboallowanceDes4">
+                                                        <select name="allowanceDes4" value="@salaryEntity.UtilityDescription"@onchange="OnChangeUtilityDesc" class = "form-control control-input-border" id = "cboallowanceDes4">
                                                             <option>----Select----</option>
+                                                        @foreach (var m in allowances3)
+                                                        {
+                                                            <option value="@m.Description">@m.Description</option>
+                                                        }
                                                     </select>
                                                     
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <input type="text" name="allowanceType4" class = "form-control control-input-border" id = "cboallowanceType4" disabled placeholder = "Allowance Type"/> 
+                                                        <input type="text"@bind="salaryEntity.UtilityType" name="allowanceType4" class = "form-control control-input-border" id = "cboallowanceType4" disabled placeholder = "Allowance Type"/> 
                                                     
                                                 </div>
                                                 <div class="col-md-1 control-space">
-                                                        <input type="text" name="allPercent4" class = "form-control control-input-border",id = "txtallPercent4" disabled placeholder = "%"/>
+                                                        <input type="text" @bind="salaryEntity.UtilityPer"name="allPercent4" class = "form-control control-input-border" id = "txtallPercent4" disabled placeholder = "%"/>
 
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <input type="text" name="allAmount4" class = "form-control control-input-border" id = "txtallAmount4" disabled/>
+                                                        <input type="text" @bind="salaryEntity.UtilityAmt" name="allAmount4" class = "form-control control-input-border" id = "txtallAmount4" disabled/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Lunch Allowance:</label>
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <select name="allowanceDes5" class = "form-control control-input-border" id = "cboallowanceDes5">
+                                                    <select name="allowanceDes5" value="@salaryEntity.LunchDescription"@onchange="OnChangeLunchDesc" class="form-control control-input-border" id="cboallowanceDes5">
                                                             <option>----Select----</option>
+                                                        @foreach (var m in allowances4)
+                                                        {
+                                                            <option value="@m.Description">@m.Description</option>
+                                                        }
                                                     </select>
                                                     
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <input type="text" name="allowanceType5" class = "form-control control-input-border" id = "cboallowanceType5" disabled placeholder = "Allowance Type"/>
+                                                        <input type="text" name="allowanceType5" @bind="salaryEntity.LunchType"class = "form-control control-input-border" id = "cboallowanceType5" disabled placeholder = "Allowance Type"/>
                                                     
                                                 </div>
                                                 <div class="col-md-1 control-space">
-                                                        <input type="text" name="allPercent5" class = "form-control control-input-border" id = "txtallPercent5" disabled placeholder = "%"/>
+                                                        <input type="text" name="allPercent"@bind="salaryEntity.LunchPer" class = "form-control control-input-border" id = "txtallPercent5" disabled placeholder = "%"/>
                                                     
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <input type="text" name="allAmount5" class = "form-control control-input-border" id = "txtallAmount5" disabled/>
+                                                        <input type="text" name="allAmount5" @bind="salaryEntity.LunchAmt"class = "form-control control-input-border" id = "txtallAmount5" disabled/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Other Allowance:</label>
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <select name="allowanceDes6" class="form-control control-input-border" id="cboallowanceDes6">
+                                                    <select name="allowanceDes6" value="@salaryEntity.OtherDescription" @onchange="OnChangeOtherDesc" class="form-control control-input-border" id="cboallowanceDes6">
                                                             <option>----Select----</option>
+                                                        @foreach (var m in allowances5)
+                                                        {
+                                                            <option value="@m.Description">@m.Description</option>
+                                                        }
                                                         </select>
                                                     
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <input type="text" name="allowanceType6" class = "form-control control-input-border" id = "cboallowanceType6" disabled placeholder = "Allowance Type"/>
+                                                        <input type="text" name="allowanceType6" @bind="salaryEntity.OtherType" class = "form-control control-input-border" id = "cboallowanceType6" disabled placeholder = "Allowance Type"/>
                                                     
                                                 </div>
                                                 <div class="col-md-1 control-space">
-                                                        <input type="text" name="allPercent6" class = "form-control control-input-border" id = "txtallPercent6" disabled placeholder = "%"/>
+                                                        <input type="text" name="allPercent6" @bind="salaryEntity.OtherPer" class = "form-control control-input-border" id = "txtallPercent6" disabled placeholder = "%"/>
                                                     
                                                 </div>
                                                 <div class="col-md-2 control-space">
-                                                        <input type="text" name="allAmount6" class = "form-control control-input-border" id = "txtallAmount6" disabled/>
+                                                        <input type="text" name="allAmount6" @bind="salaryEntity.OtherAmt"class = "form-control control-input-border" id = "txtallAmount6" disabled/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Gross Salary:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                    <input type="text" name="amount" @class = "form-control control-input-border" id = "txtamount"/>
+                                                    <input type="number" name="amount" value="@salaryEntity.Amount" @onchange="OnChangeAmount" class="form-control control-input-border" id="txtamount" />
                                                     
                                                 </div>
                                                 <div class="col-md-3"></div>
@@ -255,35 +281,42 @@
                                         </div>*@
                                                 <div class="col-md-3"></div>
                                                 <div class="col-md-3 control-space">
-                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="button" id="SaveSalary"><i class="fa fa-save"></i> Save </button>
+                                                    <button class="btn btn-outline-info" @onclick=@(() => SaveSalary()) style="margin-bottom:10px;" type="button" id="SaveSalary"><i class="fa fa-save"></i> Save </button>
                                                 </div>
                                             </div>
-                                        </form>
+                                    
                                     </div>
                                     </div>
                                 }
                                 else if(selectedTabIndex == 1)
                                 {
-                                    <div class="row">
-                                    <div class="col-md-5">
-                                            <form method="post" class="form-inline">
-
-                                         
-                                       
-                                            <div class="row">
+                                  
+                                    <div class="row">                                        
+                                        <div class="col-md-5">                                                                  
+                                            <EditForm Model="staffLoanEntity" OnSubmit="SaveStaffloan">
+                                             <div class="row">
+                                                 
+                                                <div class="text-danger">
+                                                @staffLoanMessage 
+                                                </div> 
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Gross Salary:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                    <input type="text" name="staffSalary" class = "form-control control-input-border" id = "cbostaffSalary" disabled/>
+                                                        <input type="text" @bind="staffLoanEntity.NetSalary" name="staffSalary" class="form-control control-input-border" id="cbostaffSalary" disabled />
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Loan Type:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                    <select name="staffLoan" class = "form-control control-input-border" id = "cbostaffLoanType">
+                                                    <select name="staffLoan" @bind="staffLoanEntity.LoanType" class = "form-control control-input-border" id = "cbostaffLoanType">
                                                             <option>----Select----</option>
+                                                            <option value="HOUSE RENT">HOUSE RENT</option>
+                                                            <option value="CAR LOAN">CAR LOAN</option>
+                                                            <option value="EDUCATION LOAN">EDUCATION LOAN</option>
+                                                            <option value="WARDROBE LOAN">WARDROBE LOAN</option>
+                                                            <option value="GENERAL">GENERAL</option>
                                                     </select>
                                                     
                                                 </div>
@@ -291,38 +324,39 @@
                                                     <label class="label">Loan Amount:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                        <input type="text" name="staffLoanAmt" class = "form-control control-input-border" id = "cbostaffLoanAmt" placeholder = "Enter Loan Amount"/>
+                                                        <input type="text" name="staffLoanAmt" @bind="staffLoanEntity.LoanAmount"class = "form-control control-input-border" id = "cbostaffLoanAmt" placeholder = "Enter Loan Amount"/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Interest (%):</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                        <input type="text" name="interest" class = "form-control control-input-border" id = "txtinterest"/>
+                                                        <input type="text" name="interest" value="@staffLoanEntity.Interest" @onchange="OnChangeLoanAmount" class="form-control control-input-border" id="txtinterest" />
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Total Loan Amount:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                        <input type="text" name="totalLoanAmt" class = "form-control control-input-border" id = "txttotalLoanAmt" placeholder = "" disabled"/>
+                                                        <input type="text" name="totalLoanAmt" @bind="staffLoanEntity.TotalLoanAmount" class = "form-control control-input-border" id = "txttotalLoanAmt" placeholder = "" disabled/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">No of Installment:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                        <select name="installment" class="form-control control-input-border" id="txtinstallment">
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                        <option>4</option>
-                                                        <option>5</option>
-                                                        <option>6</option>
-                                                        <option>7</option>
-                                                        <option>8</option>
-                                                        <option>9</option>
-                                                        <option>10</option>                                                        
+                                                        <select name="installment" value="@staffLoanEntity.Installment" @onchange="OnChangeInstallment"class="form-control control-input-border" id="txtinstallment">
+                                                        <option>----Select----</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>                                                        
                                                     </select>
                                                    
                                                 </div>
@@ -330,17 +364,20 @@
                                                     <label class="label">Repayment Amount:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                        <input type="text" name="repaymentAmt" class = "form-control control-input-border" id = "txtrepaymentAmt" placeholder = "" disabled/>
+                                                        <input type="text" @bind="staffLoanEntity.Repayment"name="repaymentAmt" class = "form-control control-input-border" id = "txtrepaymentAmt" placeholder = "" disabled/>
                                                     
                                                 </div>
                                                 <div class="col-md-3 ml-2 control-space"></div>
                                                 <div class="col-md-7 control-space">
-                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="button" id="SaveStaffLoan"><i class="fa fa-save"></i> Save </button>
+                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="submit" id="SaveStaffLoan"><i class="fa fa-save"></i> Save </button>
                                                 </div>
+                                                
                                             </div>
-                                            </form>
-
-                                    </div>
+                                            </EditForm>
+                                         </div>
+                                        
+                                  
+                                   
                                     <div class="col-md-6">
                                         <div class="card">
                                             <div class="card-header"><strong>Staff Loan</strong></div>
@@ -358,29 +395,53 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody id="loanBody">
+                                                            @foreach(var m in staffloans)
+                                                            {
+                                                                <tr>
+                                                                    <td>@m.ID</td>
+                                                                    <td>@m.LoanType</td>
+                                                                    <td>@m.LoanAmount</td>
+                                                                    <td>@m.Interest</td>
+                                                                    <td>@m.Repayment</td>
+                                                                <td style="display:flex">
+                                                                    <div @onclick=@(()=>EditStaffLoan(m.ID)) title="Edit"><i class="fa fa-pencil"></i></div>
+                                                                    &nbsp;&nbsp;&nbsp;
+                                                                    <div @onclick="() => DeleteStaffLoan(m.ID)" title="Delete"><i class="fa fa-trash"></i></div>
+                                                                </td>
+                                                                </tr>
+                                                            }
+                                                            
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
 
-                                </div>
+                                    </div>
                                     <br /><br />
 
                                 }
                                 else if(selectedTabIndex == 2)
                                 {
+                                    
                                     <div class="row">
                                         <div class="col-md-5">
-                                            <form method="post" class="form-inline">
-                                           
+                                            <EditForm Model="deductionEntity" OnSubmit="SaveDeductions">                                    
+                                           <div class="text-danger">
+                                                    @deductmessage
+                                           </div>
                                          
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Penalty Type:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                    <select name="penaltyType" class="form-control control-input-border"  id="cbopenaltyType">
+                                                    <select name="penaltyType" value="@deductionEntity.PenaltyType" @onchange="OnChangePenaltytype" class="form-control control-input-border"  id="cbopenaltyType">
                                                         <option>----Select----</option>
+                                                        @foreach (var m in penalties)
+                                                        {
+                                                            <option value="@m.DeductType.ToUpper()">@m.Description.ToUpper()</option>
+                                                        }
+                                                        
                                                     </select>
                                                     
                                                 </div>
@@ -388,21 +449,21 @@
                                                     <label class="label">Deduction Type:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                    <input type="text" name="deductionType" class = "form-control control-input-border" id = "cbodeductionType" disabled/>
+                                                    <input type="text" @bind="deductionEntity.DeductionType" name="deductionType" class = "form-control control-input-border" id = "cbodeductionType" disabled/>
                                                    
                                                 </div>
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Penalty Amount:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                    <input type="text" name="staffDedAmt" class = "form-control control-input-border"id = "cbostaffDedAmt" placeholder = "Enter Amount"/>
+                                                    <input type="text" name="staffDedAmt" @bind="deductionEntity.Amount" class = "form-control control-input-border"id = "cbostaffDedAmt" placeholder = "Enter Amount"/>
                                                     
                                                 </div>
                                                 <div class="col-md-4"></div>
                                                 <div class="col-md-8 control-space">
-                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="button" id="SaveDeduction"><i class="fa fa-save"></i> Save </button>
+                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="submit" id="SaveDeduction"><i class="fa fa-save"></i> Save </button>
                                                 </div>
-                                            </form>
+                                            </EditForm>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="card">
@@ -419,6 +480,20 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody id="penaltyBody">
+                                                            @foreach(var m in deductions)
+                                                            {
+                                                                <tr>
+                                                                    <td>@m.ID</td>
+                                                                    <td>@m.PenaltyType</td>
+                                                                    <td>@m.DeductionType</td>
+                                                                    <td>@m.Amount</td>
+                                                                    <td style="display:flex">
+                                                                        <div @onclick=@(()=>EditDeductions(m.ID)) title="Edit"><i class="fa fa-pencil"></i></div>
+                                                                        &nbsp;&nbsp;&nbsp;
+                                                                        <div @onclick="() => DeleteDeductions(m.ID)" title="Delete"><i class="fa fa-trash"></i></div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -429,16 +504,24 @@
                                 }
                                 else if (selectedTabIndex == 3)
                                 {
+                                    
                                     <div class="row">
                                         <div class="col-md-5">
-                                            <form method="post"class = "form-inline">
+                                            <EditForm Model="staff" OnSubmit="SaveStaffOthers">
+                                            <div class="text-danger">
+                                                @Staffothersmessage
+                                            </div>
 
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">Allowance Type:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                    <select name="AllowanceType" class="form-control control-input-border"  id="cboStallowanceType">
+                                                    <select name="AllowanceType" @bind="staff.AllowanceType"class="form-control control-input-border"  id="cboStallowanceType">
                                                         <option>----Select----</option>
+                                                        @foreach (var m in otherallowances)
+                                                        {
+                                                            <option value="@m.Description">@m.Description</option>
+                                                        }
                                                     </select>
                                                     <input type="text" name="AllowanceCode" class = "form-control control-input-border hide-txt" id = "txtStaffallowanceCode" />
                                                     
@@ -448,14 +531,14 @@
                                                     <label class="label">Allowance Amount:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                    <input type="text" name="staffAllowAmt" class = "form-control control-input-border" id = "cbostaffAllowAmt" placeholder = "Enter Amount" />
+                                                    <input type="text" name="staffAllowAmt" @bind="staff.Amount" class = "form-control control-input-border" id = "cbostaffAllowAmt" placeholder = "Enter Amount" />
                                                     
                                                 </div>
                                                 <div class="col-md-4"></div>
                                                 <div class="col-md-8 control-space">
-                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="button" id="SaveStaffOtherAllowance"><i class="fa fa-save"></i> Save </button>
+                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="submit" id="SaveStaffOtherAllowance"><i class="fa fa-save"></i> Save </button>
                                                 </div>
-                                            </form>
+                                            </EditForm>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="card">
@@ -471,6 +554,19 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody id="StaffAllowanceBody">
+                                                            @foreach(var m in StaffOtherAllowances)
+                                                            {
+                                                                <tr>
+                                                                  <td>@m.ID</td>
+                                                                  <td>@m.AllowanceType</td>
+                                                                  <td>@m.Amount</td>
+                                                                    <td style="display:flex">
+                                                                        <div @onclick=@(()=>EditStaffOthers(m.ID)) title="Edit"><i class="fa fa-pencil"></i></div>
+                                                                        &nbsp;&nbsp;&nbsp;
+                                                                        <div @onclick="() => DeleteStaffOthers(m.ID)" title="Delete"><i class="fa fa-trash"></i></div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -483,21 +579,23 @@
                                 {
                                     <div class="row">
                                         <div class="col-md-5">
-                                            <form method="post" class = "form-inline">
-                                            
+                                            <EditForm Model="StaffAvc" OnSubmit="SaveAVC">                                           
+                                            <div class="text-danger">
+                                                    @AvcMessage
+                                            </div>
 
                                                 <div class="col-md-3 control-space ml-2">
                                                     <label class="label">AVC:</label>
                                                 </div>
                                                 <div class="col-md-7 control-space">
-                                                    <input name="staffAVCAmount" class = "form-control control-input-border" id = "txtStaffAVC" placeholder = "Enter Amount"/>
+                                                    <input name="staffAVCAmount" @bind="StaffAvc.AVC" class = "form-control control-input-border" id = "txtStaffAVC" placeholder = "Enter Amount"/>
                                                     
                                                 </div>
                                                 <div class="col-md-4"></div>
                                                 <div class="col-md-8 control-space">
-                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="button" id="SaveStaffAVC"><i class="fa fa-save"></i> Save </button>
+                                                    <button class="btn btn-outline-info" style="margin-bottom:10px;" type="submit" id="SaveStaffAVC"><i class="fa fa-save"></i> Save </button>
                                                 </div>
-                                            </form>
+                                            </EditForm>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="card">
@@ -512,6 +610,18 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody id="StaffAVCBody">
+                                                           @foreach(var m  in staffavcs){
+                                                                <tr>
+                                                                    <td>@m.ID</td>
+                                                                    <td>@m.AVC</td>
+                                                                    <td style="display:flex">
+                                                                        <div @onclick=@(()=>EditStaffAVC(m.ID)) title="Edit"><i class="fa fa-pencil"></i></div>
+                                                                        &nbsp;&nbsp;&nbsp;
+                                                                        <div @onclick="() => DeleteStaffAVC(m.ID)" title="Delete"><i class="fa fa-trash"></i></div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -524,20 +634,21 @@
                                 {
                                     <div class="row">
                                     <div class="col-md-12">
-                                            <form method="post" class="form-inline">
-
-                                        
-                                       
+                                            <EditForm Model="pAYEEntity" OnSubmit="SavePAYE" >
+                                            
                                             <div class="col-md-6">
                                                 <div class="row">
-
+                                                    <div class="text-danger">
+                                                            @pAYEMessage
+                                                    </div>
                                                     <div class="col-md-3 control-space">
                                                         <label class="label">Pay Period:</label>
                                                     </div>
                                                     <div class="col-md-7 control-space">
-                                                        <select name="payPeriod" class = "form-control control-input-border" id = "cbopayPeriod">
-                                                            <option>Monthly</option>
-                                                            <option>Annually</option>
+                                                        <select name="payPeriod" value="@pAYEEntity.PayPeriod" @onchange="OnChangePeriod" class = "form-control control-input-border" id = "cbopayPeriod">
+                                                            <option>----Select----</option>
+                                                            <option value="Monthly">Monthly</option>
+                                                            <option value="Annually">Annually</option>
                                                         </select>
                                                         
                                                     </div>
@@ -545,49 +656,49 @@
                                                         <label class="label">Gross Income:</label>
                                                     </div>
                                                     <div class="col-md-9 control-space">
-                                                        <input type="text" name="income" class = "form-control control-input-border" id = "txtIncome" disabled/>
+                                                        <input type="text" name="income" @bind="pAYEEntity.GrossSalary"class = "form-control control-input-border" id = "txtIncome" disabled/>
                                                        
                                                     </div>
                                                     <div class="col-md-3 control-space">
                                                         <label class="label">Basic Salary:</label>
                                                     </div>
                                                     <div class="col-md-9 control-space">
-                                                        <input type="text" name="basic" class = "form-control control-input-border" id = "txtbasic" disabled/>
+                                                        <input type="text" name="basic" @bind="pAYEEntity.Basic"class = "form-control control-input-border" id = "txtbasic" disabled/>
                                                         
                                                     </div>
                                                     <div class="col-md-3 control-space">
                                                         <label class="label">Housing Allowance:</label>
                                                     </div>
                                                     <div class="col-md-9 control-space">
-                                                         <input type="text" name="housing" class = "form-control control-input-border id = "txthousing" disabled/>
+                                                         <input type="text" name="housing" @bind="pAYEEntity.Housing" class = "form-control control-input-border" id = "txthousing" disabled/>
                                                  
                                                     </div>
                                                     <div class="col-md-3 control-space">
                                                         <label class="label">Utility Allowance:</label>
                                                     </div>
                                                     <div class="col-md-9 control-space">
-                                                        <input type="text" name="Utility" class = "form-control control-input-border" id = "txtUtility" disabled/>
+                                                        <input type="text" name="Utility" @bind="pAYEEntity.Utility" class = "form-control control-input-border" id = "txtUtility" disabled/>
                                                         
                                                     </div>
                                                     <div class="col-md-3 control-space">
                                                         <label class="label">Lunch Allowance:</label>
                                                     </div>
                                                     <div class="col-md-9 control-space">
-                                                        <input name="Lunch" class = "form-control control-input-border" id = "txtLunch" disabled />
+                                                        <input name="Lunch" @bind="pAYEEntity.Lunch"class = "form-control control-input-border" id = "txtLunch" disabled />
                                                         
                                                     </div>
                                                     <div class="col-md-3 control-space">
                                                         <label class="label">Transport Allowance:</label>
                                                     </div>
                                                     <div class="col-md-9 control-space">
-                                                        <input name="transport" class = "form-control control-input-border" id = "txtTransport" disabled/>
+                                                        <input name="transport" @bind="pAYEEntity.Transport" class = "form-control control-input-border" id = "txtTransport" disabled/>
                                                         
                                                     </div>
                                                     <div class="col-md-3 control-space">
                                                         <label class="label">Others:</label>
                                                     </div>
                                                     <div class="col-md-9 control-space">
-                                                        <input type="text" name="others"class = "form-control control-input-border" id = "txtOthers" disabled/>
+                                                        <input type="text" @bind="pAYEEntity.Others"name="others"class = "form-control control-input-border" id = "txtOthers" disabled/>
                                                         
                                                     </div>
                                                     <div class="col-md-3"></div>
@@ -683,7 +794,7 @@
                                                                 </div>
                                                                 <div class="col-md-5"></div>
                                                                 <div class="col-md-4 control-space">
-                                                                    <button class="btn btn-info" type="button" style="margin-bottom:10px;" id="savePayE"><i class="fa fa-save"></i> Save PAYE </button>
+                                                                    <button class="btn btn-info" type="submit" style="margin-bottom:10px;" id="savePayE"><i class="fa fa-save"></i> Save PAYE </button>
                                                                 </div>
                                                                 @*<div class="col-md-4 control-space">
                                                         <button class="btn btn-danger" type="button" style="margin-bottom:10px;" id="calculPAYE"><i class="fa fa-calculator"></i> Calculate PAYE </button>
@@ -693,32 +804,26 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                          </form>
-                                            <br />
-                                            <br />
+                                                <br />
+                                                <br />
 
-                                            <br />
-                                            <div class="col-md-12">
-                                                <div class="card hide-txt" id="payEBody">
-                                                    <div class="card-header"> PAYE for Selected Staff </div>
-                                                    <div class="card-body">
+                                                <br />
+                                                <div class="col-md-12">
+                                                    <div class="card hide-txt" id="payEBody">
+                                                        <div class="card-header"> PAYE for Selected Staff </div>
+                                                        <div class="card-body">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </EditForm>
+                                            
                                         
-                                    </div>
+                                        </div>
                                     </div>
                                 }
                             </TabContents>
                             </Tabs>
-                        
-                        
-                                
-                            
-                            
-                            
-
-                            
+   
                      </div>
                     </div>
                        @* <div class="alert alert-info" id="loading" style="padding:10px; position:absolute;border:2px solid #33bb0b;left:50%;top:50%;">
@@ -736,30 +841,396 @@
 @code {
     private int selectedTabIndex = 0;
     private string loadedvalue = string.Empty;
+    private string salaryMessage = string.Empty;
+    private string staffLoanMessage = string.Empty;
+    private string deductmessage = string.Empty;
+    private string Staffothersmessage = string.Empty;
+    private string AvcMessage = string.Empty;
+    private string pAYEMessage = string.Empty;
+
+    SalaryEntity salaryEntity = new SalaryEntity();
+    StaffLoanEntity staffLoanEntity = new StaffLoanEntity();
+    DeductionEntity deductionEntity = new DeductionEntity();
+    StaffOtherAllowancesEntity staff = new StaffOtherAllowancesEntity();
+    StaffAVCEntity StaffAvc = new StaffAVCEntity();
+    PAYEEntity pAYEEntity = new PAYEEntity();
+
+    List<StaffOtherAllowancesEntity> StaffOtherAllowances = new List<StaffOtherAllowancesEntity>();
+    List<StaffLoanEntity> staffloans = new List<StaffLoanEntity>();
+    List<StaffAVCEntity> staffavcs = new List<StaffAVCEntity>();
     List<PersonalInformationEntity> personalInformation = new List<PersonalInformationEntity>();
+    List<PenaltyEntity> penalties = new List<PenaltyEntity>();
+    List<AllowanceEntity> allowances = new List<AllowanceEntity>();
+    List<DeductionEntity> deductions = new List<DeductionEntity>();
+    List<OtherAllowancesEntity> otherallowances = new List<OtherAllowancesEntity>();
+    List<AllowanceEntity> allowances1 = new List<AllowanceEntity>();
+    List<AllowanceEntity> allowances2 = new List<AllowanceEntity>();
+    List<AllowanceEntity> allowances3 = new List<AllowanceEntity>();
+    List<AllowanceEntity> allowances4 = new List<AllowanceEntity>();
+    List<AllowanceEntity> allowances5 = new List<AllowanceEntity>();
 
     protected override async Task OnInitializedAsync()
     {
         var result = await _payrollService.GetallStaff();
         personalInformation = result;
 
+        var res = await _payrollService.GetPenalties();
+        penalties = res.Data;
+
+        var resu = await _payrollService.GetOtherAllowances();
+        otherallowances = resu.Data;
+
+    }
+    private async Task SaveSalary()
+    {
+        var result = await _payrollService.SaveSalary(salaryEntity);
+        if (result.Success)
+        {
+            salaryMessage = result.Message;
+        }
+    }
+    private async Task SaveDeductions()
+    {
+
+        deductionEntity.StaffName = salaryEntity.StaffName;
+        var result = await _payrollService.SaveDeductions(deductionEntity);
+        if (result.Success)
+        {
+            deductmessage = result.Message;
+        }
+        var resu = await _payrollService.GetDeductions(deductionEntity.StaffNo);
+        deductions = resu;
+    }
+    public async Task SaveStaffOthers()
+    {
+        foreach(var m in otherallowances)
+        {
+            staff.AllowanceCode = m.Code;
+        }        
+        var result = await _payrollService.SaveStaffOthers(staff);
+        if (result.Success)
+        {
+            Staffothersmessage = result.Message;
+        }
+        var resul = await _payrollService.GetStaffOthers(staff.StaffNo);
+        StaffOtherAllowances = resul;
+    }
+
+    public async Task SaveAVC()
+    {
+        var result = await _payrollService.SaveAVC(StaffAvc);
+        if(result.Success){
+            AvcMessage = result.Message;
+        }
+        var r = await _payrollService.GetStaffAVC(StaffAvc.StaffID);
+        staffavcs = r;
     }
     private async Task OnDropdownChange(ChangeEventArgs e)
     {
-        
 
-        // Load information based on the selected value
-        Task.Delay(500);
-        var result = await _payrollService.GetallStaff();
-        foreach (var m in result)
+        var res = await _payrollService.GetSalary(e.Value.ToString());
+        if (res.Data != null)
         {
-            if (e.Value.ToString() == m.StaffNo)
+            salaryMessage = "";
+            staffLoanMessage = "";
+            deductmessage = "";
+            Staffothersmessage = "";
+            AvcMessage = "";
+            pAYEMessage = "";
+            salaryEntity = res.Data;
+            pAYEEntity.StaffID = salaryEntity.StaffNo;
+
+            if(res.Data.Period == "Monthly")
             {
-                loadedvalue = m.Surname + " " + m.FirstName;
+                var paye = await _payrollService.LoadAll(pAYEEntity.StaffID);
+                foreach (var m in paye)
+                {
+                    pAYEEntity.PayPeriod = m.Period;
+                    pAYEEntity.GrossSalary = m.Amount;
+                    pAYEEntity.Basic = m.BasicAmt;
+                    pAYEEntity.Housing = m.HousingAmt;
+                    pAYEEntity.Lunch = m.LunchAmt;
+                    pAYEEntity.Transport = m.TransportAmt;
+                    pAYEEntity.Utility = m.UtilityAmt;
+                    pAYEEntity.Others = m.OtherAmt;
+                }
+            }
+            else if (res.Data.Period== "Annually")
+            {
+                var result = await _payrollService.LoadAllAnnual(pAYEEntity.StaffID);
+                foreach (var m in result)
+                {
+                    pAYEEntity.PayPeriod = m.Period;
+                    pAYEEntity.GrossSalary = m.Amount;
+                    pAYEEntity.Basic = m.BasicAmt;
+                    pAYEEntity.Housing = m.HousingAmt;
+                    pAYEEntity.Lunch = m.LunchAmt;
+                    pAYEEntity.Transport = m.TransportAmt;
+                    pAYEEntity.Utility = m.UtilityAmt;
+                    pAYEEntity.Others = m.OtherAmt;
+                }
+
+            }
+        }
+        // Load information based on the selected value
+        else
+        {
+
+
+            Task.Delay(500);
+            var result = await _payrollService.GetallStaff();
+
+
+            foreach (var m in result)
+            {
+                if (e.Value.ToString() == m.StaffNo)
+                {
+                    salaryMessage = "";
+                    staffLoanMessage = "";
+                    deductmessage = "";
+                    Staffothersmessage = "";
+                    AvcMessage = "";
+                    pAYEMessage = "";
+                    salaryEntity.StaffNo = e.Value.ToString();
+                    salaryEntity.StaffName = m.Surname + " " + m.FirstName;
+                    salaryEntity.Period = "Monthly";
+                    salaryEntity.TransportAmt = 0;
+                    salaryEntity.BasicAmt =0;
+                    salaryEntity.UtilityAmt= 0;
+                    salaryEntity.OtherAmt =0;
+                    salaryEntity.LunchAmt = 0;
+                    salaryEntity.HousingAmt = 0;
+                    salaryEntity.Amount = 0;
+
+                }
+
+            }
+        }
+        var reslt = await _payrollService.GetAllType("Basic");
+        allowances = reslt;
+        var reslt1 = await _payrollService.GetAllType("Housing");
+        allowances1 = reslt1;
+        var reslt2 = await _payrollService.GetAllType("Transport");
+        allowances2 = reslt2;
+        var reslt3 = await _payrollService.GetAllType("Utility");
+        allowances3 = reslt3;
+        var reslt4 = await _payrollService.GetAllType("Lunch");
+        allowances4 = reslt4;
+        var reslt5 = await _payrollService.GetAllType("Others");
+        allowances5 = reslt5;
+
+        staffLoanEntity.NetSalary = salaryEntity.Amount.ToString();
+        staffLoanEntity.StaffNo = salaryEntity.StaffNo;
+        deductionEntity.StaffNo = salaryEntity.StaffNo;
+        staff.StaffNo = salaryEntity.StaffNo;
+        StaffAvc.StaffID = salaryEntity.StaffNo;
+        
+        
+        var re = await _payrollService.GetStaffLoan(staffLoanEntity.StaffNo);
+        staffloans = re;
+        var resu = await _payrollService.GetDeductions(deductionEntity.StaffNo);
+        deductions = resu;
+        var resul = await _payrollService.GetStaffOthers(staff.StaffNo);
+        StaffOtherAllowances = resul;
+        var r = await _payrollService.GetStaffAVC(StaffAvc.StaffID);
+        staffavcs = r;
+        
+    }
+
+    private async Task OnChangeBasicDesc(ChangeEventArgs e)    {
+        salaryEntity.BasicDescription = e.Value.ToString();
+        var reslt = await _payrollService.GetAllowanceType(salaryEntity.BasicDescription);
+        foreach(var m in reslt){            
+            salaryEntity.BasicType = m.AllType;
+            salaryEntity.BasicPer = m.Percentage;
+
+        }
+
+    }
+    private async Task OnChangeHousingDesc(ChangeEventArgs e)
+    {
+        salaryEntity.HousingDescription = e.Value.ToString();
+        var reslt = await _payrollService.GetAllowanceType(salaryEntity.HousingDescription);
+        foreach (var m in reslt)
+        {
+            salaryEntity.HousingType = m.AllType;
+            salaryEntity.HousingPer = m.Percentage;
+
+        }
+    }
+    private async Task OnChangeTransportDesc(ChangeEventArgs e)
+    {
+        salaryEntity.TransportDescription = e.Value.ToString();
+        var reslt = await _payrollService.GetAllowanceType(salaryEntity.TransportDescription);
+        foreach (var m in reslt)
+        {
+            salaryEntity.TransportType = m.AllType;
+            salaryEntity.TransportPer = m.Percentage;
+
+        }
+    }
+    private async Task OnChangeUtilityDesc(ChangeEventArgs e)
+    {
+        salaryEntity.UtilityDescription = e.Value.ToString();
+        var reslt = await _payrollService.GetAllowanceType(salaryEntity.UtilityDescription);
+        foreach (var m in reslt)
+        {
+            salaryEntity.UtilityType = m.AllType;
+            salaryEntity.UtilityPer = m.Percentage;
+
+        }
+    }
+    private async Task OnChangeLunchDesc(ChangeEventArgs e)
+    {
+        salaryEntity.LunchDescription = e.Value.ToString();
+        var reslt = await _payrollService.GetAllowanceType(salaryEntity.LunchDescription);
+        foreach (var m in reslt)
+        {
+            salaryEntity.LunchType = m.AllType;
+            salaryEntity.LunchPer = m.Percentage;
+
+        }
+    }
+    private async Task OnChangeOtherDesc(ChangeEventArgs e)
+    {
+        salaryEntity.OtherDescription = e.Value.ToString();
+        var reslt = await _payrollService.GetAllowanceType(salaryEntity.OtherDescription);
+        foreach (var m in reslt)
+        {
+            salaryEntity.OtherType = m.AllType;
+            salaryEntity.OtherPer = m.Percentage;
+
+        }
+    }
+    private async Task OnChangeAmount(ChangeEventArgs e)
+    {
+        salaryEntity.Amount = Decimal.Parse(e.Value.ToString());        
+        salaryEntity.BasicAmt = salaryEntity.Amount * salaryEntity.BasicPer / 100;
+        salaryEntity.HousingAmt = salaryEntity.Amount * salaryEntity.HousingPer / 100;
+        salaryEntity.TransportAmt = salaryEntity.Amount * salaryEntity.TransportPer / 100;
+        salaryEntity.UtilityAmt = salaryEntity.Amount * salaryEntity.UtilityPer / 100;
+        salaryEntity.LunchAmt = salaryEntity.Amount * salaryEntity.LunchPer / 100;
+        salaryEntity.OtherAmt = salaryEntity.Amount * salaryEntity.OtherPer / 100;        
+    }
+    public async Task SaveStaffloan()
+    {
+        staffLoanEntity.StaffNo = salaryEntity.StaffNo;
+        staffLoanEntity.StaffName = salaryEntity.StaffName;        
+
+        var result = await _payrollService.SaveStaffLoan(staffLoanEntity);
+        if (result.Success)
+        {
+            staffLoanMessage = result.Message;
+        }
+        var res = await _payrollService.GetStaffLoan(staffLoanEntity.StaffNo);
+        staffloans = res;
+    }
+    public async Task EditStaffLoan(int ID)
+    {
+        var edit = await _payrollService.EditStaffLoan(ID);
+        staffLoanEntity = edit;
+    }
+    public async Task DeleteStaffLoan(int ID)
+    {
+        await _payrollService.DeleteStaffLoan(ID);
+        var res = await _payrollService.GetStaffLoan(staffLoanEntity.StaffNo);
+        staffloans = res;
+    }
+    public async Task EditDeductions(int ID)
+    {
+        var edit = await _payrollService.EditStaffDeductions(ID);
+        deductionEntity = edit;
+    }
+    public async Task DeleteDeductions(int ID)
+    {
+        await _payrollService.DeleteStaffdeduct(ID);
+        var resu = await _payrollService.GetDeductions(deductionEntity.StaffNo);
+        deductions = resu;
+    }
+    public async Task EditStaffOthers(int ID)
+    {
+        var edit = await _payrollService.EditStaffOthers(ID);
+        staff = edit;
+    }
+     public async Task DeleteStaffOthers(int ID)
+    {
+        await _payrollService.DeleteStaffothers(ID);
+        var resu = await _payrollService.GetStaffOthers(deductionEntity.StaffNo);
+        StaffOtherAllowances = resu;
+    }
+    public async Task EditStaffAVC(int ID)
+    {
+        var edit = await _payrollService.EditStaffAVC(ID);
+        StaffAvc = edit;
+    }
+     public async Task DeleteStaffAVC(int ID)
+    {
+        await _payrollService.DeleteStaffAVC(ID);
+        var resu = await _payrollService.GetStaffAVC(StaffAvc.StaffID);
+        staffavcs = resu;
+    }
+    public async Task OnChangeLoanAmount(ChangeEventArgs e)
+    {
+        staffLoanEntity.Interest = int.Parse(e.Value.ToString());
+        staffLoanEntity.TotalLoanAmount = staffLoanEntity.LoanAmount + (staffLoanEntity.LoanAmount * staffLoanEntity.Interest / 100);
+    }
+    public async Task OnChangeInstallment(ChangeEventArgs e)
+    {
+        staffLoanEntity.Installment = int.Parse(e.Value.ToString());
+        staffLoanEntity.Repayment = staffLoanEntity.TotalLoanAmount / staffLoanEntity.Installment;
+    }
+    public async Task OnChangePenaltytype(ChangeEventArgs e)
+    {
+        @foreach(var m in penalties)
+        {
+            deductionEntity.PenaltyType = m.Description;
+        }
+
+        deductionEntity.DeductionType = e.Value.ToString();
+    }
+
+    private async Task OnChangePeriod(ChangeEventArgs e)
+    {
+        if(e.Value.ToString() == "Monthly")
+        {
+            var result = await _payrollService.LoadAll(pAYEEntity.StaffID);
+            foreach(var m in result)
+            {
+                pAYEEntity.PayPeriod = m.Period;
+                pAYEEntity.GrossSalary = m.Amount;
+                pAYEEntity.Basic = m.BasicAmt;
+                pAYEEntity.Housing = m.HousingAmt;
+                pAYEEntity.Lunch = m.LunchAmt;
+                pAYEEntity.Transport = m.TransportAmt;
+                pAYEEntity.Utility = m.UtilityAmt;
+                pAYEEntity.Others = m.OtherAmt;
+            }
+        }
+        else if(e.Value.ToString() == "Annually")
+        {
+            var result = await _payrollService.LoadAllAnnual(pAYEEntity.StaffID);
+            foreach (var m in result)
+            {
+                pAYEEntity.PayPeriod = m.Period;
+                pAYEEntity.GrossSalary = m.Amount;
+                pAYEEntity.Basic = m.BasicAmt;
+                pAYEEntity.Housing = m.HousingAmt;
+                pAYEEntity.Lunch = m.LunchAmt;
+                pAYEEntity.Transport = m.TransportAmt;
+                pAYEEntity.Utility = m.UtilityAmt;
+                pAYEEntity.Others = m.OtherAmt;
             }
         }
     }
 
+    private async Task SavePAYE()
+    {
+        var result = await _payrollService.SavePAYE(pAYEEntity);
+        if (result.Success)
+        {
+            pAYEMessage = result.Message;
+        }
+    }
     public void SelectTab(int index)
     {
         selectedTabIndex = index;

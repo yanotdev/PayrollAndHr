@@ -317,5 +317,370 @@ namespace PayrollAndHr.Server.Services
             var result = _context.PersonalInfo.OrderBy(d => d.StaffNo).ToList();
             return result;
         }
+        //load allowance type and percent value
+        public async Task<List<AllowanceEntity>>LoadAllowanceType(string descript)
+        {
+            var model = _context.Allowances.Where(d => d.Description == descript).ToList();
+            return model;
+        }
+        //Load all description
+        public async Task<List<AllowanceEntity>> LoadAllType(string type)
+        {
+            var model = _context.Allowances.Where(d => d.AllType == type).OrderBy(d => d.Code).ToList();
+            return model;
+        }
+        //save salary
+        public async Task<ServiceResponse<SalaryEntity>> SaveSalary(SalaryEntity salary)
+        {
+            
+            var save = _context.Salaries.Where(d => d.StaffNo == salary.StaffNo).FirstOrDefault();
+
+            if (save != null)
+            {
+
+                save.StaffNo = salary.StaffNo;
+                save.StaffName = salary.StaffName;
+                save.Period = salary.Period;
+                save.BasicDescription = salary.BasicDescription;
+                save.HousingDescription = salary.HousingDescription;
+                save.TransportDescription = salary.TransportDescription;
+                save.UtilityDescription = salary.UtilityDescription;
+                save.LunchDescription = salary.LunchDescription;
+                save.OtherDescription = salary.OtherDescription;
+                save.BasicType = salary.BasicType;
+                save.HousingType = salary.HousingType;
+                save.TransportType = salary.TransportType;
+                save.UtilityType = salary.UtilityType;
+                save.LunchType = salary.LunchType;
+                save.OtherType = salary.OtherType;
+                save.BasicPer = salary.BasicPer;
+                save.HousingPer = salary.HousingPer;
+                save.TransportPer = salary.TransportPer;
+                save.UtilityPer = salary.UtilityPer;
+                save.LunchPer = salary.LunchPer;
+                save.OtherPer = salary.OtherPer;
+                save.BasicAmt = salary.BasicAmt;
+                save.HousingAmt = salary.HousingAmt;
+                save.TransportAmt = salary.TransportAmt;
+                save.UtilityAmt = salary.UtilityAmt;
+                save.LunchAmt = salary.LunchAmt;
+                save.OtherAmt = salary.OtherAmt;
+                save.Amount = salary.Amount;
+
+            }
+            else
+            {
+
+                _context.Salaries.Add(salary);
+
+            }
+            await _context.SaveChangesAsync();
+            return new ServiceResponse<SalaryEntity>()
+            {
+                Data = salary,
+                Message = "Save Successful",
+                Success = true,
+
+            };            
+
+        }
+        //Loading Staff Salary Initial Setup     
+        public async Task<ServiceResponse<SalaryEntity>> LoadStaffSalary(string staffID)
+        {
+           
+            var model = _context.Salaries.Where(d => d.StaffNo == staffID).FirstOrDefault();
+            return new ServiceResponse<SalaryEntity>()
+            {
+                Data = model,
+                Message = "Save Successful",
+                Success = true,
+
+            };
+        }
+        //Save Staff loan
+        public async Task<ServiceResponse<StaffLoanEntity>> SaveStaffLoan(StaffLoanEntity indiviLoan)
+        {
+
+           
+            var loan = _context.StaffLoans.Where(d => d.LoanType == indiviLoan.LoanType && d.LoanAmount == indiviLoan.LoanAmount && d.Installment == indiviLoan.Installment).FirstOrDefault();
+            if (loan != null)
+            {
+                loan.StaffNo = indiviLoan.StaffNo;
+                loan.StaffName = indiviLoan.StaffName;
+                loan.NetSalary = indiviLoan.NetSalary;
+                loan.LoanType = indiviLoan.LoanType;
+                loan.LoanAmount = indiviLoan.LoanAmount;
+                loan.Interest = indiviLoan.Interest;
+                loan.TotalLoanAmount = indiviLoan.TotalLoanAmount;
+                loan.Installment = indiviLoan.Installment;
+                loan.Repayment = indiviLoan.Repayment;
+                loan.Date = DateTime.Now;
+
+            }
+            else
+            {
+                _context.StaffLoans.Add(indiviLoan);
+            }
+
+            await _context.SaveChangesAsync();
+            return new ServiceResponse<StaffLoanEntity>()
+            {
+                Data = indiviLoan,
+                Message = "Save Successful",
+                Success = true,
+
+            };
+         
+        }
+
+        //save staff deductions
+        public async Task<ServiceResponse<DeductionEntity>> Savededuct(DeductionEntity staffDeduction)
+        {
+            DeductionEntity newDeduct = new DeductionEntity();
+            newDeduct.StaffNo = staffDeduction.StaffNo;
+            newDeduct.StaffName = staffDeduction.StaffName;
+            newDeduct.PenaltyType = staffDeduction.PenaltyType;
+            newDeduct.DeductionType = staffDeduction.DeductionType;
+            newDeduct.Amount = staffDeduction.Amount;
+            newDeduct.Date = DateTime.Now;
+            _context.StaffDeductions.Add(newDeduct);
+            _context.SaveChanges();
+
+            return new ServiceResponse<DeductionEntity>()
+            {
+                Data = newDeduct,
+                Message = "Save Successful",
+                Success = true,
+
+            };
+
+        }
+
+        //load staff penalty
+        public async Task<List<DeductionEntity>> LoadStaffPenalty(string StaffID)
+        {
+            var data = _context.StaffDeductions.Where(d => d.StaffNo == StaffID).ToList();
+            return data;
+        }
+        //edit staff deductions
+        public async Task<DeductionEntity> EditDeductions(int ID)
+        {
+            var ded = _context.StaffDeductions.Where(d => d.ID == ID).FirstOrDefault();
+            return ded;
+        }
+
+        //delete staff deductions
+        public async Task<bool> DeletePen(int ID)
+        {
+            bool check = false; 
+            var emp = _context.StaffDeductions.Where(d => d.ID == ID).FirstOrDefault();
+            _context.StaffDeductions.Remove(emp);
+            check = true;
+            
+            await _context.SaveChangesAsync();
+            return check;
+        }
+        //load staff loan
+
+        public async Task<List<StaffLoanEntity>> LoadStaffLoan(string StaffID)
+        {
+            var data = _context.StaffLoans.Where(d => d.StaffNo == StaffID).ToList();
+            return data;
+        }
+
+        //edit staff loan
+        public async Task<StaffLoanEntity> EditStaffLoan(int ID)
+        {
+            int newCode = Convert.ToInt32(ID);
+            var dept = _context.StaffLoans.Where(d => d.ID == newCode).FirstOrDefault();
+            return dept;
+        }
+        //delete staff loan
+        public async Task<bool> DeleteStaffLoan(int ID)
+        {
+            int newCode = Convert.ToInt32(ID);
+            bool check = false; 
+           
+            var data = _context.StaffLoans.Where(d => d.ID == newCode).FirstOrDefault();
+            _context.StaffLoans.Remove(data);
+            _context.SaveChanges();
+            check = true;
+
+
+            return check;
+        }
+        //save staff other allowances
+        public async Task<ServiceResponse<StaffOtherAllowancesEntity>> SaveStaffOtherAllowance(StaffOtherAllowancesEntity staff)
+        {
+            
+            //var allCode = db.otherAllowances.Where(d=>d.Description == staff.AllowanceType).FirstOrDefault();
+            var oldAll = _context.staffOtherAllowances.Where(d => d.AllowanceCode == staff.AllowanceCode && d.StaffNo == staff.StaffNo).FirstOrDefault();
+            if (oldAll != null)
+            {
+                oldAll.StaffNo = staff.StaffNo;
+                oldAll.AllowanceCode = staff.AllowanceCode;
+                oldAll.Amount = staff.Amount;
+                oldAll.Status = true;
+                oldAll.AllowanceType = staff.AllowanceType;
+            }
+            else
+            {
+
+                _context.staffOtherAllowances.Add(staff);
+            }
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<StaffOtherAllowancesEntity>()
+            {
+                Data = staff,
+                Message = "Save Successful",
+                Success = true,
+            };
+        }
+        //load staff other allowances
+        public async Task<List<StaffOtherAllowancesEntity>> LoadStaffOtherAllowances(string StaffID)
+        {
+            var data = _context.staffOtherAllowances.Where(d => d.StaffNo == StaffID).ToList();
+            return data;
+        }
+        //edit staff other allowances
+        public async Task<StaffOtherAllowancesEntity> EditStaffOthers(int ID)
+        {
+            int newCode = Convert.ToInt32(ID);
+            var dept = _context.staffOtherAllowances.Where(d => d.ID == newCode).FirstOrDefault();
+            return dept;
+        }
+
+        //delete staff other allowances
+        public async Task<bool> DeleteStaffOthers(int ID)
+        {
+            int newCode = Convert.ToInt32(ID);
+            bool check = false;
+
+            var data = _context.staffOtherAllowances.Where(d => d.ID == newCode).FirstOrDefault();
+            _context.staffOtherAllowances.Remove(data);
+            _context.SaveChanges();
+            check = true;
+
+
+            return check;
+        }
+        //SAVE STAFF AVC
+        //SAVE THE STAFF AVC 
+        public async Task<ServiceResponse<StaffAVCEntity>> SaveAvc(string StaffID, string AVC)
+        {
+            StaffAVCEntity staffAVC = new StaffAVCEntity();
+            var oldavc = _context.staffAVC.Where(d => d.StaffID == StaffID).FirstOrDefault();
+            if (oldavc != null)
+            {
+                oldavc.StaffID = StaffID;
+                oldavc.AVC = AVC;
+
+            }
+            else
+            {
+                
+                staffAVC.StaffID = StaffID;
+                staffAVC.AVC = AVC;
+                _context.staffAVC.Add(staffAVC);
+            }
+            await _context.SaveChangesAsync();
+            return new ServiceResponse<StaffAVCEntity>()
+            {
+                Data = staffAVC,
+                Message = "Save Successful",
+                Success = true,
+
+            };
+
+        }
+        public async Task<List<StaffAVCEntity>> GetStaffAVC(string StaffID)
+        {
+            var data = _context.staffAVC.Where(p => p.StaffID == StaffID).ToList();
+            return data;
+        }
+        public async Task<StaffAVCEntity> EditStaffAVC(int ID)
+        {
+            int newCode = Convert.ToInt32(ID);
+            var dept = _context.staffAVC.Where(d => d.ID == newCode).FirstOrDefault();
+            return dept;
+        }
+
+        //delete staff other allowances
+        public async Task<bool> DeleteStaffAVC(int ID)
+        {
+            int newCode = Convert.ToInt32(ID);
+            bool check = false;
+
+            var data = _context.staffAVC.Where(d => d.ID == newCode).FirstOrDefault();
+            _context.staffAVC.Remove(data);
+            _context.SaveChanges();
+            check = true;
+
+
+            return check;
+        }
+
+        public async Task<ServiceResponse<PAYEEntity>> SaveStaffPayE(PAYEEntity paye)
+        {
+            
+            //var DedSta = db.StaffDeductions.Where(d => d.StaffNo == sID);
+            var newPayE = _context.PayE.Where(d => d.StaffID == paye.StaffID).FirstOrDefault();
+            if (newPayE != null)
+            {
+
+                newPayE.StaffID = paye.StaffID;
+                newPayE.StaffName = paye.StaffName;
+                newPayE.PayPeriod = paye.PayPeriod;
+                newPayE.NetSalary = paye.NetSalary;
+                newPayE.Basic = paye.Basic;
+                newPayE.Housing = paye.Housing;
+                newPayE.Transport = paye.Transport;
+                newPayE.Lunch = paye.Lunch;
+                newPayE.Utility = paye.Utility;
+                newPayE.Others = paye.Others;
+                newPayE.LoanDeduct = paye.LoanDeduct;
+                newPayE.PenaltyDeduct = paye.PenaltyDeduct;
+                newPayE.Pension = paye.Pension;
+                newPayE.NationalHFC = paye.NationalHFC;
+                newPayE.ConsolidatedR = paye.ConsolidatedR;
+                newPayE.Date = DateTime.Now;
+                newPayE.NetTIncome = paye.NetTIncome;
+                newPayE.GrossSalary = paye.GrossSalary;
+                newPayE.TDeduction = paye.TDeduction;
+                newPayE.TNonTDeduction = paye.TNonTDeduction;
+                newPayE.CalPayE = paye.CalPayE;
+
+            }
+            else
+            {
+
+                _context.PayE.Add(paye);
+            }
+
+            await _context.SaveChangesAsync();
+            return new ServiceResponse<PAYEEntity>()
+            {
+                Data = paye,
+                Message = "Save Successful",
+                Success = true,
+            };
+
+        }
+        //load from Salary table with ID
+       
+        public async Task<List<SalaryEntity>> LoadALL(string sID)
+        {
+            var data = _context.Salaries.Where(d => d.StaffNo == sID && d.Period == "Monthly").ToList();
+            return data;
+        }
+
+        //load from Salary table with ID
+        
+        public async Task<List<SalaryEntity>> LoadALLAnnual(string sID)
+        {
+            var data = _context.Salaries.Where(d => d.StaffNo == sID && d.Period == "Annually").ToList();
+            return data;
+        }
     }
 }

@@ -118,8 +118,8 @@ namespace PayrollAndHr.Server.Services
             return new ServiceResponse<PersonalInformationEntity>()
             {
                 Data = personal,
-                Message = "Registration Successful",
-                Success = true,                
+                Message = "Personal Info Save Successful",
+                Success = true,            
 
             };
         }

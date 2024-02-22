@@ -36,5 +36,30 @@ namespace PayrollAndHr.Client.Services
         Task<bool> DeleteOtherAllowances(int Code);
 
         Task<List<PersonalInformationEntity>?> GetallStaff();
+        Task<List<AllowanceEntity>> GetAllowanceType(string descript);
+        Task<List<AllowanceEntity>> GetAllType(string type);
+        Task<ServiceResponse<SalaryEntity>?> SaveSalary(SalaryEntity salaryEntity);
+        Task<ServiceResponse<SalaryEntity>> GetSalary(string StaffID);
+        Task<ServiceResponse<StaffLoanEntity>?> SaveStaffLoan(StaffLoanEntity staffLoanEntity);
+        Task<List<StaffLoanEntity>?> GetStaffLoan(string StaffID);
+        Task<StaffLoanEntity> EditStaffLoan(int ID);
+        Task<bool> DeleteStaffLoan(int ID);
+
+        Task<ServiceResponse<DeductionEntity>?> SaveDeductions(DeductionEntity deductionEntity);
+        Task<List<DeductionEntity>?> GetDeductions(string StaffID);
+        Task<DeductionEntity> EditStaffDeductions(int ID);
+        Task<bool> DeleteStaffdeduct(int ID);
+        Task<ServiceResponse<StaffOtherAllowancesEntity>?> SaveStaffOthers(StaffOtherAllowancesEntity staff);
+        Task<List<StaffOtherAllowancesEntity>?> GetStaffOthers(string StaffID);
+        Task<StaffOtherAllowancesEntity> EditStaffOthers(int ID);
+        Task<bool> DeleteStaffothers(int ID);
+        Task<ServiceResponse<StaffAVCEntity>?> SaveAVC(StaffAVCEntity staffavc);
+        Task<List<StaffAVCEntity>?> GetStaffAVC(string StaffID);
+        Task<StaffAVCEntity> EditStaffAVC(int ID);
+        Task<bool> DeleteStaffAVC(int ID);
+        Task<ServiceResponse<PAYEEntity>?> SavePAYE(PAYEEntity pAYE);
+        Task<List<SalaryEntity>?> LoadAll(string StaffID);
+        Task<List<SalaryEntity>?> LoadAllAnnual(string StaffID);
+
     }
 }

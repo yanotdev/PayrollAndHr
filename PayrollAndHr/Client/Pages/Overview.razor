@@ -2,122 +2,132 @@
 @page "/dashboard/"
 @layout PayrollAndHr.Client.Shared.Layouts.MainLayout
 
+
 @inject HttpClient _httpClient;
 
 <PageTitle>Dashboard Overview</PageTitle>
-
-<style>
-    .blue {
-        color: cornflowerblue !important;
-        font-size: 22px !important;
-        font-weight: bold !important;
-    }
-</style>
- <!-- Counts Section -->
-<section class="dashboard-counts section-padding mb-4">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xl-2 col-md-4 col-6">
-                <div class="wrapper count-title d-flex">
-                    <div class="icon"><i class="icon-check"></i></div>
-                    <div class="name">
-                        <strong class="text-uppercase">Employees</strong><span></span>
-                        <span class="blue bold" id="EmployeeCount">@empcount</span>
+<AuthorizeView>
+    <Authorized>
+        <style>
+            .blue {
+                color: cornflowerblue !important;
+                font-size: 22px !important;
+                font-weight: bold !important;
+            }
+        </style>
+         <!-- Counts Section -->
+        <section class="dashboard-counts section-padding mb-4">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-2 col-md-4 col-6">
+                        <div class="wrapper count-title d-flex">
+                            <div class="icon"><i class="icon-check"></i></div>
+                            <div class="name">
+                                <strong class="text-uppercase">Employees</strong><span></span>
+                                <span class="blue bold" id="EmployeeCount">@empcount</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-md-4 col-6">
+                        <div class="wrapper count-title d-flex">
+                            <div class="icon"><i class="icon-user"></i></div>
+                            <div class="name">
+                                <strong class="text-uppercase">Users</strong><span></span>
+                                <span class="UserCount blue bold">@usercount</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-4 col-6">
+                        <div class="wrapper count-title d-flex">
+                            <div class="icon"><i class="icon-bill"></i></div>
+                            <div class="name">
+                                <strong class="text-uppercase">Staff on Leave</strong><span></span>
+                                <span class="LeaveCount blue bold">@leavecount</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-md-4 col-6">
+                        <div class="wrapper count-title d-flex">
+                            <div class="icon"><i class="icon-list"></i></div>
+                            <div class="name">
+                                <strong class="text-uppercase">Unapproved Reqs</strong><span></span>
+                                <span class="UnapproveCount blue bold">@unapprovecount.ToString()</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-4 col-6">
+                        <div class="wrapper count-title d-flex">
+                            <div class="icon"><i class="icon-list-1"></i></div>
+                            <div class="name">
+                                <strong class="text-uppercase">Suspended Staff</strong><span></span>
+                                <span class="SuspendedCount blue bold">0</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-xl-2 col-md-4 col-6">
-                <div class="wrapper count-title d-flex">
-                    <div class="icon"><i class="icon-user"></i></div>
-                    <div class="name">
-                        <strong class="text-uppercase">Users</strong><span></span>
-                        <span class="UserCount blue bold">@usercount</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-4 col-6">
-                <div class="wrapper count-title d-flex">
-                    <div class="icon"><i class="icon-bill"></i></div>
-                    <div class="name">
-                        <strong class="text-uppercase">Staff on Leave</strong><span></span>
-                        <span class="LeaveCount blue bold">@leavecount</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-2 col-md-4 col-6">
-                <div class="wrapper count-title d-flex">
-                    <div class="icon"><i class="icon-list"></i></div>
-                    <div class="name">
-                        <strong class="text-uppercase">Unapproved Reqs</strong><span></span>
-                        <span class="UnapproveCount blue bold">@unapprovecount.ToString()</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-4 col-6">
-                <div class="wrapper count-title d-flex">
-                    <div class="icon"><i class="icon-list-1"></i></div>
-                    <div class="name">
-                        <strong class="text-uppercase">Suspended Staff</strong><span></span>
-                        <span class="SuspendedCount blue bold">0</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<div class="col-md-12 mt-4">
-    <div class="card">
-        <div class="card-header"><strong>APPLICATION MODULE</strong> </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="well applink">
-                        <a href="#" title="User Setup and Management" >
-                            <div style="color:#160202;"> <span class="fa fa-user fa-4x"></span><br />  <span class="text-center;">User Management</span></div>
+        </section>
+        <div class="col-md-12 mt-4">
+            <div class="card">
+                <div class="card-header"><strong>APPLICATION MODULE</strong> </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="well applink">
+                                <a href="#" title="User Setup and Management" >
+                                    <div style="color:#160202;"> <span class="fa fa-user fa-4x"></span><br />  <span class="text-center;">User Management</span></div>
                         
-                        </a>
-                    </div>
+                                </a>
+                            </div>
                   
-                </div>
-                <div class="col-md-2">
-                    <div class="well applink">
-                        <NavLink href="/setupindex" title="Company Info and other Setup" Match="NavLinkMatch.All">
-                            <div style="color:#160202;"> <span class="fa fa-cog fa-4x"></span><br />  <span class="text-center;">Company Settings</span></div>
-                        </NavLink>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="well applink">
-                        <NavLink href="/employeeindex" title="Employee Information Management" Match="NavLinkMatch.All">
-                            <div style="color:#160202;"> <span class="fa fa-user-circle fa-4x"></span><br />  <span class="text-center;">Employee</span></div>
-                        </NavLink>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="well applink">
-                        <a href="/payrollindex" title="Payroll System Module">
-                            <div style="color:#160202;"> <span class="fa fa-bank fa-4x"></span><br />  <span class="text-center;">Payroll</span></div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="well applink">
-                        <a href="/HumanResource/Index" title="Human Resource Module" >
-                            <div style="color:#160202;"> <span class="fa fa-user-o fa-4x"></span><br />  <span class="text-center;">Human Resource</span></div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="well applink">
-                        <a href="#" title="Various Report" >
-                            <div style="color:#160202;"> <span class="fa fa-bar-chart fa-4x"></span><br />  <span class="text-center;">Reports</span></div>
-                        </a>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="well applink">
+                                <NavLink href="/setupindex" title="Company Info and other Setup" Match="NavLinkMatch.All">
+                                    <div style="color:#160202;"> <span class="fa fa-cog fa-4x"></span><br />  <span class="text-center;">Company Settings</span></div>
+                                </NavLink>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="well applink">
+                                <NavLink href="/employeeindex" title="Employee Information Management" Match="NavLinkMatch.All">
+                                    <div style="color:#160202;"> <span class="fa fa-user-circle fa-4x"></span><br />  <span class="text-center;">Employee</span></div>
+                                </NavLink>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="well applink">
+                                <a href="/payrollindex" title="Payroll System Module">
+                                    <div style="color:#160202;"> <span class="fa fa-bank fa-4x"></span><br />  <span class="text-center;">Payroll</span></div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="well applink">
+                                <a href="/HumanResource/Index" title="Human Resource Module" >
+                                    <div style="color:#160202;"> <span class="fa fa-user-o fa-4x"></span><br />  <span class="text-center;">Human Resource</span></div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="well applink">
+                                <a href="#" title="Various Report" >
+                                    <div style="color:#160202;"> <span class="fa fa-bar-chart fa-4x"></span><br />  <span class="text-center;">Reports</span></div>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+
+    </Authorized>
+    @*<NotAuthorized>
+        <h3>Access Denied. Please log in.</h3>
+    </NotAuthorized>*@
+</AuthorizeView>
+
+
  
 
 
@@ -132,11 +142,13 @@
 
     protected override async Task OnInitializedAsync()
     {
+            
         empcount += await _httpClient.GetStringAsync("api/AdminPortal/EmpCount");
         var res = await _httpClient.GetStringAsync("api/AdminPortal/UserCount");
         usercount += res ?? "0";
         leavecount += await _httpClient.GetStringAsync("api/AdminPortal/StaffLeaveCount");
         unapprovecount += await _httpClient.GetStringAsync("api/AdminPortal/UnapproveCount");
+
     }
   
 

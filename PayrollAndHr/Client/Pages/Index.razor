@@ -72,6 +72,7 @@
 
             await _sessionStorageService.SetItemAsStringAsync("UserRole", result.UserRole);
             await _sessionStorageService.SetItemAsStringAsync("UserName", result.UserName);
+            await _sessionStorageService.SetItemAsStringAsync("jwtToken", result.Data);
 
             var userrole = result.UserRole;
             var department = result.Department;

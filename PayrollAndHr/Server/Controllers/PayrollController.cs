@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PayrollAndHr.Server.Services;
 using PayrollAndHr.Shared.Models;
+using Syncfusion.Blazor;
 using System;
 using System.Data;
 using System.IO;
 using System.Linq;
-
+using System.Reflection.Metadata.Ecma335;
 
 namespace Payroll_Application.Controllers
 {
@@ -420,7 +421,341 @@ namespace Payroll_Application.Controllers
             }
 
         }
+
+        [HttpGet("GetallAllowanceType/{descript}")]
+
+        public async Task<ActionResult<List<AllowanceEntity>>> GetallAllowanceType(string descript)
+        {
+            try
+            {
+                var result = await _payrollService.LoadAllowanceType(descript);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        [HttpGet("GetAllType/{type}")]
+
+        public async Task<ActionResult<List<AllowanceEntity>>> GetAllType(string type)
+        {
+            try
+            {
+                var result = await _payrollService.LoadAllType(type);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        [HttpPost("SaveSalary")]
+
+        public async Task<ActionResult<ServiceResponse<SalaryEntity>>> SaveSalary([FromBody] SalaryEntity salaryEntity)
+        {
+            try
+            {
+                var result = await _payrollService.SaveSalary(salaryEntity);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpGet("GetSalary/{StaffID}")]
+
+        public async Task<ActionResult<ServiceResponse<SalaryEntity>>> GetSalary(string StaffID)
+        {
+            try
+            {
+                var result = await _payrollService.LoadStaffSalary(StaffID);                
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPost("SaveStaffLoan")]
+
+        public async Task<ActionResult<ServiceResponse<StaffLoanEntity>>> SaveStaffLoan([FromBody] StaffLoanEntity staffLoanEntity)
+        {
+            try
+            {
+                var result = await _payrollService.SaveStaffLoan(staffLoanEntity);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+      
+        [HttpGet("GetStaffLoan/{StaffID}")]
+
+        public async Task<ActionResult<List<StaffLoanEntity>>> GetStaffLoan(string StaffID)
+        {
+            try
+            {
+                var result = await _payrollService.LoadStaffLoan(StaffID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("EditStaffLoan/{ID}")]
+
+        public async Task<ActionResult<StaffLoanEntity>> EditStaffLoan(int ID)
+        {
+            try
+            {
+                var result = await _payrollService.EditStaffLoan(ID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteStaffloan/{ID}")]
+        public async Task<ActionResult<bool>> DeleteStaffloan(int ID)
+        {
+            try
+            {
+                var result = await _payrollService.DeleteStaffLoan(ID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("SaveDeductions")]
+
+        public async Task<ActionResult<ServiceResponse<DeductionEntity>>> SaveDeductions([FromBody] DeductionEntity deductionEntity)
+        {
+            try
+            {
+                var result = await _payrollService.Savededuct(deductionEntity);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("GetDeductions/{StaffID}")]
+
+        public async Task<ActionResult<StaffLoanEntity>> Getdeductions(string StaffID)
+        {
+            try
+            {
+                var result = await _payrollService.LoadStaffPenalty(StaffID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("EditStaffDeductions/{ID}")]
+
+        public async Task<ActionResult<StaffLoanEntity>> EditStaffDeductions(int ID)
+        {
+            try
+            {
+                var result = await _payrollService.EditDeductions(ID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteStaffdeduct/{ID}")]
+        public async Task<ActionResult<bool>> DeleteStaffdeduct(int ID)
+        {
+            try
+            {
+                var result = await _payrollService.DeletePen(ID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("SaveStaffOthers")]
+
+        public async Task<ActionResult<ServiceResponse<StaffOtherAllowancesEntity>>> SaveStaffOthers([FromBody] StaffOtherAllowancesEntity staff)
+        {
+            try
+            {
+                var result = await _payrollService.SaveStaffOtherAllowance(staff);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("GetStaffOthers/{StaffID}")]
+
+        public async Task<ActionResult<StaffOtherAllowancesEntity>> GetStaffOthers(string StaffID)
+        {
+            try
+            {
+                var result = await _payrollService.LoadStaffOtherAllowances(StaffID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("EditStaffOthers/{ID}")]
+
+        public async Task<ActionResult<StaffOtherAllowancesEntity>> EditStaffOthers(int ID)
+        {
+            try
+            {
+                var result = await _payrollService.EditStaffOthers(ID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteStaffOthers/{ID}")]
+        public async Task<ActionResult<bool>> DeleteStaffOthers(int ID)
+        {
+            try
+            {
+                var result = await _payrollService.DeleteStaffOthers(ID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        [HttpPost("SaveAVC")]
+
+        public async Task<ActionResult<ServiceResponse<StaffAVCEntity>>> SaveAVC([FromBody] StaffAVCEntity staffavc)
+        {
+            try
+            {
+                var result = await _payrollService.SaveAvc(staffavc.StaffID, staffavc.AVC);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("GetStaffAVC/{StaffID}")]
+
+        public async Task<ActionResult<StaffAVCEntity>> GetStaffAVC(string StaffID)
+        {
+            try
+            {
+                var result = await _payrollService.GetStaffAVC(StaffID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("EditStaffAVC/{ID}")]
+
+        public async Task<ActionResult<StaffAVCEntity>> EditStaffAVC(int ID)
+        {
+            try
+            {
+                var result = await _payrollService.EditStaffAVC(ID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteStaffAVC/{ID}")]
+        public async Task<ActionResult<bool>> DeleteStaffAVC(int ID)
+        {
+            try
+            {
+                var result = await _payrollService.DeleteStaffAVC(ID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPost("SavePAYE")]
+
+        public async Task<ActionResult<ServiceResponse<PAYEEntity>>> SavePAYE([FromBody] PAYEEntity pAYEEntity )
+        {
+            try
+            {
+                var result = await _payrollService.SaveStaffPayE(pAYEEntity);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("LoadAll/{StaffID}")]
+
+        public async Task<ActionResult<List<SalaryEntity>>> LoadAll(string StaffID)
+        {
+            try
+            {
+                var result = await _payrollService.LoadALL(StaffID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("LoadAllAnnual/{StaffID}")]
+
+        public async Task<ActionResult<List<SalaryEntity>>> LoadAllAnnual(string StaffID)
+        {
+            try
+            {
+                var result = await _payrollService.LoadALLAnnual(StaffID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
+
 }
 
 //        // GET: Loan & PenaltyStatus
